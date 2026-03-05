@@ -1359,21 +1359,55 @@ footer {
   .container { padding: 0 16px; }
   section { padding: 48px 0; }
 
-  /* Hero */
-  .hero { padding: 100px 0 48px; }
-  .hero h1 { font-size: 28px; line-height: 1.15; letter-spacing: -1px; }
-  .hero-sub { font-size: 14px; max-width: 100%; margin-bottom: 32px; }
-  .hero-actions { flex-direction: column; gap: 12px; width: 100%; }
-  .hero-actions a { width: 100%; text-align: center; padding: 14px 24px; font-size: 13px; }
-  .hero-badge { font-size: 10px; padding: 6px 14px; }
+  /* Hero — headline is the HOOK, it needs to dominate */
+  .hero { padding: 100px 0 40px; }
+  .hero h1 {
+    font-size: 38px;
+    line-height: 1.08;
+    letter-spacing: -2px;
+  }
+  .hero h1 .gradient { display: inline; }
+  .hero-sub {
+    font-size: 14px;
+    max-width: 100%;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+  .hero-badge { font-size: 9px; padding: 5px 12px; margin-bottom: 16px; }
 
-  /* Stats */
-  .hero-stats { gap: 12px; margin-top: 40px; }
-  .hero-stat .value { font-size: 28px; }
-  .hero-stat .label { font-size: 9px; }
+  /* CTA buttons — full width, primary stands out */
+  .hero-actions { flex-direction: column; gap: 10px; width: 100%; }
+  .hero-actions a {
+    width: 100%;
+    text-align: center;
+    padding: 14px 24px;
+    font-size: 13px;
+  }
+
+  /* Stats — 2x2 grid instead of vertical stack */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin-top: 32px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .hero-stat {
+    border-right: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 16px 12px;
+    text-align: center;
+  }
+  .hero-stat:nth-child(2n) { border-right: none; }
+  .hero-stat:nth-child(n+3) { border-bottom: none; }
+  .hero-stat:last-child { border-bottom: none; }
+  .hero-stat .value { font-size: 24px; }
+  .hero-stat .label { font-size: 9px; letter-spacing: 0.15em; }
 
   /* Section headings */
-  h2, .section-title { font-size: 22px; }
+  h2, .section-title { font-size: 24px; letter-spacing: -0.5px; }
   .section-sub { font-size: 13px; }
 
   /* Scanner feed */
@@ -1381,7 +1415,7 @@ footer {
 
   /* Equity curve */
   .equity-card { padding: 16px; }
-  .equity-value { font-size: 28px; }
+  .equity-value { font-size: 24px; }
 
   /* Feature cards */
   .feature-card { padding: 24px 20px; }
