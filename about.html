@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About & Methodology — The Strategy Factory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #06090F;
+  --bg-secondary: #0B1018;
+  --bg-card: #0E1420;
+  --bg-card-hover: #141C2A;
+  --bg-elevated: #1A2233;
+  --accent-cyan: #00A3FF;
+  --accent-cyan-dim: rgba(0, 163, 255, 0.10);
+  --accent-cyan-glow: rgba(0, 163, 255, 0.35);
+  --accent-green: #00E676;
+  --accent-green-dim: rgba(0, 230, 118, 0.08);
+  --accent-red: #FF5252;
+  --accent-purple: #7C5CFC;
+  --accent-purple-glow: rgba(124, 92, 252, 0.25);
+  --accent-gold: #EAB308;
+  --accent-teal: #0D9488;
+  --text-primary: #FFFFFF;
+  --text-secondary: #7B8DA4;
+  --text-muted: #445566;
+  --text-dim: #2A3544;
+  --border-default: #151D2B;
+  --border-subtle: rgba(255,255,255,0.04);
+  --border-cyan: rgba(0, 163, 255, 0.2);
+  --font-display: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-pill: 9999px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-display);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Film Grain */
+body::after {
+  content: '';
+  position: fixed;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.5;
+  animation: grain 0.5s steps(1) infinite;
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-2%, -3%); }
+  20% { transform: translate(3%, 1%); }
+  30% { transform: translate(-1%, 2%); }
+  40% { transform: translate(2%, -2%); }
+  50% { transform: translate(-3%, 3%); }
+  60% { transform: translate(1%, -1%); }
+  70% { transform: translate(-2%, 2%); }
+  80% { transform: translate(3%, -3%); }
+  90% { transform: translate(-1%, 1%); }
+}
+
+#particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 1;
+}
+
+section { padding: 100px 0; }
+
+/* Navigation */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 16px 0;
+  background: rgba(6, 9, 15, 0.8);
+  backdrop-filter: blur(24px) saturate(1.4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+nav .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+
+.nav-logo-mark {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 28px;
+  font-style: italic;
+  letter-spacing: -1px;
+}
+
+.nav-logo-mark .s { color: var(--text-primary); }
+.nav-logo-mark .f { color: var(--accent-cyan); text-shadow: 0 0 20px var(--accent-cyan-glow); }
+
+.nav-logo-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0; right: 0;
+  height: 1px;
+  background: var(--accent-cyan);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+
+.nav-links a:hover { color: var(--accent-cyan); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-links a.active { color: var(--accent-cyan); }
+.nav-links a.active::after { transform: scaleX(1); }
+
+.nav-cta {
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: var(--bg-primary) !important;
+  background: var(--accent-cyan) !important;
+  padding: 10px 24px;
+  border-radius: var(--radius-pill);
+  transition: all 0.3s;
+  box-shadow: 0 0 20px rgba(0, 163, 255, 0.2);
+}
+
+.nav-cta::after { display: none !important; }
+.nav-cta:hover {
+  background: #38BDF8 !important;
+  box-shadow: 0 0 40px rgba(0, 163, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Section helpers */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 16px;
+  text-shadow: 0 0 20px var(--accent-cyan-glow);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+  line-height: 1.05;
+}
+
+.section-desc {
+  font-size: 17px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin-bottom: 64px;
+  line-height: 1.7;
+}
+
+/* ═══════════════════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════════════════ */
+.hero {
+  padding: 200px 0 100px;
+  text-align: center;
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+}
+
+.hero .container { width: 100%; }
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px;
+  height: 600px;
+  background: radial-gradient(ellipse, rgba(124, 92, 252, 0.06), transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 8vw, 110px);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -4px;
+  margin-bottom: 32px;
+  animation: fadeInUp 0.8s ease 0.1s both;
+}
+
+.hero h1 .gradient {
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 50%, var(--accent-cyan) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.hero-sub {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.7;
+  animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+/* ═══════════════════════════════════════════════════
+   APPROACH — 3 Principle Cards
+   ═══════════════════════════════════════════════════ */
+.approach-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.approach-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 48px 36px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.approach-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.approach-card:hover {
+  border-color: var(--border-cyan);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(0, 163, 255, 0.05);
+}
+
+.approach-card:hover::before { opacity: 1; }
+
+.approach-icon {
+  width: 56px; height: 56px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 28px;
+}
+
+.approach-icon.cyan { background: var(--accent-cyan-dim); border: 1px solid rgba(0, 163, 255, 0.12); }
+.approach-icon.purple { background: rgba(124, 92, 252, 0.08); border: 1px solid rgba(124, 92, 252, 0.15); }
+.approach-icon.green { background: var(--accent-green-dim); border: 1px solid rgba(0, 230, 118, 0.12); }
+
+.approach-card h3 {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.approach-card h3.cyan-text { color: var(--accent-cyan); }
+.approach-card h3.purple-text { color: var(--accent-purple); }
+.approach-card h3.green-text { color: var(--accent-green); }
+
+.approach-card p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+/* ═══════════════════════════════════════════════════
+   STRATEGY OVERVIEW — Flowchart
+   ═══════════════════════════════════════════════════ */
+.strategy-points {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 72px;
+}
+
+.strategy-point {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  transition: all 0.4s;
+}
+
+.strategy-point:hover {
+  border-color: var(--border-cyan);
+}
+
+.strategy-point p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.strategy-point .highlight {
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+
+/* Flowchart */
+.flowchart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+  padding: 48px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+}
+
+.flow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.flow-node {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-cyan);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  text-align: center;
+  white-space: nowrap;
+  transition: all 0.4s;
+  min-width: 120px;
+}
+
+.flow-node:hover {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 24px rgba(0, 163, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.flow-node .flow-icon {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.flow-arrow {
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  position: relative;
+  z-index: 1;
+}
+
+.flow-arrow svg {
+  width: 36px;
+  height: 12px;
+}
+
+.flow-arrow .arrow-line {
+  stroke: var(--accent-cyan);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 4;
+  animation: dashFlow 1s linear infinite;
+}
+
+.flow-arrow .arrow-head {
+  fill: var(--accent-cyan);
+}
+
+@keyframes dashFlow {
+  to { stroke-dashoffset: -10; }
+}
+
+/* ═══════════════════════════════════════════════════
+   WALK-FORWARD VALIDATION
+   ═══════════════════════════════════════════════════ */
+.wf-explainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+  margin-bottom: 48px;
+}
+
+.wf-text h3 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.wf-text p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+/* Timeline visual */
+.wf-timeline {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 36px 32px;
+}
+
+.wf-timeline-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.wf-bars {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.wf-bar {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  border-radius: 4px;
+}
+
+.wf-bar.train {
+  flex: 1;
+  background: rgba(0, 163, 255, 0.12);
+  border: 1px solid rgba(0, 163, 255, 0.2);
+  color: var(--accent-cyan);
+}
+
+.wf-bar.test {
+  flex: 1;
+  background: rgba(0, 230, 118, 0.1);
+  border: 1px solid rgba(0, 230, 118, 0.2);
+  color: var(--accent-green);
+}
+
+.wf-bar-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.wf-bar-labels span {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+
+.wf-arrow-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 16px 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent-green);
+}
+
+/* Results grid */
+.wf-results {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.wf-result-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 24px;
+  text-align: center;
+  transition: all 0.4s;
+}
+
+.wf-result-card:hover {
+  border-color: var(--border-cyan);
+  transform: translateY(-2px);
+}
+
+.wf-result-sym {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+
+.wf-result-sym.nq { color: var(--accent-cyan); }
+.wf-result-sym.gc { color: var(--accent-gold); }
+.wf-result-sym.sil { color: #90A4AE; }
+
+.wf-result-pf {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+}
+
+.wf-result-train {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--text-muted);
+}
+
+.wf-result-arrow {
+  color: var(--accent-green);
+  font-size: 14px;
+}
+
+.wf-result-test {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--accent-green);
+  text-shadow: 0 0 16px rgba(0, 230, 118, 0.2);
+}
+
+.wf-result-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+/* ═══════════════════════════════════════════════════
+   WHAT WE'RE NOT / ARE
+   ═══════════════════════════════════════════════════ */
+.not-are {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+
+.not-list, .are-list {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 40px 36px;
+}
+
+.not-list { border-color: rgba(255, 82, 82, 0.15); }
+.are-list { border-color: rgba(0, 230, 118, 0.15); }
+
+.not-list h3, .are-list h3 {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+
+.not-list h3 { color: var(--accent-red); }
+.are-list h3 { color: var(--accent-green); }
+
+.not-item, .are-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 15px;
+}
+
+.not-item:last-child, .are-item:last-child { border-bottom: none; }
+
+.not-item {
+  color: var(--text-muted);
+  text-decoration: line-through;
+  text-decoration-color: rgba(255, 82, 82, 0.4);
+}
+
+.not-x {
+  font-size: 16px;
+  color: var(--accent-red);
+  font-weight: 700;
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+}
+
+.are-check {
+  font-size: 16px;
+  color: var(--accent-green);
+  font-weight: 700;
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+}
+
+.are-item {
+  color: var(--text-secondary);
+}
+
+/* ═══════════════════════════════════════════════════
+   THE NUMBERS — Stat Block
+   ═══════════════════════════════════════════════════ */
+.numbers-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.number-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 36px 28px;
+  text-align: center;
+  transition: all 0.4s;
+}
+
+.number-card:hover {
+  border-color: var(--border-cyan);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+}
+
+.number-value {
+  font-family: var(--font-mono);
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.number-value.cyan { color: var(--accent-cyan); text-shadow: 0 0 24px var(--accent-cyan-glow); }
+.number-value.green { color: var(--accent-green); text-shadow: 0 0 24px rgba(0, 230, 118, 0.3); }
+.number-value.purple { color: var(--accent-purple); text-shadow: 0 0 24px var(--accent-purple-glow); }
+.number-value.gold { color: var(--accent-gold); text-shadow: 0 0 24px rgba(234, 179, 8, 0.3); }
+
+.number-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ═══════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════ */
+footer {
+  border-top: 1px solid var(--border-subtle);
+  padding: 60px 0 40px;
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 48px;
+}
+
+.footer-brand { max-width: 320px; }
+
+.footer-logo {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 22px;
+  font-style: italic;
+  margin-bottom: 12px;
+}
+
+.footer-logo .s { color: var(--text-primary); }
+.footer-logo .f { color: var(--accent-cyan); text-shadow: 0 0 16px var(--accent-cyan-glow); }
+
+.footer-tagline {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.footer-links {
+  display: flex;
+  gap: 48px;
+}
+
+.footer-col h4 {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.footer-col a {
+  display: block;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 4px 0;
+  transition: color 0.3s;
+}
+
+.footer-col a:hover { color: var(--accent-cyan); }
+
+.footer-bottom {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 24px;
+}
+
+.footer-disclaimer {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  max-width: 800px;
+}
+
+/* ═══════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════ */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-stagger > .reveal:nth-child(1) { transition-delay: 0.05s; }
+.reveal-stagger > .reveal:nth-child(2) { transition-delay: 0.12s; }
+.reveal-stagger > .reveal:nth-child(3) { transition-delay: 0.19s; }
+.reveal-stagger > .reveal:nth-child(4) { transition-delay: 0.26s; }
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .approach-grid, .strategy-points, .wf-results, .numbers-grid, .wf-explainer, .not-are {
+    grid-template-columns: 1fr;
+  }
+  .flowchart { flex-direction: column; gap: 8px; }
+  .flow-arrow { transform: rotate(90deg); }
+  .footer-top { flex-direction: column; gap: 32px; }
+  .footer-links { flex-direction: column; gap: 24px; }
+  .nav-links { display: none; }
+  .hero { padding: 160px 0 80px; min-height: auto; }
+  .hero h1 { letter-spacing: -2px; }
+}
+
+@media (max-width: 600px) {
+  .container { padding: 0 20px; }
+  section { padding: 60px 0; }
+  .numbers-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="container">
+    <a href="landing.html" class="nav-logo">
+      <div class="nav-logo-mark"><span class="s">S</span><span class="f">F</span></div>
+      <div class="nav-logo-text">Strategy<br>Factory</div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="landing.html#performance">Performance</a></li>
+      <li><a href="about.html" class="active">Methodology</a></li>
+      <li><a href="landing.html#pricing">Pricing</a></li>
+      <li><a href="landing.html#pricing" class="nav-cta">Get Started</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="container">
+    <h1><span class="gradient">Built Different.</span></h1>
+    <p class="hero-sub">
+      Most signal services are one person with opinions.<br>
+      We're an algorithm with receipts.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     THE APPROACH
+     ═══════════════════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-label reveal">The Approach</div>
+    <h2 class="section-title reveal">Three principles. Zero compromise.</h2>
+    <p class="section-desc reveal">Every aspect of our system is built on these foundations.</p>
+
+    <div class="approach-grid reveal-stagger">
+      <div class="approach-card reveal">
+        <div class="approach-icon cyan">📊</div>
+        <h3 class="cyan-text">Quantitative</h3>
+        <p>Every decision is data-driven. 2+ years of tick-level market data. Zero gut feelings.</p>
+      </div>
+      <div class="approach-card reveal">
+        <div class="approach-icon purple">⚙️</div>
+        <h3 class="purple-text">Systematic</h3>
+        <p>53 parameters, rigorously tested. Walk-forward validated out-of-sample. No curve-fitting.</p>
+      </div>
+      <div class="approach-card reveal">
+        <div class="approach-icon green">⚡</div>
+        <h3 class="green-text">Automated</h3>
+        <p>24/5 monitoring across 3 markets. Sub-second signal detection. No human bottleneck.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     STRATEGY OVERVIEW
+     ═══════════════════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-label reveal">Strategy Overview</div>
+    <h2 class="section-title reveal">How the system finds edge.</h2>
+    <p class="section-desc reveal">High-level methodology. The specifics stay in the vault.</p>
+
+    <div class="strategy-points reveal-stagger">
+      <div class="strategy-point reveal">
+        <p>Our system identifies <span class="highlight">Fair Value Gaps</span> — institutional footprints left in price action when smart money moves aggressively.</p>
+      </div>
+      <div class="strategy-point reveal">
+        <p><span class="highlight">Multi-timeframe bias confirmation</span> ensures we only trade in the direction of the dominant trend. No counter-trend gambling.</p>
+      </div>
+      <div class="strategy-point reveal">
+        <p>Strict risk management: <span class="highlight">$3K max risk</span> per trade, stop-on-first-win, 60-minute cooldown between entries.</p>
+      </div>
+    </div>
+
+    <!-- Flowchart -->
+    <div class="flowchart reveal">
+      <div class="flow-step">
+        <div class="flow-node"><span class="flow-icon">📡</span>Market Data</div>
+      </div>
+      <div class="flow-arrow">
+        <svg viewBox="0 0 36 12"><line x1="0" y1="6" x2="28" y2="6" class="arrow-line"/><polygon points="28,2 36,6 28,10" class="arrow-head"/></svg>
+      </div>
+      <div class="flow-step">
+        <div class="flow-node"><span class="flow-icon">🔍</span>FVG Detection</div>
+      </div>
+      <div class="flow-arrow">
+        <svg viewBox="0 0 36 12"><line x1="0" y1="6" x2="28" y2="6" class="arrow-line"/><polygon points="28,2 36,6 28,10" class="arrow-head"/></svg>
+      </div>
+      <div class="flow-step">
+        <div class="flow-node"><span class="flow-icon">⟁</span>Bias Confirm</div>
+      </div>
+      <div class="flow-arrow">
+        <svg viewBox="0 0 36 12"><line x1="0" y1="6" x2="28" y2="6" class="arrow-line"/><polygon points="28,2 36,6 28,10" class="arrow-head"/></svg>
+      </div>
+      <div class="flow-step">
+        <div class="flow-node"><span class="flow-icon">⚡</span>Signal Gen</div>
+      </div>
+      <div class="flow-arrow">
+        <svg viewBox="0 0 36 12"><line x1="0" y1="6" x2="28" y2="6" class="arrow-line"/><polygon points="28,2 36,6 28,10" class="arrow-head"/></svg>
+      </div>
+      <div class="flow-step">
+        <div class="flow-node"><span class="flow-icon">🛡️</span>Risk Check</div>
+      </div>
+      <div class="flow-arrow">
+        <svg viewBox="0 0 36 12"><line x1="0" y1="6" x2="28" y2="6" class="arrow-line"/><polygon points="28,2 36,6 28,10" class="arrow-head"/></svg>
+      </div>
+      <div class="flow-step">
+        <div class="flow-node" style="border-color: var(--accent-green); box-shadow: 0 0 20px rgba(0, 230, 118, 0.1);"><span class="flow-icon">🔔</span>Alert</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     WALK-FORWARD VALIDATION
+     ═══════════════════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-label reveal">Walk-Forward Validation</div>
+    <h2 class="section-title reveal">Tested on data it never saw.</h2>
+
+    <div class="wf-explainer">
+      <div class="wf-text reveal">
+        <h3>What is walk-forward testing?</h3>
+        <p>Most trading systems are "backtested" — optimized and tested on the <em>same</em> historical data. That's like studying the answer key before the exam. Of course it looks good.</p>
+        <p>Walk-forward validation is different. We optimized our system on Year 1 data (the training set), then locked every parameter and ran it blind on Year 2 data it had never seen.</p>
+        <p><strong style="color: var(--accent-green);">The result?</strong> Performance <em>improved</em> on unseen data across all three instruments. That's not luck — that's a robust system.</p>
+      </div>
+      <div class="wf-timeline reveal">
+        <div class="wf-timeline-label">Walk-Forward Timeline</div>
+        <div class="wf-bar-labels">
+          <span>Feb 2024</span>
+          <span>Feb 2025</span>
+          <span>Feb 2026</span>
+        </div>
+        <div class="wf-bars">
+          <div class="wf-bar train">TRAIN — Year 1</div>
+          <div class="wf-bar test">TEST — Year 2</div>
+        </div>
+        <div class="wf-arrow-row">
+          ✓ Parameters locked → tested blind → performance held
+        </div>
+      </div>
+    </div>
+
+    <div class="wf-results reveal-stagger">
+      <div class="wf-result-card reveal">
+        <div class="wf-result-sym nq">NQ</div>
+        <div class="wf-result-pf">
+          <span class="wf-result-train">1.86</span>
+          <span class="wf-result-arrow">→</span>
+          <span class="wf-result-test">2.13</span>
+        </div>
+        <div class="wf-result-label">Profit Factor (Train → Test)</div>
+      </div>
+      <div class="wf-result-card reveal">
+        <div class="wf-result-sym gc">GC</div>
+        <div class="wf-result-pf">
+          <span class="wf-result-train">1.46</span>
+          <span class="wf-result-arrow">→</span>
+          <span class="wf-result-test">1.48</span>
+        </div>
+        <div class="wf-result-label">Profit Factor (Train → Test)</div>
+      </div>
+      <div class="wf-result-card reveal">
+        <div class="wf-result-sym sil">SIL</div>
+        <div class="wf-result-pf">
+          <span class="wf-result-train">1.60</span>
+          <span class="wf-result-arrow">→</span>
+          <span class="wf-result-test">1.80</span>
+        </div>
+        <div class="wf-result-label">Profit Factor (Train → Test)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     WHAT WE'RE NOT / ARE
+     ═══════════════════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-label reveal">Straight Talk</div>
+    <h2 class="section-title reveal">No pretense. No BS.</h2>
+    <p class="section-desc reveal">We know what we are — and more importantly, what we're not.</p>
+
+    <div class="not-are">
+      <div class="not-list reveal">
+        <h3>✕ What We're NOT</h3>
+        <div class="not-item"><span class="not-x">✕</span> A guru with a hot take</div>
+        <div class="not-item"><span class="not-x">✕</span> Cherry-picked screenshots</div>
+        <div class="not-item"><span class="not-x">✕</span> Hypothetical paper trades</div>
+        <div class="not-item"><span class="not-x">✕</span> A get-rich-quick scheme</div>
+      </div>
+      <div class="are-list reveal">
+        <h3>✓ What We ARE</h3>
+        <div class="are-item"><span class="are-check">✓</span> A quantitative system with 2+ years of data</div>
+        <div class="are-item"><span class="are-check">✓</span> Walk-forward validated on unseen data</div>
+        <div class="are-item"><span class="are-check">✓</span> Fully automated, zero discretion</div>
+        <div class="are-item"><span class="are-check">✓</span> Transparent — every trade logged and published</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     THE NUMBERS
+     ═══════════════════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-label reveal">The Numbers</div>
+    <h2 class="section-title reveal">Full transparency. Always.</h2>
+    <p class="section-desc reveal">Commission-inclusive. Walk-forward validated. No asterisks.</p>
+
+    <div class="numbers-grid reveal-stagger">
+      <div class="number-card reveal">
+        <div class="number-value cyan">2,155</div>
+        <div class="number-label">Total Trades</div>
+      </div>
+      <div class="number-card reveal">
+        <div class="number-value green">$565,170</div>
+        <div class="number-label">Total P&L</div>
+      </div>
+      <div class="number-card reveal">
+        <div class="number-value purple">56.1%</div>
+        <div class="number-label">Win Rate</div>
+      </div>
+      <div class="number-card reveal">
+        <div class="number-value gold">3 / 3</div>
+        <div class="number-label">Instruments Validated</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo"><span class="s">S</span><span class="f">F</span></div>
+        <div class="footer-tagline">Quantitative · Systematic · Automated</div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="landing.html#performance">Performance</a>
+          <a href="landing.html#pricing">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="about.html">Methodology</a>
+          <a href="#">FAQ</a>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <a href="#">Discord</a>
+          <a href="#">Twitter</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-disclaimer">
+        CFTC Rule 4.41 — Hypothetical or simulated performance results have certain limitations. Unlike an actual performance record, simulated results do not represent actual trading. Also, since the trades have not been executed, the results may have under-or-over compensated for the impact, if any, of certain market factors, such as lack of liquidity. Simulated trading programs in general are also subject to the fact that they are designed with the benefit of hindsight. No representation is being made that any account will or is likely to achieve profit or losses similar to those shown. Past performance is not indicative of future results. This is not financial advice.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- JAVASCRIPT -->
+<script>
+// Particle Network
+(function() {
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let w, h, particles = [], mouse = { x: null, y: null };
+  const COUNT = 60, DIST = 150, MOUSE_DIST = 200;
+
+  function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+  class P {
+    constructor() {
+      this.x = Math.random() * w; this.y = Math.random() * h;
+      this.vx = (Math.random() - 0.5) * 0.4; this.vy = (Math.random() - 0.5) * 0.4;
+      this.r = Math.random() * 1.5 + 0.5; this.a = Math.random() * 0.4 + 0.1;
+    }
+    update() {
+      this.x += this.vx; this.y += this.vy;
+      if (this.x < 0 || this.x > w) this.vx *= -1;
+      if (this.y < 0 || this.y > h) this.vy *= -1;
+    }
+    draw() {
+      ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0, 163, 255, ${this.a})`; ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < COUNT; i++) particles.push(new P());
+
+  function animate() {
+    ctx.clearRect(0, 0, w, h);
+    particles.forEach(p => { p.update(); p.draw(); });
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < DIST) {
+          ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(0, 163, 255, ${0.08 * (1 - d / DIST)})`;
+          ctx.lineWidth = 0.5; ctx.stroke();
+        }
+      }
+      if (mouse.x) {
+        const dx = particles[i].x - mouse.x, dy = particles[i].y - mouse.y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < MOUSE_DIST) {
+          ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.strokeStyle = `rgba(0, 163, 255, ${0.15 * (1 - d / MOUSE_DIST)})`;
+          ctx.lineWidth = 0.6; ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// Scroll Reveal
+(function() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+})();
+</script>
+
+</body>
+</html>

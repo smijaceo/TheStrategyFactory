@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Started — The Strategy Factory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #06090F;
+  --bg-secondary: #0B1018;
+  --bg-card: #0E1420;
+  --bg-card-hover: #141C2A;
+  --bg-elevated: #1A2233;
+
+  --accent-cyan: #00A3FF;
+  --accent-cyan-dim: rgba(0, 163, 255, 0.10);
+  --accent-cyan-glow: rgba(0, 163, 255, 0.35);
+  --accent-green: #00E676;
+  --accent-green-dim: rgba(0, 230, 118, 0.08);
+  --accent-red: #FF5252;
+  --accent-purple: #7C5CFC;
+  --accent-purple-glow: rgba(124, 92, 252, 0.25);
+  --accent-gold: #EAB308;
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #7B8DA4;
+  --text-muted: #445566;
+  --text-dim: #2A3544;
+
+  --border-default: #151D2B;
+  --border-subtle: rgba(255,255,255,0.04);
+  --border-cyan: rgba(0, 163, 255, 0.2);
+
+  --font-display: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-pill: 9999px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-display);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Film Grain ──────────────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.5;
+  animation: grain 0.5s steps(1) infinite;
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-2%, -3%); }
+  20% { transform: translate(3%, 1%); }
+  30% { transform: translate(-1%, 2%); }
+  40% { transform: translate(2%, -2%); }
+  50% { transform: translate(-3%, 3%); }
+  60% { transform: translate(1%, -1%); }
+  70% { transform: translate(-2%, 2%); }
+  80% { transform: translate(3%, -3%); }
+  90% { transform: translate(-1%, 1%); }
+}
+
+#particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── Layout ──────────────────────────────────────────── */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 1;
+}
+
+section { padding: 100px 0; }
+
+/* ── Navigation ──────────────────────────────────────── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 16px 0;
+  background: rgba(6, 9, 15, 0.8);
+  backdrop-filter: blur(24px) saturate(1.4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+nav .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+
+.nav-logo-mark {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 28px;
+  font-style: italic;
+  letter-spacing: -1px;
+}
+
+.nav-logo-mark .s { color: var(--text-primary); }
+.nav-logo-mark .f { color: var(--accent-cyan); text-shadow: 0 0 20px var(--accent-cyan-glow); }
+
+.nav-logo-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0; right: 0;
+  height: 1px;
+  background: var(--accent-cyan);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+
+.nav-links a:hover { color: var(--accent-cyan); }
+.nav-links a:hover::after { transform: scaleX(1); }
+
+.nav-cta {
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: var(--bg-primary) !important;
+  background: var(--accent-cyan) !important;
+  padding: 10px 24px;
+  border-radius: var(--radius-pill);
+  transition: all 0.3s;
+  box-shadow: 0 0 20px rgba(0, 163, 255, 0.2);
+}
+
+.nav-cta::after { display: none !important; }
+
+.nav-cta:hover {
+  background: #38BDF8 !important;
+  box-shadow: 0 0 40px rgba(0, 163, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+/* ── Buttons ─────────────────────────────────────────── */
+.btn-primary {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bg-primary);
+  background: var(--accent-cyan);
+  padding: 16px 40px;
+  border-radius: var(--radius-pill);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+  box-shadow: 0 0 30px rgba(0, 163, 255, 0.2), inset 0 1px 0 rgba(255,255,255,0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-primary:hover::before { left: 100%; }
+.btn-primary:hover {
+  background: #38BDF8;
+  box-shadow: 0 0 60px rgba(0, 163, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: transparent;
+  padding: 16px 40px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-default);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  box-shadow: 0 0 30px rgba(0, 163, 255, 0.1);
+}
+
+/* ── Section Headers ─────────────────────────────────── */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.section-subtitle {
+  font-size: 17px;
+  color: var(--text-secondary);
+  max-width: 560px;
+  line-height: 1.7;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.section-header .section-subtitle {
+  margin: 0 auto;
+}
+
+/* ── Hero ────────────────────────────────────────────── */
+.hero {
+  padding: 180px 0 100px;
+  text-align: center;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px;
+  height: 600px;
+  background: radial-gradient(ellipse, rgba(0, 163, 255, 0.06), transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-green);
+  background: var(--accent-green-dim);
+  border: 1px solid rgba(0, 230, 118, 0.15);
+  padding: 8px 20px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 40px;
+  animation: fadeInDown 0.8s ease;
+}
+
+.hero-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  box-shadow: 0 0 10px var(--accent-green);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--accent-green); }
+  50% { opacity: 0.4; box-shadow: 0 0 4px var(--accent-green); }
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 6vw, 80px);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -3px;
+  margin-bottom: 28px;
+  animation: fadeInUp 0.8s ease 0.1s both;
+}
+
+.hero h1 .gradient {
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 50%, var(--accent-cyan) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.hero-sub {
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  max-width: 560px;
+  margin: 0 auto 50px;
+  line-height: 1.7;
+  animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  animation: fadeInUp 0.8s ease 0.3s both;
+}
+
+/* ── Steps ───────────────────────────────────────────── */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.step-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 40px 36px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.step-card:hover {
+  border-color: var(--border-cyan);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.step-number {
+  font-family: var(--font-display);
+  font-size: 72px;
+  font-weight: 900;
+  color: rgba(0, 163, 255, 0.06);
+  position: absolute;
+  top: -8px;
+  right: 20px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.step-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.step-icon.discord { background: rgba(88, 101, 242, 0.12); border: 1px solid rgba(88, 101, 242, 0.2); }
+.step-icon.alerts { background: var(--accent-cyan-dim); border: 1px solid var(--border-cyan); }
+.step-icon.signals { background: rgba(0, 230, 118, 0.08); border: 1px solid rgba(0, 230, 118, 0.15); }
+.step-icon.risk { background: rgba(234, 179, 8, 0.08); border: 1px solid rgba(234, 179, 8, 0.15); }
+
+.step-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 10px;
+}
+
+.step-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.step-desc {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ── Signal Explainer ────────────────────────────────── */
+.signal-section { padding: 80px 0 100px; }
+
+.signal-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.signal-mock {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  overflow: hidden;
+  position: relative;
+}
+
+.signal-mock-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+}
+
+.signal-mock-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  box-shadow: 0 0 6px var(--accent-green);
+  animation: pulse 1.5s infinite;
+}
+
+.signal-mock-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.signal-mock-body {
+  padding: 28px 24px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 2.2;
+}
+
+.signal-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.signal-line .label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  min-width: 80px;
+  text-transform: uppercase;
+}
+
+.signal-direction { color: var(--accent-green); font-weight: 700; }
+.signal-instrument { color: var(--accent-cyan); font-weight: 600; }
+.signal-entry { color: var(--accent-green); }
+.signal-stop { color: var(--accent-red); }
+.signal-tp { color: var(--accent-cyan); }
+
+.signal-main-line {
+  background: rgba(0, 230, 118, 0.04);
+  border: 1px solid rgba(0, 230, 118, 0.1);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.signal-detail-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.signal-detail-line:last-child { border-bottom: none; }
+
+.signal-annotations {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.annotation {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.annotation-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.annotation-dot.green { background: var(--accent-green); box-shadow: 0 0 8px rgba(0, 230, 118, 0.4); }
+.annotation-dot.red { background: var(--accent-red); box-shadow: 0 0 8px rgba(255, 82, 82, 0.4); }
+.annotation-dot.cyan { background: var(--accent-cyan); box-shadow: 0 0 8px var(--accent-cyan-glow); }
+
+.annotation-title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.annotation-title.green { color: var(--accent-green); }
+.annotation-title.red { color: var(--accent-red); }
+.annotation-title.cyan { color: var(--accent-cyan); }
+
+.annotation-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ── FAQ ─────────────────────────────────────────────── */
+.faq-list {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.faq-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+
+.faq-item.active {
+  border-color: var(--border-cyan);
+}
+
+.faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: color 0.3s;
+  user-select: none;
+}
+
+.faq-question:hover { color: var(--accent-cyan); }
+
+.faq-chevron {
+  font-size: 18px;
+  color: var(--text-muted);
+  transition: transform 0.3s;
+  flex-shrink: 0;
+}
+
+.faq-item.active .faq-chevron { transform: rotate(180deg); color: var(--accent-cyan); }
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.faq-answer-inner {
+  padding: 0 24px 20px;
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ── Tier Table ──────────────────────────────────────── */
+.tier-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.tier-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 40px 32px;
+  position: relative;
+  transition: all 0.4s;
+  display: flex;
+  flex-direction: column;
+}
+
+.tier-card:hover {
+  border-color: var(--border-cyan);
+  transform: translateY(-4px);
+}
+
+.tier-card.featured {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 40px rgba(0, 163, 255, 0.08);
+}
+
+.tier-badge {
+  position: absolute;
+  top: -1px; right: 24px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--bg-primary);
+  background: var(--accent-cyan);
+  padding: 6px 14px;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+}
+
+.tier-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.tier-price {
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin-bottom: 4px;
+}
+
+.tier-price span {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0;
+}
+
+.tier-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.tier-features {
+  list-style: none;
+  margin-bottom: 32px;
+  flex-grow: 1;
+}
+
+.tier-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.tier-features li:last-child { border-bottom: none; }
+
+.tier-check {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.tier-check.yes { color: var(--accent-green); }
+.tier-check.no { color: var(--accent-red); opacity: 0.4; }
+
+.tier-btn {
+  display: block;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 14px 24px;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  transition: all 0.3s;
+  border: none;
+  cursor: pointer;
+}
+
+.tier-btn-outline {
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-default);
+}
+.tier-btn-outline:hover {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+
+.tier-btn-cyan {
+  color: var(--bg-primary);
+  background: var(--accent-cyan);
+  box-shadow: 0 0 20px rgba(0, 163, 255, 0.2);
+}
+.tier-btn-cyan:hover {
+  background: #38BDF8;
+  box-shadow: 0 0 40px rgba(0, 163, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.tier-btn-gold {
+  color: var(--bg-primary);
+  background: var(--accent-gold);
+  box-shadow: 0 0 20px rgba(234, 179, 8, 0.15);
+}
+.tier-btn-gold:hover {
+  background: #FACC15;
+  box-shadow: 0 0 40px rgba(234, 179, 8, 0.3);
+  transform: translateY(-2px);
+}
+
+/* ── Footer ──────────────────────────────────────────── */
+footer {
+  padding: 60px 0 40px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 48px;
+}
+
+.footer-brand { max-width: 320px; }
+
+.footer-logo {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 22px;
+  font-style: italic;
+  margin-bottom: 12px;
+}
+
+.footer-logo .s { color: var(--text-primary); }
+.footer-logo .f { color: var(--accent-cyan); text-shadow: 0 0 16px var(--accent-cyan-glow); }
+
+.footer-tagline {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.footer-links {
+  display: flex;
+  gap: 48px;
+}
+
+.footer-col h4 {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.footer-col a {
+  display: block;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 4px 0;
+  transition: color 0.3s;
+}
+
+.footer-col a:hover { color: var(--accent-cyan); }
+
+.footer-bottom {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 24px;
+}
+
+.footer-disclaimer {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  max-width: 800px;
+}
+
+/* ── Animations ──────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-stagger > .reveal:nth-child(1) { transition-delay: 0.05s; }
+.reveal-stagger > .reveal:nth-child(2) { transition-delay: 0.12s; }
+.reveal-stagger > .reveal:nth-child(3) { transition-delay: 0.19s; }
+.reveal-stagger > .reveal:nth-child(4) { transition-delay: 0.26s; }
+.reveal-stagger > .reveal:nth-child(5) { transition-delay: 0.33s; }
+.reveal-stagger > .reveal:nth-child(6) { transition-delay: 0.40s; }
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 900px) {
+  .steps-grid { grid-template-columns: 1fr; }
+  .signal-layout { grid-template-columns: 1fr; gap: 40px; }
+  .tier-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+  .nav-links { display: none; }
+  .hero { padding: 140px 0 60px; }
+  .hero h1 { letter-spacing: -1.5px; }
+  .footer-top { flex-direction: column; gap: 32px; }
+  .footer-links { flex-direction: column; gap: 24px; }
+  section { padding: 60px 0; }
+}
+
+@media (max-width: 600px) {
+  .container { padding: 0 20px; }
+  .step-card { padding: 28px 24px; }
+  .hero-actions { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<!-- ═══ NAVIGATION ═══ -->
+<nav>
+  <div class="container">
+    <a href="landing.html" class="nav-logo">
+      <div class="nav-logo-mark"><span class="s">S</span><span class="f">F</span></div>
+      <div class="nav-logo-text">Strategy<br>Factory</div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="landing.html">Home</a></li>
+      <li><a href="#steps">Steps</a></li>
+      <li><a href="#signals">Signals</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#pricing" class="nav-cta">Join Now</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">Quick Setup</div>
+    <h1>Get Started in<br><span class="gradient">3 Minutes</span></h1>
+    <p class="hero-sub">
+      No complicated software. No coding required. Join Discord, read our signals, 
+      and start trading with a proven algorithmic system.
+    </p>
+    <div class="hero-actions">
+      <a href="#steps" class="btn-primary">Show Me How</a>
+      <a href="#pricing" class="btn-secondary">View Plans</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STEPS ═══ -->
+<section id="steps">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Setup Guide</div>
+      <h2 class="section-title">Four Simple Steps</h2>
+      <p class="section-subtitle">From signup to your first trade — here's everything you need to know.</p>
+    </div>
+
+    <div class="steps-grid reveal-stagger">
+
+      <div class="step-card reveal">
+        <div class="step-number">01</div>
+        <div class="step-icon discord">💬</div>
+        <div class="step-label">Step 1</div>
+        <h3 class="step-title">Join Discord</h3>
+        <p class="step-desc">
+          Click the invite link and join The Strategy Factory server. 
+          Pick your tier on Whop — you'll get instant access to the signals channels 
+          based on your plan.
+        </p>
+      </div>
+
+      <div class="step-card reveal">
+        <div class="step-number">02</div>
+        <div class="step-icon alerts">🔔</div>
+        <div class="step-label">Step 2</div>
+        <h3 class="step-title">Set Up Alerts</h3>
+        <p class="step-desc">
+          Enable notifications for the <strong style="color:var(--text-primary)">#signals</strong> channel. 
+          Turn on mobile push notifications so you get real-time alerts 
+          anywhere — at the gym, at work, wherever you are.
+        </p>
+      </div>
+
+      <div class="step-card reveal">
+        <div class="step-number">03</div>
+        <div class="step-icon signals">📊</div>
+        <div class="step-label">Step 3</div>
+        <h3 class="step-title">Read the Signals</h3>
+        <p class="step-desc">
+          Each signal tells you exactly what to do: direction, instrument, entry price, 
+          stop loss, and take-profit levels. No guesswork, no chart-reading required.
+        </p>
+      </div>
+
+      <div class="step-card reveal">
+        <div class="step-number">04</div>
+        <div class="step-icon risk">⚖️</div>
+        <div class="step-label">Step 4</div>
+        <h3 class="step-title">Manage Risk</h3>
+        <p class="step-desc">
+          Size your positions to risk no more than 1–2% of your account per trade. 
+          Our signals include exact stop-loss levels so you always know your 
+          maximum downside before you enter.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SIGNAL FORMAT EXPLAINER ═══ -->
+<section id="signals" class="signal-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Signal Breakdown</div>
+      <h2 class="section-title">How to Read a Signal</h2>
+      <p class="section-subtitle">Every signal follows the same clean format. Here's what each part means.</p>
+    </div>
+
+    <div class="signal-layout">
+      <div class="signal-mock reveal">
+        <div class="signal-mock-header">
+          <div class="signal-mock-dot"></div>
+          <div class="signal-mock-title">#signals — New Alert</div>
+        </div>
+        <div class="signal-mock-body">
+          <div class="signal-main-line">
+            <span class="signal-direction">LONG</span>&nbsp;
+            <span class="signal-instrument">NQ</span>&nbsp;
+            <span style="color:var(--text-muted)">@</span>&nbsp;
+            <span class="signal-entry">21,847.50</span>
+          </div>
+          <div class="signal-detail-line">
+            <span class="label" style="color:var(--accent-red)">Stop Loss</span>
+            <span class="signal-stop" style="font-weight:600">21,790.00</span>
+          </div>
+          <div class="signal-detail-line">
+            <span class="label" style="color:var(--accent-cyan)">Target 1</span>
+            <span class="signal-tp" style="font-weight:600">21,905.00</span>
+          </div>
+          <div class="signal-detail-line">
+            <span class="label" style="color:var(--accent-cyan)">Target 2</span>
+            <span class="signal-tp" style="font-weight:600">21,985.00</span>
+          </div>
+          <div style="margin-top:16px; padding-top:12px; border-top:1px solid var(--border-subtle);">
+            <span style="font-size:10px; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase;">Risk:</span>
+            <span style="color:var(--accent-gold); font-weight:600; font-size:13px;"> 57.50 pts</span>
+            <span style="color:var(--text-muted); margin:0 8px;">|</span>
+            <span style="font-size:10px; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase;">Reward:</span>
+            <span style="color:var(--accent-green); font-weight:600; font-size:13px;"> 137.50 pts</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="signal-annotations reveal">
+        <div class="annotation">
+          <div class="annotation-dot green"></div>
+          <div>
+            <div class="annotation-title green">Direction & Entry</div>
+            <p class="annotation-desc">
+              <strong>LONG</strong> means buy. <strong>SHORT</strong> means sell. 
+              The entry price is where you place your limit order. 
+              The instrument (NQ, GC, SIL) tells you what to trade.
+            </p>
+          </div>
+        </div>
+        <div class="annotation">
+          <div class="annotation-dot red"></div>
+          <div>
+            <div class="annotation-title red">Stop Loss</div>
+            <p class="annotation-desc">
+              Your safety net. If the market moves against you, the stop loss 
+              closes your position automatically. This is your maximum risk on the trade.
+            </p>
+          </div>
+        </div>
+        <div class="annotation">
+          <div class="annotation-dot cyan"></div>
+          <div>
+            <div class="annotation-title cyan">Take-Profit Targets</div>
+            <p class="annotation-desc">
+              TP1 is the first profit target — consider taking partial profits here. 
+              TP2 is the extended target for runners. Both are pre-calculated by our algorithms.
+            </p>
+          </div>
+        </div>
+        <div class="annotation">
+          <div class="annotation-dot" style="background:var(--accent-gold); box-shadow:0 0 8px rgba(234,179,8,0.4);"></div>
+          <div>
+            <div class="annotation-title" style="color:var(--accent-gold);">Risk / Reward</div>
+            <p class="annotation-desc">
+              Every signal shows the risk-to-reward ratio upfront. 
+              We only send signals with favorable setups — typically 2:1 or better.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Common Questions</div>
+      <h2 class="section-title">FAQ</h2>
+      <p class="section-subtitle">Everything you need to know before getting started.</p>
+    </div>
+
+    <div class="faq-list reveal">
+
+      <div class="faq-item">
+        <div class="faq-question">
+          What broker do I need?
+          <span class="faq-chevron">▾</span>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Any futures broker that supports the instruments we trade (NQ, GC, SIL). 
+            Popular options include NinjaTrader, TradingView, TradeStation, and Interactive Brokers. 
+            If you're new, NinjaTrader offers free simulated trading to practice with.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          How many contracts should I trade?
+          <span class="faq-chevron">▾</span>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            It depends on your account size and risk tolerance. We recommend starting with 
+            1–2 <strong>micro</strong> contracts (MNQ, MGC, SIL) until you're comfortable. 
+            Micros let you risk smaller amounts while following the same signals.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          What's the typical risk per trade?
+          <span class="faq-chevron">▾</span>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Risk per trade ranges from roughly $50–$300 on micro contracts, 
+            or $500–$3,000 on full-size contracts, depending on the instrument and stop distance. 
+            Every signal includes exact stop-loss levels so you know the risk before you enter.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          Do I need to watch the market all day?
+          <span class="faq-chevron">▾</span>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            No. Our signals include entry, stop, and target levels — you can set your orders and walk away. 
+            Enable push notifications on Discord so you don't miss alerts, then let the market come to your levels. 
+            Set it and forget it.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          What times are signals active?
+          <span class="faq-chevron">▾</span>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Our algorithms run 24/5 across all major sessions — Asian, London, and New York. 
+            Signals can fire at any time when the system detects a high-probability setup. 
+            Mobile notifications ensure you never miss one.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          How do I cancel?
+          <span class="faq-chevron">▾</span>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Cancel anytime through your Whop dashboard — no questions asked, no hoops to jump through. 
+            Your access continues until the end of your current billing period.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRICING / TIER COMPARISON ═══ -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Plans</div>
+      <h2 class="section-title">Choose Your Tier</h2>
+      <p class="section-subtitle">Start free, upgrade when you're ready. No lock-in, cancel anytime.</p>
+    </div>
+
+    <div class="tier-grid reveal-stagger">
+
+      <div class="tier-card reveal">
+        <div class="tier-name">Free</div>
+        <div class="tier-price">$0 <span>/mo</span></div>
+        <p class="tier-desc">Get a taste of the system. Limited signals, full community access.</p>
+        <ul class="tier-features">
+          <li><span class="tier-check yes">✓</span> Community access</li>
+          <li><span class="tier-check yes">✓</span> Educational content</li>
+          <li><span class="tier-check yes">✓</span> Delayed signals (30 min)</li>
+          <li><span class="tier-check no">✗</span> Real-time alerts</li>
+          <li><span class="tier-check no">✗</span> All instruments</li>
+          <li><span class="tier-check no">✗</span> Strategy deep-dives</li>
+          <li><span class="tier-check no">✗</span> Direct team access</li>
+        </ul>
+        <a href="#" class="tier-btn tier-btn-outline">Join Free</a>
+      </div>
+
+      <div class="tier-card featured reveal">
+        <div class="tier-badge">Most Popular</div>
+        <div class="tier-name">Pro</div>
+        <div class="tier-price" style="color:var(--accent-cyan);">$99 <span>/mo</span></div>
+        <p class="tier-desc">Full access to all real-time signals across every instrument.</p>
+        <ul class="tier-features">
+          <li><span class="tier-check yes">✓</span> Community access</li>
+          <li><span class="tier-check yes">✓</span> Educational content</li>
+          <li><span class="tier-check yes">✓</span> Real-time alerts</li>
+          <li><span class="tier-check yes">✓</span> All instruments (NQ, GC, SIL)</li>
+          <li><span class="tier-check yes">✓</span> Mobile push notifications</li>
+          <li><span class="tier-check no">✗</span> Strategy deep-dives</li>
+          <li><span class="tier-check no">✗</span> Direct team access</li>
+        </ul>
+        <a href="#" class="tier-btn tier-btn-cyan">Go Pro</a>
+      </div>
+
+      <div class="tier-card reveal">
+        <div class="tier-name">Elite</div>
+        <div class="tier-price" style="color:var(--accent-gold);">$249 <span>/mo</span></div>
+        <p class="tier-desc">Everything in Pro plus strategy breakdowns and direct access.</p>
+        <ul class="tier-features">
+          <li><span class="tier-check yes">✓</span> Everything in Pro</li>
+          <li><span class="tier-check yes">✓</span> Strategy deep-dives</li>
+          <li><span class="tier-check yes">✓</span> Risk management breakdowns</li>
+          <li><span class="tier-check yes">✓</span> Walk-forward reports</li>
+          <li><span class="tier-check yes">✓</span> Direct access to the team</li>
+          <li><span class="tier-check yes">✓</span> Priority support</li>
+          <li><span class="tier-check yes">✓</span> Early feature access</li>
+        </ul>
+        <a href="#" class="tier-btn tier-btn-gold">Go Elite</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo"><span class="s">S</span><span class="f">F</span></div>
+        <div class="footer-tagline">Quantitative · Systematic · Automated</div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="landing.html">Performance</a>
+          <a href="#">System Status</a>
+          <a href="#pricing">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="#">Getting Started</a>
+          <a href="#">Methodology</a>
+          <a href="#faq">FAQ</a>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <a href="#">Discord</a>
+          <a href="#">Twitter</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-disclaimer">
+        CFTC Rule 4.41 — Hypothetical or simulated performance results have certain limitations. Unlike an actual performance record, simulated results do not represent actual trading. Also, since the trades have not been executed, the results may have under-or-over compensated for the impact, if any, of certain market factors, such as lack of liquidity. Simulated trading programs in general are also subject to the fact that they are designed with the benefit of hindsight. No representation is being made that any account will or is likely to achieve profit or losses similar to those shown. Past performance is not indicative of future results. This is not financial advice.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Particle Network ──────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let w, h, particles = [], mouse = { x: null, y: null };
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  document.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+
+  const PARTICLE_COUNT = Math.min(60, Math.floor(window.innerWidth / 20));
+  const CONNECT_DIST = 150;
+
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push({
+      x: Math.random() * w, y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 1.5 + 0.5
+    });
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, w, h);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > w) p.vx *= -1;
+      if (p.y < 0 || p.y > h) p.vy *= -1;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0, 163, 255, 0.25)';
+      ctx.fill();
+    });
+
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < CONNECT_DIST) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(0, 163, 255, ${0.06 * (1 - dist / CONNECT_DIST)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+
+      if (mouse.x !== null) {
+        const dx = particles[i].x - mouse.x;
+        const dy = particles[i].y - mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 200) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.strokeStyle = `rgba(0, 163, 255, ${0.12 * (1 - dist / 200)})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// ── Scroll Reveal ─────────────────────────────────────────
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ── FAQ Accordion ─────────────────────────────────────────
+document.querySelectorAll('.faq-question').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    const answer = item.querySelector('.faq-answer');
+    const isActive = item.classList.contains('active');
+
+    // Close all
+    document.querySelectorAll('.faq-item.active').forEach(i => {
+      i.classList.remove('active');
+      i.querySelector('.faq-answer').style.maxHeight = '0';
+    });
+
+    // Open clicked if it wasn't active
+    if (!isActive) {
+      item.classList.add('active');
+      answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+  });
+});
+
+// ── 3D Card Tilt ──────────────────────────────────────────
+document.querySelectorAll('.step-card, .tier-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = (y - centerY) / centerY * -3;
+    const rotateY = (x - centerX) / centerX * 3;
+    card.style.transform = `translateY(-6px) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  });
+  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+});
+</script>
+</body>
+</html>

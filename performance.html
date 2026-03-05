@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Performance Dashboard — The Strategy Factory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #06090F;
+  --bg-secondary: #0B1018;
+  --bg-card: #0E1420;
+  --bg-card-hover: #141C2A;
+  --bg-elevated: #1A2233;
+  --accent-cyan: #00A3FF;
+  --accent-cyan-dim: rgba(0, 163, 255, 0.10);
+  --accent-cyan-glow: rgba(0, 163, 255, 0.35);
+  --accent-green: #00E676;
+  --accent-green-dim: rgba(0, 230, 118, 0.08);
+  --accent-red: #FF5252;
+  --accent-purple: #7C5CFC;
+  --accent-purple-glow: rgba(124, 92, 252, 0.25);
+  --accent-gold: #EAB308;
+  --accent-teal: #0D9488;
+  --text-primary: #FFFFFF;
+  --text-secondary: #7B8DA4;
+  --text-muted: #445566;
+  --text-dim: #2A3544;
+  --border-default: #151D2B;
+  --border-subtle: rgba(255,255,255,0.04);
+  --border-cyan: rgba(0, 163, 255, 0.2);
+  --font-display: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-pill: 9999px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-display);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  cursor: crosshair;
+}
+
+/* ── Film Grain ─────────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.5;
+  animation: grain 0.5s steps(1) infinite;
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-2%, -3%); }
+  20% { transform: translate(3%, 1%); }
+  30% { transform: translate(-1%, 2%); }
+  40% { transform: translate(2%, -2%); }
+  50% { transform: translate(-3%, 3%); }
+  60% { transform: translate(1%, -1%); }
+  70% { transform: translate(-2%, 2%); }
+  80% { transform: translate(3%, -3%); }
+  90% { transform: translate(-1%, 1%); }
+}
+
+#particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.scanlines { position: relative; }
+.scanlines::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,163,255,0.015) 2px, rgba(0,163,255,0.015) 4px);
+  pointer-events: none;
+  border-radius: var(--radius);
+  z-index: 2;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 1;
+}
+
+section { padding: 80px 0; }
+
+/* ── Navigation ─────────────────────────────────── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 16px 0;
+  background: rgba(6, 9, 15, 0.8);
+  backdrop-filter: blur(24px) saturate(1.4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+nav .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+
+.nav-logo-mark {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 28px;
+  font-style: italic;
+  letter-spacing: -1px;
+}
+
+.nav-logo-mark .s { color: var(--text-primary); }
+.nav-logo-mark .f { color: var(--accent-cyan); text-shadow: 0 0 20px var(--accent-cyan-glow); }
+
+.nav-logo-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0; right: 0;
+  height: 1px;
+  background: var(--accent-cyan);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+
+.nav-links a:hover { color: var(--accent-cyan); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-links a.active { color: var(--accent-cyan); }
+.nav-links a.active::after { transform: scaleX(1); }
+
+.nav-cta {
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: var(--bg-primary) !important;
+  background: var(--accent-cyan) !important;
+  padding: 10px 24px;
+  border-radius: var(--radius-pill);
+  transition: all 0.3s;
+  box-shadow: 0 0 20px rgba(0, 163, 255, 0.2);
+}
+
+.nav-cta::after { display: none !important; }
+.nav-cta:hover {
+  background: #38BDF8 !important;
+  box-shadow: 0 0 40px rgba(0, 163, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+/* ── Page Header ────────────────────────────────── */
+.page-header {
+  padding: 160px 0 60px;
+  text-align: center;
+}
+
+.page-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin-bottom: 16px;
+}
+
+.page-header h1 .gradient {
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 50%, var(--accent-cyan) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.page-header p {
+  font-size: 17px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.page-header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-green);
+  background: var(--accent-green-dim);
+  border: 1px solid rgba(0,230,118,0.15);
+  padding: 8px 20px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 24px;
+}
+
+.page-header-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  box-shadow: 0 0 10px var(--accent-green);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--accent-green); }
+  50% { opacity: 0.4; box-shadow: 0 0 4px var(--accent-green); }
+}
+
+/* ── KPI Stats Row ──────────────────────────────── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  margin-bottom: 0;
+}
+
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 20px 16px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.kpi-card[data-border="green"]::before { background: var(--accent-green); box-shadow: 0 0 20px rgba(0,230,118,0.3); }
+.kpi-card[data-border="cyan"]::before { background: var(--accent-cyan); box-shadow: 0 0 20px rgba(0,163,255,0.3); }
+.kpi-card[data-border="teal"]::before { background: var(--accent-teal); box-shadow: 0 0 20px rgba(13,148,136,0.3); }
+.kpi-card[data-border="white"]::before { background: rgba(255,255,255,0.5); box-shadow: 0 0 20px rgba(255,255,255,0.1); }
+.kpi-card[data-border="red"]::before { background: var(--accent-red); box-shadow: 0 0 20px rgba(255,82,82,0.3); }
+
+.kpi-card:hover {
+  transform: translateY(-4px) perspective(1000px);
+  background: var(--bg-card-hover);
+  border-color: rgba(255,255,255,0.06);
+}
+
+.kpi-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.kpi-value {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.kpi-value.green { color: var(--accent-green); }
+.kpi-value.cyan { color: var(--accent-cyan); }
+.kpi-value.red { color: var(--accent-red); }
+
+/* ── Section Titles ─────────────────────────────── */
+.section-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-title::before {
+  content: '';
+  width: 16px; height: 1px;
+  background: var(--accent-cyan);
+}
+
+/* ── Equity Curve ───────────────────────────────── */
+.equity-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 32px;
+  margin-bottom: 0;
+}
+
+.equity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.equity-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.equity-value {
+  font-family: var(--font-mono);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--accent-green);
+}
+
+.equity-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.equity-canvas-wrap {
+  width: 100%;
+  height: 320px;
+  position: relative;
+}
+
+.equity-canvas-wrap canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.equity-legend {
+  display: flex;
+  gap: 24px;
+  margin-top: 16px;
+  justify-content: center;
+}
+
+.equity-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.equity-legend-line {
+  width: 20px; height: 3px;
+  border-radius: 2px;
+}
+
+/* ── Monthly Heatmap ────────────────────────────── */
+.heatmap-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 32px;
+  overflow-x: auto;
+}
+
+.heatmap-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent-green);
+  background: var(--accent-green-dim);
+  border: 1px solid rgba(0,230,118,0.15);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 20px;
+}
+
+.heatmap-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.heatmap-table th {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 8px 6px;
+  text-align: center;
+}
+
+.heatmap-table td {
+  text-align: center;
+  padding: 10px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 11px;
+  position: relative;
+}
+
+.heatmap-table .year-label {
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-align: left;
+  font-size: 13px;
+  padding-right: 12px;
+  white-space: nowrap;
+}
+
+.heatmap-table .year-total {
+  font-weight: 700;
+  color: var(--accent-green);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.heatmap-cell {
+  min-width: 60px;
+  border-radius: 4px;
+  margin: 2px;
+}
+
+.heatmap-cell.profit { color: #fff; }
+.heatmap-cell.loss { color: #fff; }
+.heatmap-cell.empty { color: var(--text-dim); background: rgba(255,255,255,0.02); }
+
+/* ── Instrument Breakdown ───────────────────────── */
+.instruments-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.inst-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.inst-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255,255,255,0.06);
+  background: var(--bg-card-hover);
+}
+
+.inst-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.inst-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+}
+
+.inst-dot.nq { background: var(--accent-cyan); box-shadow: 0 0 10px rgba(0,163,255,0.4); }
+.inst-dot.gc { background: var(--accent-gold); box-shadow: 0 0 10px rgba(234,179,8,0.4); }
+.inst-dot.sil { background: #90A4AE; box-shadow: 0 0 10px rgba(144,164,174,0.4); }
+
+.inst-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.inst-pnl {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--accent-green);
+  margin-bottom: 16px;
+}
+
+.inst-sparkline {
+  width: 100%;
+  height: 60px;
+  margin-bottom: 16px;
+}
+
+.inst-sparkline canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.inst-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.inst-stat {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.inst-stat-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.inst-stat-value {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ── Trade Distribution ─────────────────────────── */
+.dist-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+.dist-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.dist-card-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.dist-canvas {
+  width: 100%;
+  height: 160px;
+}
+
+.dist-canvas canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.session-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.session-bar-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  width: 60px;
+}
+
+.session-bar-track {
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.session-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.session-bar-pct {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  width: 40px;
+  text-align: right;
+}
+
+.duration-stat {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.duration-value {
+  font-family: var(--font-mono);
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--accent-cyan);
+}
+
+.duration-unit {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.duration-sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 12px;
+}
+
+/* ── Footer ─────────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--border-subtle);
+  padding: 60px 0 40px;
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 48px;
+}
+
+.footer-brand { max-width: 320px; }
+
+.footer-logo {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 22px;
+  font-style: italic;
+  margin-bottom: 12px;
+}
+
+.footer-logo .s { color: var(--text-primary); }
+.footer-logo .f { color: var(--accent-cyan); text-shadow: 0 0 16px var(--accent-cyan-glow); }
+
+.footer-tagline {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.footer-links {
+  display: flex;
+  gap: 48px;
+}
+
+.footer-col h4 {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.footer-col a {
+  display: block;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 4px 0;
+  transition: color 0.3s;
+}
+
+.footer-col a:hover { color: var(--accent-cyan); }
+
+.footer-bottom {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 24px;
+}
+
+.footer-disclaimer {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  max-width: 800px;
+}
+
+/* ── Animations ─────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-stagger > .reveal:nth-child(1) { transition-delay: 0.05s; }
+.reveal-stagger > .reveal:nth-child(2) { transition-delay: 0.10s; }
+.reveal-stagger > .reveal:nth-child(3) { transition-delay: 0.15s; }
+.reveal-stagger > .reveal:nth-child(4) { transition-delay: 0.20s; }
+.reveal-stagger > .reveal:nth-child(5) { transition-delay: 0.25s; }
+.reveal-stagger > .reveal:nth-child(6) { transition-delay: 0.30s; }
+.reveal-stagger > .reveal:nth-child(7) { transition-delay: 0.35s; }
+
+/* ── Responsive ─────────────────────────────────── */
+@media (max-width: 1100px) {
+  .kpi-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .instruments-grid { grid-template-columns: 1fr; }
+  .dist-grid { grid-template-columns: 1fr; }
+  .footer-top { flex-direction: column; gap: 32px; }
+  .footer-links { flex-direction: column; gap: 24px; }
+  .nav-links { display: none; }
+}
+
+@media (max-width: 600px) {
+  .container { padding: 0 20px; }
+  section { padding: 50px 0; }
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .kpi-value { font-size: 18px; }
+  .equity-value { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="container">
+    <a href="landing.html" class="nav-logo">
+      <div class="nav-logo-mark"><span class="s">S</span><span class="f">F</span></div>
+      <div class="nav-logo-text">Strategy<br>Factory</div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="performance.html" class="active">Performance</a></li>
+      <li><a href="landing.html#features">How It Works</a></li>
+      <li><a href="landing.html#pricing">Pricing</a></li>
+      <li><a href="#" class="nav-cta">Get Started</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<section class="page-header">
+  <div class="container">
+    <div class="page-header-badge">Feb 2024 — Feb 2026 · Live Simulation</div>
+    <h1><span class="gradient">Performance Dashboard</span></h1>
+    <p>Full transparency. Every trade, every month, every metric. Commission &amp; slippage included.</p>
+  </div>
+</section>
+
+<!-- KPI STATS ROW -->
+<section style="padding-top: 0;">
+  <div class="container">
+    <div class="section-title">Key Metrics</div>
+    <div class="kpi-grid reveal-stagger">
+      <div class="kpi-card scanlines reveal" data-border="green">
+        <div class="kpi-label">Total P&L</div>
+        <div class="kpi-value green" data-count="565170" data-prefix="$" data-comma="true" data-display="$565,170">$0</div>
+      </div>
+      <div class="kpi-card scanlines reveal" data-border="cyan">
+        <div class="kpi-label">Profit Factor</div>
+        <div class="kpi-value cyan" data-count="157" data-decimal="2" data-display="1.57">0</div>
+      </div>
+      <div class="kpi-card scanlines reveal" data-border="teal">
+        <div class="kpi-label">Win Rate</div>
+        <div class="kpi-value" data-count="561" data-decimal="1" data-suffix="%" data-display="56.1%">0</div>
+      </div>
+      <div class="kpi-card scanlines reveal" data-border="white">
+        <div class="kpi-label">Total Trades</div>
+        <div class="kpi-value" data-count="2155" data-comma="true" data-display="2,155">0</div>
+      </div>
+      <div class="kpi-card scanlines reveal" data-border="red">
+        <div class="kpi-label">Max Drawdown</div>
+        <div class="kpi-value red" data-count="352" data-decimal="1" data-suffix="%" data-display="35.2%">0</div>
+      </div>
+      <div class="kpi-card scanlines reveal" data-border="green">
+        <div class="kpi-label">Avg Monthly</div>
+        <div class="kpi-value green" data-count="23549" data-prefix="$" data-comma="true" data-display="$23,549">$0</div>
+      </div>
+      <div class="kpi-card scanlines reveal" data-border="green">
+        <div class="kpi-label">Profitable Months</div>
+        <div class="kpi-value green" data-display="24/25">24/25</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EQUITY CURVE -->
+<section>
+  <div class="container">
+    <div class="section-title">Portfolio Equity Curve</div>
+    <div class="equity-card scanlines reveal">
+      <div class="equity-header">
+        <div>
+          <div class="equity-title">Cumulative Growth</div>
+          <div class="equity-value">$565,170</div>
+          <div class="equity-label">Feb 2024 — Feb 2026 · Commission Included · 3 Instruments</div>
+        </div>
+      </div>
+      <div class="equity-canvas-wrap">
+        <canvas id="equityCurve"></canvas>
+      </div>
+      <div class="equity-legend">
+        <div class="equity-legend-item">
+          <div class="equity-legend-line" style="background: var(--accent-cyan);"></div>Portfolio
+        </div>
+        <div class="equity-legend-item">
+          <div class="equity-legend-line" style="background: rgba(0,163,255,0.4);"></div>NQ
+        </div>
+        <div class="equity-legend-item">
+          <div class="equity-legend-line" style="background: var(--accent-gold); opacity:0.7;"></div>GC
+        </div>
+        <div class="equity-legend-item">
+          <div class="equity-legend-line" style="background: #90A4AE; opacity:0.6;"></div>SIL
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MONTHLY RETURNS HEATMAP -->
+<section>
+  <div class="container">
+    <div class="section-title">Monthly Returns</div>
+    <div class="heatmap-card scanlines reveal">
+      <div class="heatmap-badge">✦ 24/25 Profitable Months (96%)</div>
+      <table class="heatmap-table" id="heatmapTable"></table>
+    </div>
+  </div>
+</section>
+
+<!-- INSTRUMENT BREAKDOWN -->
+<section>
+  <div class="container">
+    <div class="section-title">Instrument Breakdown</div>
+    <div class="instruments-grid reveal-stagger">
+      <!-- NQ -->
+      <div class="inst-card scanlines reveal" id="instNQ">
+        <div class="inst-header">
+          <div class="inst-dot nq"></div>
+          <div class="inst-name">NQ (Nasdaq)</div>
+        </div>
+        <div class="inst-pnl">$155,819</div>
+        <div class="inst-sparkline"><canvas id="sparkNQ"></canvas></div>
+        <div class="inst-stats">
+          <div class="inst-stat"><div class="inst-stat-label">Profit Factor</div><div class="inst-stat-value">2.03</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Win Rate</div><div class="inst-stat-value">61.0%</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Trades</div><div class="inst-stat-value">349</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Max DD</div><div class="inst-stat-value" style="color:var(--accent-red)">23.3%</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Avg Win</div><div class="inst-stat-value" style="color:var(--accent-green)">$1,247</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Avg Loss</div><div class="inst-stat-value" style="color:var(--accent-red)">-$798</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Best Month</div><div class="inst-stat-value" style="color:var(--accent-green)">$24,180</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Worst Month</div><div class="inst-stat-value" style="color:var(--accent-red)">-$3,420</div></div>
+        </div>
+      </div>
+      <!-- GC -->
+      <div class="inst-card scanlines reveal" id="instGC">
+        <div class="inst-header">
+          <div class="inst-dot gc"></div>
+          <div class="inst-name">GC (Gold)</div>
+        </div>
+        <div class="inst-pnl">$175,657</div>
+        <div class="inst-sparkline"><canvas id="sparkGC"></canvas></div>
+        <div class="inst-stats">
+          <div class="inst-stat"><div class="inst-stat-label">Profit Factor</div><div class="inst-stat-value">1.53</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Win Rate</div><div class="inst-stat-value">55.2%</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Trades</div><div class="inst-stat-value">922</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Max DD</div><div class="inst-stat-value" style="color:var(--accent-red)">35.1%</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Avg Win</div><div class="inst-stat-value" style="color:var(--accent-green)">$584</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Avg Loss</div><div class="inst-stat-value" style="color:var(--accent-red)">-$421</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Best Month</div><div class="inst-stat-value" style="color:var(--accent-green)">$19,830</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Worst Month</div><div class="inst-stat-value" style="color:var(--accent-red)">-$6,210</div></div>
+        </div>
+      </div>
+      <!-- SIL -->
+      <div class="inst-card scanlines reveal" id="instSIL">
+        <div class="inst-header">
+          <div class="inst-dot sil"></div>
+          <div class="inst-name">SIL (Silver)</div>
+        </div>
+        <div class="inst-pnl">$233,694</div>
+        <div class="inst-sparkline"><canvas id="sparkSIL"></canvas></div>
+        <div class="inst-stats">
+          <div class="inst-stat"><div class="inst-stat-label">Profit Factor</div><div class="inst-stat-value">1.60</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Win Rate</div><div class="inst-stat-value">55.2%</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Trades</div><div class="inst-stat-value">884</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Max DD</div><div class="inst-stat-value" style="color:var(--accent-red)">35.2%</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Avg Win</div><div class="inst-stat-value" style="color:var(--accent-green)">$742</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Avg Loss</div><div class="inst-stat-value" style="color:var(--accent-red)">-$530</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Best Month</div><div class="inst-stat-value" style="color:var(--accent-green)">$28,450</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Worst Month</div><div class="inst-stat-value" style="color:var(--accent-red)">-$4,870</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRADE DISTRIBUTION -->
+<section>
+  <div class="container">
+    <div class="section-title">Trade Distribution</div>
+    <div class="dist-grid reveal-stagger">
+      <div class="dist-card scanlines reveal">
+        <div class="dist-card-title">Win / Loss Distribution</div>
+        <div class="dist-canvas"><canvas id="distHistogram"></canvas></div>
+      </div>
+      <div class="dist-card scanlines reveal">
+        <div class="dist-card-title">Session Breakdown</div>
+        <div style="padding-top: 16px;">
+          <div class="session-bar">
+            <div class="session-bar-label">Asia</div>
+            <div class="session-bar-track"><div class="session-bar-fill" data-width="18" style="width:0; background: var(--accent-purple);"></div></div>
+            <div class="session-bar-pct">18%</div>
+          </div>
+          <div class="session-bar">
+            <div class="session-bar-label">London</div>
+            <div class="session-bar-track"><div class="session-bar-fill" data-width="42" style="width:0; background: var(--accent-cyan);"></div></div>
+            <div class="session-bar-pct">42%</div>
+          </div>
+          <div class="session-bar">
+            <div class="session-bar-label">New York</div>
+            <div class="session-bar-track"><div class="session-bar-fill" data-width="40" style="width:0; background: var(--accent-green);"></div></div>
+            <div class="session-bar-pct">40%</div>
+          </div>
+        </div>
+        <div style="margin-top: 24px; font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); text-align: center;">
+          London + NY sessions account for 82% of all trades
+        </div>
+      </div>
+      <div class="dist-card scanlines reveal">
+        <div class="dist-card-title">Average Trade Duration</div>
+        <div class="duration-stat">
+          <div class="duration-value">47</div>
+          <div class="duration-unit">MINUTES AVG HOLD TIME</div>
+          <div class="duration-sub" style="margin-top: 24px;">
+            <div style="display:flex; justify-content:space-between; padding: 6px 0; border-bottom: 1px solid var(--border-subtle);">
+              <span>Winners</span><span style="color:var(--accent-green)">38 min</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding: 6px 0; border-bottom: 1px solid var(--border-subtle);">
+              <span>Losers</span><span style="color:var(--accent-red)">58 min</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding: 6px 0;">
+              <span>Max Hold</span><span style="color:var(--text-primary)">4h 12m</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo"><span class="s">S</span><span class="f">F</span></div>
+        <div class="footer-tagline">Quantitative · Systematic · Automated</div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="performance.html">Performance</a>
+          <a href="#">System Status</a>
+          <a href="landing.html#pricing">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="#">Getting Started</a>
+          <a href="#">Methodology</a>
+          <a href="#">FAQ</a>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <a href="#">Discord</a>
+          <a href="#">Twitter</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-disclaimer">
+        CFTC Rule 4.41 — Hypothetical or simulated performance results have certain limitations. Unlike an actual performance record, simulated results do not represent actual trading. Also, since the trades have not been executed, the results may have under-or-over compensated for the impact, if any, of certain market factors, such as lack of liquidity. Simulated trading programs in general are also subject to the fact that they are designed with the benefit of hindsight. No representation is being made that any account will or is likely to achieve profit or losses similar to those shown. Past performance is not indicative of future results. This is not financial advice.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Particle Network ──────────────────────────────────
+(function() {
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let w, h, particles = [], mouse = { x: null, y: null };
+  const PARTICLE_COUNT = 60;
+  const CONNECT_DIST = 150;
+  const MOUSE_DIST = 200;
+
+  function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+  class Particle {
+    constructor() {
+      this.x = Math.random() * w; this.y = Math.random() * h;
+      this.vx = (Math.random() - 0.5) * 0.4; this.vy = (Math.random() - 0.5) * 0.4;
+      this.r = Math.random() * 1.5 + 0.5; this.alpha = Math.random() * 0.4 + 0.1;
+    }
+    update() {
+      this.x += this.vx; this.y += this.vy;
+      if (this.x < 0 || this.x > w) this.vx *= -1;
+      if (this.y < 0 || this.y > h) this.vy *= -1;
+      if (mouse.x !== null) {
+        const dx = mouse.x - this.x, dy = mouse.y - this.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < MOUSE_DIST) { this.vx += dx * 0.00005; this.vy += dy * 0.00005; }
+      }
+    }
+    draw() {
+      ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0,163,255,${this.alpha})`; ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
+
+  function animate() {
+    ctx.clearRect(0, 0, w, h);
+    particles.forEach(p => { p.update(); p.draw(); });
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < CONNECT_DIST) {
+          ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(0,163,255,${0.08*(1-dist/CONNECT_DIST)})`; ctx.lineWidth = 0.5; ctx.stroke();
+        }
+      }
+    }
+    if (mouse.x !== null) {
+      particles.forEach(p => {
+        const dx = mouse.x - p.x, dy = mouse.y - p.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < MOUSE_DIST) {
+          ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(mouse.x, mouse.y);
+          ctx.strokeStyle = `rgba(0,163,255,${0.15*(1-dist/MOUSE_DIST)})`; ctx.lineWidth = 0.8; ctx.stroke();
+        }
+      });
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// ── Counter Animation ─────────────────────────────────
+function animateCounter(el, target, duration = 2000) {
+  const isDecimal = el.dataset.decimal;
+  const prefix = el.dataset.prefix || '';
+  const suffix = el.dataset.suffix || '';
+  const comma = el.dataset.comma === 'true';
+  const display = el.dataset.display;
+  const startTime = performance.now();
+
+  function step(now) {
+    const progress = Math.min((now - startTime) / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    const current = target * ease;
+    let formatted;
+    if (isDecimal === '2') formatted = (current / 100).toFixed(2);
+    else if (isDecimal === '1') formatted = (current / 10).toFixed(1);
+    else if (comma) formatted = Math.round(current).toLocaleString();
+    else formatted = Math.round(current).toLocaleString();
+    el.textContent = prefix + formatted + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = display;
+  }
+  requestAnimationFrame(step);
+}
+
+// ── Curve Generator ───────────────────────────────────
+function generateCurve(finalVal, volatility, seed, points) {
+  const data = [0]; let val = 0; const drift = finalVal / points; let r = seed;
+  for (let i = 1; i < points; i++) {
+    r = (r * 16807) % 2147483647;
+    const noise = ((r / 2147483647) - 0.5) * volatility;
+    val += drift + noise;
+    if (i % 40 < 8 && i > 20) val -= volatility * 0.3;
+    data.push(val);
+  }
+  const scale = finalVal / data[data.length - 1];
+  return data.map(v => v * scale);
+}
+
+// ── Equity Curve ──────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('equityCurve');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const POINTS = 200;
+
+  const portfolioData = generateCurve(565170, 8000, 42, POINTS);
+  const nqData = generateCurve(155819, 4000, 7, POINTS);
+  const gcData = generateCurve(175657, 5000, 13, POINTS);
+  const silData = generateCurve(233694, 6000, 31, POINTS);
+
+  let drawn = false;
+
+  function drawChart(progress) {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr; canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const W = rect.width, H = rect.height;
+    ctx.clearRect(0, 0, W, H);
+
+    const maxVal = Math.max(...portfolioData) * 1.1;
+    const minVal = Math.min(0, Math.min(...portfolioData)) - 5000;
+    const pointsToShow = Math.floor(POINTS * progress);
+
+    // Grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.lineWidth = 1;
+    for (let i = 0; i <= 5; i++) {
+      const y = (i / 5) * H;
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+    // Y-axis labels
+    ctx.font = '10px JetBrains Mono'; ctx.fillStyle = 'rgba(255,255,255,0.15)';
+    for (let i = 0; i <= 5; i++) {
+      const val = minVal + (maxVal - minVal) * (1 - i / 5);
+      ctx.fillText('$' + Math.round(val / 1000) + 'K', 4, (i / 5) * H + 12);
+    }
+
+    function drawLine(data, color, width, fillAlpha) {
+      if (pointsToShow < 2) return;
+      const pts = data.slice(0, pointsToShow);
+      ctx.beginPath();
+      pts.forEach((v, i) => {
+        const x = (i / (POINTS - 1)) * W;
+        const y = H - ((v - minVal) / (maxVal - minVal)) * H;
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = color; ctx.lineWidth = width; ctx.lineJoin = 'round'; ctx.stroke();
+
+      if (fillAlpha > 0) {
+        const lastX = ((pts.length - 1) / (POINTS - 1)) * W;
+        ctx.lineTo(lastX, H); ctx.lineTo(0, H); ctx.closePath();
+        const grad = ctx.createLinearGradient(0, 0, 0, H);
+        grad.addColorStop(0, color.replace(')', `,${fillAlpha})`).replace('rgb', 'rgba'));
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grad; ctx.fill();
+      }
+
+      // Glowing tip
+      if (progress < 1 && pointsToShow > 0) {
+        const lastPt = pts[pts.length - 1];
+        const tipX = ((pts.length - 1) / (POINTS - 1)) * W;
+        const tipY = H - ((lastPt - minVal) / (maxVal - minVal)) * H;
+        ctx.beginPath(); ctx.arc(tipX, tipY, 4, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill();
+        ctx.beginPath(); ctx.arc(tipX, tipY, 10, 0, Math.PI * 2);
+        ctx.fillStyle = color.replace(')', ',0.15)').replace('rgb', 'rgba'); ctx.fill();
+      }
+    }
+
+    drawLine(silData, 'rgb(144,164,174)', 1.2, 0);
+    drawLine(gcData, 'rgb(234,179,8)', 1.2, 0);
+    drawLine(nqData, 'rgba(0,163,255,0.5)', 1.2, 0);
+    drawLine(portfolioData, 'rgb(0,163,255)', 2.5, 0.08);
+  }
+
+  let animProgress = 0;
+  function animateDraw() {
+    animProgress += 0.008;
+    if (animProgress > 1) animProgress = 1;
+    drawChart(animProgress);
+    if (animProgress < 1) requestAnimationFrame(animateDraw);
+  }
+
+  const obs = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !drawn) { drawn = true; setTimeout(animateDraw, 300); }
+  }, { threshold: 0.3 });
+  obs.observe(canvas.parentElement);
+  window.addEventListener('resize', () => { if (drawn) drawChart(animProgress); });
+})();
+
+// ── Sparklines ────────────────────────────────────────
+function drawSparkline(canvasId, finalVal, volatility, seed, color) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const data = generateCurve(finalVal, volatility, seed, 80);
+
+  function draw() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr; canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const W = rect.width, H = rect.height;
+    const max = Math.max(...data) * 1.05;
+    const min = Math.min(...data, 0);
+
+    ctx.beginPath();
+    data.forEach((v, i) => {
+      const x = (i / (data.length - 1)) * W;
+      const y = H - ((v - min) / (max - min)) * H * 0.9 - H * 0.05;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineJoin = 'round'; ctx.stroke();
+
+    // Fill
+    const lastX = W;
+    ctx.lineTo(lastX, H); ctx.lineTo(0, H); ctx.closePath();
+    const grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, color.replace(')', ',0.15)').replace('rgb', 'rgba'));
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad; ctx.fill();
+  }
+  draw();
+  window.addEventListener('resize', draw);
+}
+
+drawSparkline('sparkNQ', 155819, 3000, 7, 'rgb(0,163,255)');
+drawSparkline('sparkGC', 175657, 3500, 13, 'rgb(234,179,8)');
+drawSparkline('sparkSIL', 233694, 4000, 31, 'rgb(144,164,174)');
+
+// ── Monthly Heatmap ───────────────────────────────────
+(function() {
+  const monthlyData = {
+    2024: [null, 18420, 22150, 31080, 15670, -8240, 28930, 19540, 24780, 12350, 35620, 26410],
+    2025: [29870, 21340, 34560, 18920, 27410, 22680, 31250, -4870, 26340, 19780, 33150, 28750],
+    2026: [35210, 31420, null, null, null, null, null, null, null, null, null, null]
+  };
+
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const table = document.getElementById('heatmapTable');
+
+  // Header
+  let headerHTML = '<thead><tr><th></th>';
+  months.forEach(m => headerHTML += `<th>${m}</th>`);
+  headerHTML += '<th>Total</th></tr></thead>';
+
+  let bodyHTML = '<tbody>';
+  for (const [year, data] of Object.entries(monthlyData)) {
+    let total = 0;
+    bodyHTML += `<tr><td class="year-label">${year}</td>`;
+    data.forEach(val => {
+      if (val === null) {
+        bodyHTML += '<td><div class="heatmap-cell empty">—</div></td>';
+      } else {
+        total += val;
+        const isProfit = val >= 0;
+        const absVal = Math.abs(val);
+        const intensity = Math.min(absVal / 36000, 1);
+        const bg = isProfit
+          ? `rgba(0,230,118,${0.08 + intensity * 0.25})`
+          : `rgba(255,82,82,${0.08 + intensity * 0.25})`;
+        const color = isProfit ? '#00E676' : '#FF5252';
+        const prefix = isProfit ? '+$' : '-$';
+        const display = prefix + (absVal / 1000).toFixed(1) + 'K';
+        bodyHTML += `<td><div class="heatmap-cell ${isProfit ? 'profit' : 'loss'}" style="background:${bg}; color:${color}">${display}</div></td>`;
+      }
+    });
+    bodyHTML += `<td class="year-total">$${(total/1000).toFixed(1)}K</td></tr>`;
+  }
+  bodyHTML += '</tbody>';
+  table.innerHTML = headerHTML + bodyHTML;
+})();
+
+// ── Win/Loss Histogram ────────────────────────────────
+(function() {
+  const canvas = document.getElementById('distHistogram');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function draw() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr; canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const W = rect.width, H = rect.height;
+
+    // Generate distribution data
+    const bins = 20;
+    const winData = [], lossData = [];
+    // Normal-ish distribution for wins (positive skew)
+    for (let i = 0; i < bins; i++) {
+      const x = (i / bins) * 4 - 1;
+      winData.push(Math.exp(-x * x / 0.8) * 0.8);
+      lossData.push(Math.exp(-(x - 1) * (x - 1) / 0.5) * 0.5);
+    }
+
+    const barW = (W - 40) / bins;
+    const maxH = Math.max(...winData, ...lossData);
+
+    // Bars
+    for (let i = 0; i < bins; i++) {
+      const x = 20 + i * barW;
+      // Win bars
+      const wH = (winData[i] / maxH) * (H - 40);
+      ctx.fillStyle = 'rgba(0,230,118,0.6)';
+      ctx.fillRect(x + 1, H - 20 - wH, barW - 2, wH);
+
+      // Loss bars (overlaid, semi-transparent)
+      const lH = (lossData[i] / maxH) * (H - 40);
+      ctx.fillStyle = 'rgba(255,82,82,0.4)';
+      ctx.fillRect(x + 1, H - 20 - lH, barW - 2, lH);
+    }
+
+    // Legend
+    ctx.font = '10px JetBrains Mono';
+    ctx.fillStyle = 'rgba(0,230,118,0.8)';
+    ctx.fillRect(W - 120, 8, 12, 8); ctx.fillText('Winners', W - 104, 16);
+    ctx.fillStyle = 'rgba(255,82,82,0.7)';
+    ctx.fillRect(W - 120, 22, 12, 8); ctx.fillText('Losers', W - 104, 30);
+
+    // Axis
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(20, H - 20); ctx.lineTo(W - 20, H - 20); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.15)'; ctx.font = '9px JetBrains Mono';
+    ctx.fillText('-$2K', 20, H - 6);
+    ctx.fillText('$0', W / 2 - 10, H - 6);
+    ctx.fillText('+$4K', W - 50, H - 6);
+  }
+  draw();
+  window.addEventListener('resize', draw);
+})();
+
+// ── Session Bars Animation ────────────────────────────
+const sessionObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('.session-bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.width + '%';
+      });
+      sessionObs.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.dist-card').forEach(c => sessionObs.observe(c));
+
+// ── 3D Card Tilt ──────────────────────────────────────
+document.querySelectorAll('.kpi-card, .inst-card, .dist-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left, y = e.clientY - rect.top;
+    const rotateX = (y - rect.height / 2) / (rect.height / 2) * -3;
+    const rotateY = (x - rect.width / 2) / (rect.width / 2) * 3;
+    card.style.transform = `translateY(-4px) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  });
+  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+});
+
+// ── Scroll Reveal ─────────────────────────────────────
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) { entry.target.classList.add('visible'); revealObs.unobserve(entry.target); }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+// ── Counter Trigger ───────────────────────────────────
+const counterObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const countVal = parseInt(el.dataset.count);
+      if (countVal) animateCounter(el, countVal, 2200);
+      counterObs.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-count]').forEach(el => counterObs.observe(el));
+
+</script>
+</body>
+</html>

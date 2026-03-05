@@ -1,0 +1,2093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Strategy Factory — Automated Futures Signals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   THE STRATEGY FACTORY — Landing Page V2
+   Mission Control · Bloomberg Terminal · Algorithmic Precision
+   ═══════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #06090F;
+  --bg-secondary: #0B1018;
+  --bg-card: #0E1420;
+  --bg-card-hover: #141C2A;
+  --bg-elevated: #1A2233;
+
+  --accent-cyan: #00A3FF;
+  --accent-cyan-dim: rgba(0, 163, 255, 0.10);
+  --accent-cyan-glow: rgba(0, 163, 255, 0.35);
+  --accent-green: #00E676;
+  --accent-green-dim: rgba(0, 230, 118, 0.08);
+  --accent-red: #FF5252;
+  --accent-purple: #7C5CFC;
+  --accent-purple-glow: rgba(124, 92, 252, 0.25);
+  --accent-gold: #EAB308;
+  --accent-teal: #0D9488;
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #7B8DA4;
+  --text-muted: #445566;
+  --text-dim: #2A3544;
+
+  --border-default: #151D2B;
+  --border-subtle: rgba(255,255,255,0.04);
+  --border-cyan: rgba(0, 163, 255, 0.2);
+
+  --font-display: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-pill: 9999px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-display);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  cursor: crosshair;
+}
+
+/* ── Film Grain Overlay ───────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.5;
+  animation: grain 0.5s steps(1) infinite;
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-2%, -3%); }
+  20% { transform: translate(3%, 1%); }
+  30% { transform: translate(-1%, 2%); }
+  40% { transform: translate(2%, -2%); }
+  50% { transform: translate(-3%, 3%); }
+  60% { transform: translate(1%, -1%); }
+  70% { transform: translate(-2%, 2%); }
+  80% { transform: translate(3%, -3%); }
+  90% { transform: translate(-1%, 1%); }
+}
+
+/* ── Particle Canvas ──────────────────────────────────── */
+#particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── CRT Scanlines ────────────────────────────────────── */
+.scanlines {
+  position: relative;
+}
+
+.scanlines::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 163, 255, 0.015) 2px,
+    rgba(0, 163, 255, 0.015) 4px
+  );
+  pointer-events: none;
+  border-radius: var(--radius);
+  z-index: 2;
+}
+
+/* ── Layout ───────────────────────────────────────────── */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 1;
+}
+
+section { padding: 100px 0; }
+
+/* ── Navigation ───────────────────────────────────────── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 16px 0;
+  background: rgba(6, 9, 15, 0.8);
+  backdrop-filter: blur(24px) saturate(1.4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+nav .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+
+.nav-logo-mark {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 28px;
+  font-style: italic;
+  letter-spacing: -1px;
+}
+
+.nav-logo-mark .s { color: var(--text-primary); }
+.nav-logo-mark .f { color: var(--accent-cyan); text-shadow: 0 0 20px var(--accent-cyan-glow); }
+
+.nav-logo-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0; right: 0;
+  height: 1px;
+  background: var(--accent-cyan);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+
+.nav-links a:hover { color: var(--accent-cyan); }
+.nav-links a:hover::after { transform: scaleX(1); }
+
+.nav-cta {
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: var(--bg-primary) !important;
+  background: var(--accent-cyan) !important;
+  padding: 10px 24px;
+  border-radius: var(--radius-pill);
+  transition: all 0.3s;
+  box-shadow: 0 0 20px rgba(0, 163, 255, 0.2);
+}
+
+.nav-cta::after { display: none !important; }
+
+.nav-cta:hover {
+  background: #38BDF8 !important;
+  box-shadow: 0 0 40px rgba(0, 163, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+/* ── Hero Section ─────────────────────────────────────── */
+.hero {
+  padding: 200px 0 100px;
+  text-align: center;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.hero .container { width: 100%; }
+
+/* Radial glow behind hero */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px;
+  height: 600px;
+  background: radial-gradient(ellipse, rgba(0, 163, 255, 0.06), transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-green);
+  background: var(--accent-green-dim);
+  border: 1px solid rgba(0, 230, 118, 0.15);
+  padding: 8px 20px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 40px;
+  animation: fadeInDown 0.8s ease;
+}
+
+.hero-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  box-shadow: 0 0 10px var(--accent-green);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--accent-green); }
+  50% { opacity: 0.4; box-shadow: 0 0 4px var(--accent-green); }
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 7vw, 92px);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -3px;
+  margin-bottom: 32px;
+  animation: fadeInUp 0.8s ease 0.1s both;
+}
+
+.hero h1 .gradient {
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 50%, var(--accent-cyan) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.hero-sub {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  max-width: 540px;
+  margin: 0 auto 50px;
+  line-height: 1.7;
+  animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 80px;
+  animation: fadeInUp 0.8s ease 0.3s both;
+}
+
+.btn-primary {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bg-primary);
+  background: var(--accent-cyan);
+  padding: 16px 40px;
+  border-radius: var(--radius-pill);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+  box-shadow: 0 0 30px rgba(0, 163, 255, 0.2), inset 0 1px 0 rgba(255,255,255,0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-primary:hover::before { left: 100%; }
+
+.btn-primary:hover {
+  background: #38BDF8;
+  box-shadow: 0 0 60px rgba(0, 163, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: transparent;
+  padding: 16px 40px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-default);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  box-shadow: 0 0 30px rgba(0, 163, 255, 0.1);
+}
+
+/* ── Hero Stats Strip ─────────────────────────────────── */
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  animation: fadeInUp 0.8s ease 0.4s both;
+}
+
+.hero-stat {
+  text-align: center;
+  padding: 0 52px;
+  border-right: 1px solid var(--border-subtle);
+}
+
+.hero-stat:last-child { border-right: none; }
+
+.hero-stat-value {
+  font-family: var(--font-mono);
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--accent-cyan);
+  line-height: 1;
+  margin-bottom: 10px;
+  text-shadow: 0 0 30px var(--accent-cyan-glow);
+}
+
+.hero-stat-value.green {
+  color: var(--accent-green);
+  text-shadow: 0 0 30px rgba(0, 230, 118, 0.3);
+}
+
+.hero-stat-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── Scanner Feed ─────────────────────────────────────── */
+.scanner-feed {
+  margin-top: 60px;
+  animation: fadeInUp 0.8s ease 0.5s both;
+}
+
+.scanner-feed-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 16px 24px;
+  max-width: 700px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.scanner-feed-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.scanner-feed-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  box-shadow: 0 0 8px var(--accent-green);
+  animation: pulse 1.5s infinite;
+}
+
+.scanner-feed-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.scanner-feed-lines {
+  height: 96px;
+  overflow: hidden;
+  position: relative;
+}
+
+.scanner-feed-lines::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 40px;
+  background: linear-gradient(transparent, var(--bg-card));
+  pointer-events: none;
+}
+
+.feed-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+  opacity: 0;
+  transform: translateY(-8px);
+  animation: feedSlide 0.4s ease forwards;
+  white-space: nowrap;
+}
+
+.feed-time { color: var(--text-dim); font-size: 11px; }
+.feed-sym { font-weight: 700; font-size: 11px; }
+.feed-sym.nq { color: var(--accent-cyan); }
+.feed-sym.gc { color: var(--accent-gold); }
+.feed-sym.sil { color: #90A4AE; }
+.feed-action { font-size: 11px; }
+.feed-long { color: var(--accent-green); }
+.feed-short { color: var(--accent-red); }
+.feed-price { color: var(--text-secondary); font-size: 11px; }
+.feed-result { font-weight: 700; font-size: 11px; }
+.feed-win { color: var(--accent-green); }
+.feed-loss { color: var(--accent-red); }
+
+@keyframes feedSlide {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Equity Curve Section ─────────────────────────────── */
+.equity-section {
+  padding: 80px 0 100px;
+}
+
+.equity-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.equity-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.equity-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.equity-title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.equity-value {
+  font-family: var(--font-mono);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--accent-green);
+  text-shadow: 0 0 30px rgba(0, 230, 118, 0.2);
+}
+
+.equity-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+.equity-canvas-wrap {
+  position: relative;
+  height: 300px;
+  width: 100%;
+}
+
+#equityCurve {
+  width: 100%;
+  height: 100%;
+}
+
+.equity-legend {
+  display: flex;
+  gap: 24px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.equity-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.equity-legend-line {
+  width: 20px;
+  height: 2px;
+  border-radius: 1px;
+}
+
+/* ── Validation Badge Section ─────────────────────────── */
+.validation {
+  padding: 40px 0 100px;
+}
+
+.validation-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-cyan);
+  border-radius: var(--radius);
+  padding: 40px 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.validation-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+}
+
+/* Ambient glow */
+.validation-card::after {
+  content: '';
+  position: absolute;
+  top: -100px; left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 200px;
+  background: radial-gradient(ellipse, rgba(0, 163, 255, 0.04), transparent);
+  pointer-events: none;
+}
+
+.validation-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.validation-icon {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--accent-green-dim);
+  border: 1px solid rgba(0, 230, 118, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 0 20px rgba(0, 230, 118, 0.1);
+}
+
+.validation-title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-green);
+}
+
+.validation-subtitle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+.validation-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.val-instrument {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 24px;
+  transition: all 0.4s;
+}
+
+.val-instrument:hover {
+  border-color: var(--border-cyan);
+  box-shadow: 0 0 40px rgba(0, 163, 255, 0.06);
+  transform: translateY(-2px);
+}
+
+.val-instrument-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.val-instrument-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.val-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+
+.val-dot.nq { background: var(--accent-cyan); box-shadow: 0 0 12px var(--accent-cyan-glow); }
+.val-dot.gc { background: var(--accent-gold); box-shadow: 0 0 12px rgba(234, 179, 8, 0.4); }
+.val-dot.sil { background: #90A4AE; box-shadow: 0 0 12px rgba(144, 164, 174, 0.4); }
+
+.val-instrument-name span {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.val-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-green);
+  background: var(--accent-green-dim);
+  border: 1px solid rgba(0, 230, 118, 0.15);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+}
+
+.val-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.val-stat-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.val-stat-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.val-stat-train {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.val-stat-arrow {
+  font-size: 12px;
+  color: var(--accent-green);
+}
+
+.val-stat-test {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--accent-green);
+  text-shadow: 0 0 12px rgba(0, 230, 118, 0.2);
+}
+
+/* ── Features / How It Works ──────────────────────────── */
+.features {
+  padding: 100px 0;
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 16px;
+  text-shadow: 0 0 20px var(--accent-cyan-glow);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+  line-height: 1.05;
+}
+
+.section-desc {
+  font-size: 17px;
+  color: var(--text-secondary);
+  max-width: 520px;
+  margin-bottom: 64px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 36px 32px;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+/* Hover glow */
+.feature-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 163, 255, 0.06), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+
+.feature-card:hover {
+  border-color: var(--border-cyan);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(0, 163, 255, 0.05);
+}
+
+.feature-card:hover::before { opacity: 1; }
+.feature-card:hover::after { opacity: 1; }
+
+.feature-icon {
+  width: 52px; height: 52px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-cyan-dim);
+  border: 1px solid rgba(0, 163, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 24px;
+  transition: all 0.4s;
+}
+
+.feature-card:hover .feature-icon {
+  box-shadow: 0 0 24px rgba(0, 163, 255, 0.15);
+  border-color: rgba(0, 163, 255, 0.3);
+}
+
+.feature-card h3 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.feature-card p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ── Instruments with Radar Pulse ─────────────────────── */
+.instruments {
+  padding: 80px 0 100px;
+}
+
+.instruments-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.instrument-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 36px 32px;
+  text-align: center;
+  transition: all 0.5s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Radar sweep */
+.instrument-card::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 200%; height: 200%;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(from 0deg, transparent 0deg, rgba(0, 163, 255, 0.08) 30deg, transparent 60deg);
+  opacity: 0;
+  transition: opacity 0.6s;
+  animation: radarSpin 3s linear infinite paused;
+}
+
+.instrument-card.detected::before {
+  opacity: 1;
+  animation-play-state: running;
+}
+
+@keyframes radarSpin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.instrument-card:hover {
+  border-color: var(--border-cyan);
+  box-shadow: 0 0 50px rgba(0, 163, 255, 0.06);
+}
+
+.instrument-symbol {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  margin-bottom: 4px;
+  position: relative;
+  z-index: 1;
+}
+
+.instrument-name {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.instrument-pnl {
+  font-family: var(--font-mono);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--accent-green);
+  margin-bottom: 4px;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 0 20px rgba(0, 230, 118, 0.2);
+}
+
+.instrument-pnl-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.instrument-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.instrument-meta-value {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.instrument-meta-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── Pricing ──────────────────────────────────────────── */
+.pricing {
+  padding: 100px 0;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.pricing-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 40px 32px;
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-style: preserve-3d;
+}
+
+.pricing-card:hover {
+  transform: translateY(-4px);
+}
+
+.pricing-card.featured {
+  border-color: rgba(0, 163, 255, 0.3);
+  box-shadow: 0 0 80px rgba(0, 163, 255, 0.06);
+}
+
+.pricing-card.featured::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple), var(--accent-cyan));
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+.pricing-tier {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  display: inline-block;
+  margin-bottom: 24px;
+}
+
+.tier-free { color: var(--text-secondary); background: rgba(255,255,255,0.04); }
+.tier-pro { color: var(--accent-cyan); background: var(--accent-cyan-dim); border: 1px solid rgba(0, 163, 255, 0.15); }
+.tier-elite { color: var(--accent-gold); background: rgba(234, 179, 8, 0.08); border: 1px solid rgba(234, 179, 8, 0.15); }
+
+.pricing-price {
+  font-family: var(--font-display);
+  font-size: 52px;
+  font-weight: 900;
+  margin-bottom: 4px;
+  letter-spacing: -2px;
+}
+
+.pricing-price span {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0;
+}
+
+.pricing-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+}
+
+.pricing-features {
+  list-style: none;
+  margin-bottom: 36px;
+}
+
+.pricing-features li {
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pricing-features li::before {
+  content: '✓';
+  color: var(--accent-teal);
+  font-weight: 700;
+}
+
+.pricing-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 14px 0;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: all 0.3s;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.pricing-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.5s;
+}
+
+.pricing-btn:hover::before { left: 100%; }
+
+.pricing-btn-outline {
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-default);
+}
+
+.pricing-btn-outline:hover {
+  border-color: var(--text-muted);
+  color: var(--text-primary);
+}
+
+.pricing-btn-primary {
+  color: var(--bg-primary);
+  background: var(--accent-cyan);
+  box-shadow: 0 0 20px rgba(0, 163, 255, 0.15);
+}
+
+.pricing-btn-primary:hover {
+  background: #38BDF8;
+  box-shadow: 0 0 40px rgba(0, 163, 255, 0.3);
+}
+
+.pricing-btn-gold {
+  color: var(--bg-primary);
+  background: var(--accent-gold);
+  box-shadow: 0 0 20px rgba(234, 179, 8, 0.15);
+}
+
+.pricing-btn-gold:hover {
+  background: #FACC15;
+  box-shadow: 0 0 40px rgba(234, 179, 8, 0.3);
+}
+
+/* ── Footer ───────────────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--border-subtle);
+  padding: 60px 0 40px;
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 48px;
+}
+
+.footer-brand { max-width: 320px; }
+
+.footer-logo {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 22px;
+  font-style: italic;
+  margin-bottom: 12px;
+}
+
+.footer-logo .s { color: var(--text-primary); }
+.footer-logo .f { color: var(--accent-cyan); text-shadow: 0 0 16px var(--accent-cyan-glow); }
+
+.footer-tagline {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.footer-links {
+  display: flex;
+  gap: 48px;
+}
+
+.footer-col h4 {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.footer-col a {
+  display: block;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 4px 0;
+  transition: color 0.3s;
+}
+
+.footer-col a:hover { color: var(--accent-cyan); }
+
+.footer-bottom {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 24px;
+}
+
+.footer-disclaimer {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  max-width: 800px;
+}
+
+/* ── Animations ───────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger children */
+.reveal-stagger > .reveal:nth-child(1) { transition-delay: 0.05s; }
+.reveal-stagger > .reveal:nth-child(2) { transition-delay: 0.12s; }
+.reveal-stagger > .reveal:nth-child(3) { transition-delay: 0.19s; }
+.reveal-stagger > .reveal:nth-child(4) { transition-delay: 0.26s; }
+.reveal-stagger > .reveal:nth-child(5) { transition-delay: 0.33s; }
+.reveal-stagger > .reveal:nth-child(6) { transition-delay: 0.40s; }
+
+/* ── Responsive ───────────────────────────────────────── */
+@media (max-width: 900px) {
+  .features-grid, .instruments-grid, .pricing-grid, .validation-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-stats { flex-direction: column; gap: 24px; }
+  .hero-stat { border-right: none; border-bottom: 1px solid var(--border-subtle); padding: 16px 0; }
+  .hero-stat:last-child { border-bottom: none; }
+  .footer-top { flex-direction: column; gap: 32px; }
+  .footer-links { flex-direction: column; gap: 24px; }
+  .nav-links { display: none; }
+  .hero { padding: 160px 0 80px; min-height: auto; }
+  .hero h1 { letter-spacing: -1px; }
+}
+
+@media (max-width: 600px) {
+  .container { padding: 0 20px; }
+  section { padding: 60px 0; }
+  .scanner-feed-container { font-size: 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Particle Network -->
+<canvas id="particles"></canvas>
+
+<!-- ═══════════════════════════════════════════════════════════
+     NAVIGATION
+     ═══════════════════════════════════════════════════════════ -->
+<nav>
+  <div class="container">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-mark"><span class="s">S</span><span class="f">F</span></div>
+      <div class="nav-logo-text">Strategy<br>Factory</div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#performance">Performance</a></li>
+      <li><a href="#features">How It Works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#" class="nav-cta">Get Started</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">Walk-Forward Validated</div>
+
+    <h1>
+      Automated Futures<br>
+      <span class="gradient">Signals That Work.</span>
+    </h1>
+
+    <p class="hero-sub">
+      Systematic ICT-based signals for NQ, Gold & Silver futures.
+      Backtested across 2 years. Validated out-of-sample.
+      No discretion. No guesswork.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#pricing" class="btn-primary">View Plans</a>
+      <a href="#performance" class="btn-secondary">See Results</a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-value green" data-count="565000" data-prefix="$" data-suffix="K" data-display="565">$565K</div>
+        <div class="hero-stat-label">2-Year P&L</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value" data-count="203" data-decimal="2" data-display="2.03">2.03</div>
+        <div class="hero-stat-label">NQ Profit Factor</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value" data-count="561" data-decimal="1" data-suffix="%" data-display="56.1">56.1%</div>
+        <div class="hero-stat-label">Win Rate</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value" data-count="2155" data-comma="true" data-display="2,155">2,155</div>
+        <div class="hero-stat-label">Verified Trades</div>
+      </div>
+    </div>
+
+    <!-- Scanner Feed -->
+    <div class="scanner-feed">
+      <div class="scanner-feed-container scanlines">
+        <div class="scanner-feed-header">
+          <div class="scanner-feed-dot"></div>
+          <div class="scanner-feed-title">Live Scanner Feed</div>
+        </div>
+        <div class="scanner-feed-lines" id="scannerFeed"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     EQUITY CURVE
+     ═══════════════════════════════════════════════════════════ -->
+<section class="equity-section" id="performance">
+  <div class="container">
+    <div class="equity-card scanlines reveal">
+      <div class="equity-header">
+        <div>
+          <div class="equity-title">Portfolio Growth</div>
+          <div class="equity-value">$565,170</div>
+          <div class="equity-label">Feb 2024 — Feb 2026 · Commission Included</div>
+        </div>
+      </div>
+      <div class="equity-canvas-wrap">
+        <canvas id="equityCurve"></canvas>
+      </div>
+      <div class="equity-legend">
+        <div class="equity-legend-item">
+          <div class="equity-legend-line" style="background: var(--accent-cyan);"></div>
+          Portfolio
+        </div>
+        <div class="equity-legend-item">
+          <div class="equity-legend-line" style="background: rgba(0, 163, 255, 0.4);"></div>
+          NQ
+        </div>
+        <div class="equity-legend-item">
+          <div class="equity-legend-line" style="background: var(--accent-gold); opacity: 0.7;"></div>
+          GC
+        </div>
+        <div class="equity-legend-item">
+          <div class="equity-legend-line" style="background: #90A4AE; opacity: 0.6;"></div>
+          SIL
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     WALK-FORWARD VALIDATION
+     ═══════════════════════════════════════════════════════════ -->
+<section class="validation">
+  <div class="container">
+    <div class="validation-card scanlines reveal">
+      <div class="validation-header">
+        <div class="validation-icon">✅</div>
+        <div>
+          <div class="validation-title">Out-of-Sample Validated</div>
+          <div class="validation-subtitle">Trained on 2024 · Tested blind on 2025 · Zero parameter changes</div>
+        </div>
+      </div>
+
+      <div class="validation-grid">
+        <div class="val-instrument reveal">
+          <div class="val-instrument-header">
+            <div class="val-instrument-name">
+              <div class="val-dot nq"></div>
+              <span>NQ</span>
+            </div>
+            <div class="val-badge">✓ Validated</div>
+          </div>
+          <div class="val-stats">
+            <div>
+              <div class="val-stat-label">Profit Factor</div>
+              <div class="val-stat-row">
+                <span class="val-stat-train">1.86</span>
+                <span class="val-stat-arrow">→</span>
+                <span class="val-stat-test">2.13</span>
+              </div>
+            </div>
+            <div>
+              <div class="val-stat-label">Win Rate</div>
+              <div class="val-stat-row">
+                <span class="val-stat-train">60.2%</span>
+                <span class="val-stat-arrow">→</span>
+                <span class="val-stat-test">62.7%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="val-instrument reveal">
+          <div class="val-instrument-header">
+            <div class="val-instrument-name">
+              <div class="val-dot gc"></div>
+              <span>GC</span>
+            </div>
+            <div class="val-badge">✓ Validated</div>
+          </div>
+          <div class="val-stats">
+            <div>
+              <div class="val-stat-label">Profit Factor</div>
+              <div class="val-stat-row">
+                <span class="val-stat-train">1.46</span>
+                <span class="val-stat-arrow">→</span>
+                <span class="val-stat-test">1.48</span>
+              </div>
+            </div>
+            <div>
+              <div class="val-stat-label">Win Rate</div>
+              <div class="val-stat-row">
+                <span class="val-stat-train">55.3%</span>
+                <span class="val-stat-arrow">→</span>
+                <span class="val-stat-test">54.3%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="val-instrument reveal">
+          <div class="val-instrument-header">
+            <div class="val-instrument-name">
+              <div class="val-dot sil"></div>
+              <span>SIL</span>
+            </div>
+            <div class="val-badge">✓ Validated</div>
+          </div>
+          <div class="val-stats">
+            <div>
+              <div class="val-stat-label">Profit Factor</div>
+              <div class="val-stat-row">
+                <span class="val-stat-train">1.60</span>
+                <span class="val-stat-arrow">→</span>
+                <span class="val-stat-test">1.80</span>
+              </div>
+            </div>
+            <div>
+              <div class="val-stat-label">Win Rate</div>
+              <div class="val-stat-row">
+                <span class="val-stat-train">54.9%</span>
+                <span class="val-stat-arrow">→</span>
+                <span class="val-stat-test">56.9%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FEATURES
+     ═══════════════════════════════════════════════════════════ -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="section-label reveal">How It Works</div>
+    <h2 class="section-title reveal">Algorithmic precision.<br>Zero emotion.</h2>
+    <p class="section-desc reveal">
+      Our scanner monitors NQ, Gold & Silver futures 24/5, detecting
+      institutional order flow patterns and executing with mechanical discipline.
+    </p>
+
+    <div class="features-grid reveal-stagger">
+      <div class="feature-card reveal">
+        <div class="feature-icon">◎</div>
+        <h3>FVG Detection</h3>
+        <p>Scans for Fair Value Gaps on the 15-minute timeframe using ICT methodology. Body-based invalidation ensures only high-probability setups trigger.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">⟁</div>
+        <h3>Multi-Timeframe Bias</h3>
+        <p>Composite bias scoring from 1H, 4H and Daily charts. Every signal aligns with the higher-timeframe institutional narrative before entry.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">⚡</div>
+        <h3>Real-Time Alerts</h3>
+        <p>Signals fire within seconds of detection. Entry, stop loss, and dual take-profit levels delivered straight to Discord with zero delay.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">◈</div>
+        <h3>Risk Management</h3>
+        <p>Hard $3K risk cap per trade. Stop-on-first-win. 60-minute cooldown between entries. Systematic rules that protect capital above all else.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">⊞</div>
+        <h3>3 Markets, 1 System</h3>
+        <p>Diversified across E-mini Nasdaq, Gold and Micro Silver futures. Uncorrelated instruments smooth the equity curve and reduce drawdowns.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">✧</div>
+        <h3>Full Transparency</h3>
+        <p>Every trade logged. Daily and monthly recaps. Walk-forward validated performance — not cherry-picked screenshots or hypothetical returns.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     INSTRUMENTS
+     ═══════════════════════════════════════════════════════════ -->
+<section class="instruments">
+  <div class="container">
+    <div class="section-label reveal">Instruments</div>
+    <h2 class="section-title reveal">Three markets. One edge.</h2>
+    <p class="section-desc reveal">Commission-inclusive results. 2-year backtest, Feb 2024 — Feb 2026.</p>
+
+    <div class="instruments-grid reveal-stagger">
+      <div class="instrument-card reveal" data-instrument="nq">
+        <div class="instrument-symbol" style="color: var(--accent-cyan);">NQ</div>
+        <div class="instrument-name">E-mini Nasdaq 100</div>
+        <div class="instrument-pnl" data-count="155819">$155,819</div>
+        <div class="instrument-pnl-label">Total P&L</div>
+        <div class="instrument-meta">
+          <div><div class="instrument-meta-value">2.03</div><div class="instrument-meta-label">Profit Factor</div></div>
+          <div><div class="instrument-meta-value">61.0%</div><div class="instrument-meta-label">Win Rate</div></div>
+          <div><div class="instrument-meta-value">349</div><div class="instrument-meta-label">Trades</div></div>
+          <div><div class="instrument-meta-value">23.3%</div><div class="instrument-meta-label">Max DD</div></div>
+        </div>
+      </div>
+
+      <div class="instrument-card reveal" data-instrument="gc">
+        <div class="instrument-symbol" style="color: var(--accent-gold);">GC</div>
+        <div class="instrument-name">Gold Futures</div>
+        <div class="instrument-pnl" data-count="175657">$175,657</div>
+        <div class="instrument-pnl-label">Total P&L</div>
+        <div class="instrument-meta">
+          <div><div class="instrument-meta-value">1.53</div><div class="instrument-meta-label">Profit Factor</div></div>
+          <div><div class="instrument-meta-value">55.2%</div><div class="instrument-meta-label">Win Rate</div></div>
+          <div><div class="instrument-meta-value">922</div><div class="instrument-meta-label">Trades</div></div>
+          <div><div class="instrument-meta-value">35.1%</div><div class="instrument-meta-label">Max DD</div></div>
+        </div>
+      </div>
+
+      <div class="instrument-card reveal" data-instrument="sil">
+        <div class="instrument-symbol" style="color: #90A4AE;">SIL</div>
+        <div class="instrument-name">Micro Silver Futures</div>
+        <div class="instrument-pnl" data-count="233694">$233,694</div>
+        <div class="instrument-pnl-label">Total P&L</div>
+        <div class="instrument-meta">
+          <div><div class="instrument-meta-value">1.60</div><div class="instrument-meta-label">Profit Factor</div></div>
+          <div><div class="instrument-meta-value">55.2%</div><div class="instrument-meta-label">Win Rate</div></div>
+          <div><div class="instrument-meta-value">884</div><div class="instrument-meta-label">Trades</div></div>
+          <div><div class="instrument-meta-value">35.2%</div><div class="instrument-meta-label">Max DD</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PRICING
+     ═══════════════════════════════════════════════════════════ -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="section-label reveal">Pricing</div>
+    <h2 class="section-title reveal">Choose your edge.</h2>
+    <p class="section-desc reveal">Start free. Upgrade when you're ready.</p>
+
+    <div class="pricing-grid reveal-stagger">
+      <div class="pricing-card reveal">
+        <div class="pricing-tier tier-free">Free</div>
+        <div class="pricing-price">$0 <span>/mo</span></div>
+        <p class="pricing-desc">Get a feel for the system.</p>
+        <ul class="pricing-features">
+          <li>Delayed signals (15 min)</li>
+          <li>Daily performance recaps</li>
+          <li>Community access</li>
+          <li>Educational content</li>
+        </ul>
+        <a href="#" class="pricing-btn pricing-btn-outline">Join Free</a>
+      </div>
+
+      <div class="pricing-card featured reveal">
+        <div class="pricing-tier tier-pro">Pro</div>
+        <div class="pricing-price">$100 <span>/mo</span></div>
+        <p class="pricing-desc">Real-time signals for active traders.</p>
+        <ul class="pricing-features">
+          <li>Real-time signal alerts</li>
+          <li>All 3 instruments (NQ, GC, SIL)</li>
+          <li>Entry, SL & TP levels</li>
+          <li>Daily & monthly recaps</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="#" class="pricing-btn pricing-btn-primary">Get Pro</a>
+      </div>
+
+      <div class="pricing-card reveal">
+        <div class="pricing-tier tier-elite">Elite</div>
+        <div class="pricing-price">$249 <span>/mo</span></div>
+        <p class="pricing-desc">Maximum edge. Full transparency.</p>
+        <ul class="pricing-features">
+          <li>Everything in Pro</li>
+          <li>Strategy deep-dives</li>
+          <li>Risk management breakdowns</li>
+          <li>Walk-forward validation reports</li>
+          <li>Direct access to the team</li>
+        </ul>
+        <a href="#" class="pricing-btn pricing-btn-gold">Go Elite</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo"><span class="s">S</span><span class="f">F</span></div>
+        <div class="footer-tagline">Quantitative · Systematic · Automated</div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="#">Performance</a>
+          <a href="#">System Status</a>
+          <a href="#">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="#">Getting Started</a>
+          <a href="#">Methodology</a>
+          <a href="#">FAQ</a>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <a href="#">Discord</a>
+          <a href="#">Twitter</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-disclaimer">
+        CFTC Rule 4.41 — Hypothetical or simulated performance results have certain limitations. Unlike an actual performance record, simulated results do not represent actual trading. Also, since the trades have not been executed, the results may have under-or-over compensated for the impact, if any, of certain market factors, such as lack of liquidity. Simulated trading programs in general are also subject to the fact that they are designed with the benefit of hindsight. No representation is being made that any account will or is likely to achieve profit or losses similar to those shown. Past performance is not indicative of future results. This is not financial advice.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT — Particles, Counters, Scanner Feed, Equity Curve, 3D Cards
+     ═══════════════════════════════════════════════════════════ -->
+<script>
+// ── Particle Network ──────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let w, h, particles = [], mouse = { x: null, y: null };
+  const PARTICLE_COUNT = 80;
+  const CONNECT_DIST = 150;
+  const MOUSE_DIST = 200;
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  document.addEventListener('mousemove', e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+
+  class Particle {
+    constructor() {
+      this.x = Math.random() * w;
+      this.y = Math.random() * h;
+      this.vx = (Math.random() - 0.5) * 0.4;
+      this.vy = (Math.random() - 0.5) * 0.4;
+      this.r = Math.random() * 1.5 + 0.5;
+      this.alpha = Math.random() * 0.4 + 0.1;
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.x < 0 || this.x > w) this.vx *= -1;
+      if (this.y < 0 || this.y > h) this.vy *= -1;
+
+      // Mouse attraction
+      if (mouse.x !== null) {
+        const dx = mouse.x - this.x;
+        const dy = mouse.y - this.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < MOUSE_DIST) {
+          this.vx += dx * 0.00005;
+          this.vy += dy * 0.00005;
+        }
+      }
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0, 163, 255, ${this.alpha})`;
+      ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
+
+  function animate() {
+    ctx.clearRect(0, 0, w, h);
+    particles.forEach(p => { p.update(); p.draw(); });
+
+    // Connections
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < CONNECT_DIST) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(0, 163, 255, ${0.08 * (1 - dist / CONNECT_DIST)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Mouse connections
+    if (mouse.x !== null) {
+      particles.forEach(p => {
+        const dx = mouse.x - p.x;
+        const dy = mouse.y - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < MOUSE_DIST) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.strokeStyle = `rgba(0, 163, 255, ${0.15 * (1 - dist / MOUSE_DIST)})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      });
+    }
+
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+
+// ── Counter Animation ─────────────────────────────────────
+function animateCounter(el, target, duration = 2000) {
+  const isDecimal = el.dataset.decimal;
+  const prefix = el.dataset.prefix || '';
+  const suffix = el.dataset.suffix || '';
+  const comma = el.dataset.comma === 'true';
+  const display = el.dataset.display;
+  const start = 0;
+  const startTime = performance.now();
+
+  function step(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    // Ease out cubic
+    const ease = 1 - Math.pow(1 - progress, 3);
+    const current = start + (target - start) * ease;
+
+    let formatted;
+    if (isDecimal === '2') {
+      formatted = (current / 100).toFixed(2);
+    } else if (isDecimal === '1') {
+      formatted = (current / 10).toFixed(1);
+    } else if (comma) {
+      formatted = Math.round(current).toLocaleString();
+    } else {
+      formatted = Math.round(current).toLocaleString();
+    }
+
+    el.textContent = prefix + formatted + suffix;
+
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = prefix + display + suffix;
+  }
+  requestAnimationFrame(step);
+}
+
+
+// ── Scanner Feed Simulation ───────────────────────────────
+(function() {
+  const feed = document.getElementById('scannerFeed');
+  const signals = [
+    { time: '15:42:18', sym: 'NQ', symClass: 'nq', dir: 'LONG', dirClass: 'long', price: '21,847.50', result: '+$1,250', win: true },
+    { time: '15:38:04', sym: 'GC', symClass: 'gc', dir: 'SHORT', dirClass: 'short', price: '2,891.40', result: '+$680', win: true },
+    { time: '15:31:22', sym: 'SIL', symClass: 'sil', dir: 'LONG', dirClass: 'long', price: '32.445', result: '-$425', win: false },
+    { time: '15:27:55', sym: 'NQ', symClass: 'nq', dir: 'SHORT', dirClass: 'short', price: '21,903.25', result: '+$2,100', win: true },
+    { time: '15:19:41', sym: 'GC', symClass: 'gc', dir: 'LONG', dirClass: 'long', price: '2,884.20', result: '+$1,440', win: true },
+    { time: '15:14:08', sym: 'SIL', symClass: 'sil', dir: 'SHORT', dirClass: 'short', price: '32.680', result: '+$575', win: true },
+    { time: '15:08:33', sym: 'NQ', symClass: 'nq', dir: 'LONG', dirClass: 'long', price: '21,782.00', result: '+$875', win: true },
+    { time: '14:55:19', sym: 'GC', symClass: 'gc', dir: 'SHORT', dirClass: 'short', price: '2,897.80', result: '-$340', win: false },
+    { time: '14:47:02', sym: 'SIL', symClass: 'sil', dir: 'LONG', dirClass: 'long', price: '32.195', result: '+$1,875', win: true },
+    { time: '14:38:44', sym: 'NQ', symClass: 'nq', dir: 'LONG', dirClass: 'long', price: '21,755.75', result: '+$1,625', win: true },
+  ];
+
+  let index = 0;
+  function addLine() {
+    const s = signals[index % signals.length];
+    const line = document.createElement('div');
+    line.className = 'feed-line';
+    line.innerHTML = `
+      <span class="feed-time">${s.time}</span>
+      <span class="feed-sym ${s.symClass}">${s.sym}</span>
+      <span class="feed-action feed-${s.dirClass}">${s.dir}</span>
+      <span class="feed-price">@ ${s.price}</span>
+      <span class="feed-result ${s.win ? 'feed-win' : 'feed-loss'}">${s.result}</span>
+    `;
+    feed.insertBefore(line, feed.firstChild);
+    if (feed.children.length > 5) feed.removeChild(feed.lastChild);
+    index++;
+  }
+
+  // Initial population
+  for (let i = 0; i < 4; i++) { addLine(); }
+  // Then every 3.5 seconds
+  setInterval(addLine, 3500);
+})();
+
+
+// ── Equity Curve (Animated Draw) ──────────────────────────
+(function() {
+  const canvas = document.getElementById('equityCurve');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  // Simulated equity data (smoothed representation of actual $565K growth)
+  const portfolioData = [];
+  const nqData = [];
+  const gcData = [];
+  const silData = [];
+  const POINTS = 200;
+
+  // Generate realistic-looking curves
+  function generateCurve(finalVal, volatility, seed) {
+    const data = [0];
+    let val = 0;
+    const drift = finalVal / POINTS;
+    let r = seed;
+    for (let i = 1; i < POINTS; i++) {
+      r = (r * 16807) % 2147483647; // LCG PRNG
+      const noise = ((r / 2147483647) - 0.5) * volatility;
+      val += drift + noise;
+      // Occasional drawdowns
+      if (i % 40 < 8 && i > 20) val -= volatility * 0.3;
+      data.push(val);
+    }
+    // Normalize to target
+    const scale = finalVal / data[data.length - 1];
+    return data.map(v => v * scale);
+  }
+
+  portfolioData.push(...generateCurve(565170, 8000, 42));
+  nqData.push(...generateCurve(155819, 4000, 7));
+  gcData.push(...generateCurve(175657, 5000, 13));
+  silData.push(...generateCurve(233694, 6000, 31));
+
+  let drawn = false;
+
+  function drawChart(progress = 1) {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width = rect.width * 2;
+    canvas.height = rect.height * 2;
+    ctx.scale(2, 2);
+    const W = rect.width;
+    const H = rect.height;
+
+    ctx.clearRect(0, 0, W, H);
+
+    const allVals = portfolioData;
+    const maxVal = Math.max(...allVals) * 1.1;
+    const minVal = Math.min(0, Math.min(...allVals)) - 5000;
+
+    const pointsToShow = Math.floor(POINTS * progress);
+
+    function drawLine(data, color, width, fillAlpha) {
+      if (pointsToShow < 2) return;
+      const pts = data.slice(0, pointsToShow);
+      ctx.beginPath();
+      pts.forEach((v, i) => {
+        const x = (i / (POINTS - 1)) * W;
+        const y = H - ((v - minVal) / (maxVal - minVal)) * H;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = color;
+      ctx.lineWidth = width;
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+
+      // Fill area
+      if (fillAlpha > 0) {
+        const lastX = ((pts.length - 1) / (POINTS - 1)) * W;
+        ctx.lineTo(lastX, H);
+        ctx.lineTo(0, H);
+        ctx.closePath();
+        const grad = ctx.createLinearGradient(0, 0, 0, H);
+        grad.addColorStop(0, color.replace(')', `, ${fillAlpha})`).replace('rgb', 'rgba'));
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grad;
+        ctx.fill();
+      }
+
+      // Glow on tip
+      if (progress < 1 && pointsToShow > 0) {
+        const lastPt = pts[pts.length - 1];
+        const tipX = ((pts.length - 1) / (POINTS - 1)) * W;
+        const tipY = H - ((lastPt - minVal) / (maxVal - minVal)) * H;
+        ctx.beginPath();
+        ctx.arc(tipX, tipY, 4, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(tipX, tipY, 10, 0, Math.PI * 2);
+        ctx.fillStyle = color.replace(')', ', 0.15)').replace('rgb', 'rgba');
+        ctx.fill();
+      }
+    }
+
+    // Grid lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 5; i++) {
+      const y = (i / 5) * H;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(W, y);
+      ctx.stroke();
+    }
+
+    // Draw individual lines first (underneath)
+    drawLine(silData, 'rgb(144, 164, 174)', 1.2, 0);
+    drawLine(gcData, 'rgb(234, 179, 8)', 1.2, 0);
+    drawLine(nqData, 'rgba(0, 163, 255, 0.5)', 1.2, 0);
+    // Portfolio on top with fill
+    drawLine(portfolioData, 'rgb(0, 163, 255)', 2.5, 0.08);
+  }
+
+  let animProgress = 0;
+  let animating = false;
+
+  function animateDraw() {
+    animating = true;
+    animProgress += 0.008;
+    if (animProgress > 1) animProgress = 1;
+    drawChart(animProgress);
+    if (animProgress < 1) requestAnimationFrame(animateDraw);
+    else animating = false;
+  }
+
+  // Trigger on scroll into view
+  const equityObserver = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !drawn) {
+      drawn = true;
+      setTimeout(animateDraw, 300);
+    }
+  }, { threshold: 0.3 });
+  equityObserver.observe(canvas.parentElement);
+
+  window.addEventListener('resize', () => { if (drawn) drawChart(animProgress); });
+})();
+
+
+// ── 3D Card Tilt ──────────────────────────────────────────
+document.querySelectorAll('.feature-card, .pricing-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = (y - centerY) / centerY * -4;
+    const rotateY = (x - centerX) / centerX * 4;
+
+    card.style.transform = `translateY(-6px) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    card.style.setProperty('--mouse-x', (x / rect.width * 100) + '%');
+    card.style.setProperty('--mouse-y', (y / rect.height * 100) + '%');
+  });
+
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+  });
+});
+
+
+// ── Instrument Radar Detection on Scroll ──────────────────
+const instrumentObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => {
+        entry.target.classList.add('detected');
+      }, i * 200);
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('.instrument-card').forEach(card => {
+  instrumentObserver.observe(card);
+});
+
+
+// ── Scroll Reveal ─────────────────────────────────────────
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+
+// ── Counter Trigger ───────────────────────────────────────
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const countVal = parseInt(el.dataset.count);
+      if (countVal) animateCounter(el, countVal, 2200);
+      counterObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
+
+</script>
+</body>
+</html>
