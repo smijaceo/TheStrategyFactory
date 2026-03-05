@@ -1466,15 +1466,19 @@ footer {
   /* Feature cards */
   .feature-card { padding: 24px 20px; }
 
-  /* Instruments — stack meta vertically */
+  /* Instruments */
   .instruments { padding: 48px 0; }
   .instruments-grid { gap: 16px; }
-  .instrument-card { padding: 24px 20px; text-align: left; }
+  .instrument-card { padding: 24px 20px; }
   .instrument-pnl { font-size: 28px; }
-  .instrument-meta { grid-template-columns: 1fr; gap: 12px; padding-top: 16px; }
-  .instrument-meta-item { display: flex; justify-content: space-between; align-items: baseline; }
-  .instrument-meta-value { font-size: 15px; }
-  .instrument-meta-label { font-size: 9px; }
+  .instrument-meta { 
+    grid-template-columns: 1fr 1fr !important;
+    gap: 16px 24px;
+    padding-top: 16px;
+    text-align: center;
+  }
+  .instrument-meta-value { font-size: 16px; }
+  .instrument-meta-label { font-size: 8px; }
   .instrument-name { margin-bottom: 16px; }
 
   /* Pricing */
@@ -1489,7 +1493,7 @@ footer {
   .val-instrument-header { margin-bottom: 12px; }
   .val-instrument-name span { font-size: 12px; }
   .val-badge { font-size: 8px; padding: 3px 8px; }
-  .val-stats { grid-template-columns: 1fr; gap: 12px; }
+  .val-stats { grid-template-columns: 1fr !important; gap: 16px; }
   .val-stat-train { font-size: 13px; }
   .val-stat-test { font-size: 16px; }
   .val-stat-arrow { font-size: 11px; }
