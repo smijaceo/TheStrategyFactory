@@ -1266,27 +1266,6 @@ footer {
 .reveal-stagger > .reveal:nth-child(5) { transition-delay: 0.33s; }
 .reveal-stagger > .reveal:nth-child(6) { transition-delay: 0.40s; }
 
-/* ── Responsive ───────────────────────────────────────── */
-@media (max-width: 900px) {
-  .features-grid, .instruments-grid, .pricing-grid, .validation-grid {
-    grid-template-columns: 1fr;
-  }
-  .hero-stats { flex-direction: column; gap: 24px; }
-  .hero-stat { border-right: none; border-bottom: 1px solid var(--border-subtle); padding: 16px 0; }
-  .hero-stat:last-child { border-bottom: none; }
-  .footer-top { flex-direction: column; gap: 32px; }
-  .footer-links { flex-direction: column; gap: 24px; }
-  .nav-links { display: none; }
-  .hero { padding: 160px 0 80px; min-height: auto; }
-  .hero h1 { letter-spacing: -1px; }
-}
-
-@media (max-width: 600px) {
-  .container { padding: 0 20px; }
-  section { padding: 60px 0; }
-  .scanner-feed-container { font-size: 12px; }
-}
-
 /* ── Hamburger Menu ───────────────────────────────────── */
 .hamburger {
   display: none;
@@ -1357,16 +1336,66 @@ footer {
 }
 .mobile-menu-close:hover { color: var(--accent-cyan); }
 
-/* ── Mobile Responsive Fixes ──────────────────────────── */
+/* ── Responsive — Tablet ──────────────────────────────── */
 @media (max-width: 900px) {
   .hamburger { display: flex; }
-  h1 { font-size: clamp(24px, 5vw, 36px); word-break: break-word; }
-  h2 { font-size: clamp(20px, 4vw, 28px); }
+  .nav-links { display: none; }
+
+  .features-grid, .instruments-grid, .pricing-grid, .validation-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-stats { flex-direction: column; gap: 16px; }
+  .hero-stat { border-right: none; border-bottom: 1px solid var(--border-subtle); padding: 12px 0; }
+  .hero-stat:last-child { border-bottom: none; }
+  .footer-top { flex-direction: column; gap: 32px; }
+  .footer-links { flex-direction: column; gap: 24px; }
+  .hero { padding: 120px 0 60px; min-height: auto; }
+  .hero h1 { font-size: 36px; letter-spacing: -1px; }
+  .hero-sub { font-size: 15px; max-width: 90%; }
 }
+
+/* ── Responsive — Mobile ──────────────────────────────── */
 @media (max-width: 600px) {
-  h1 { font-size: clamp(20px, 5vw, 28px); letter-spacing: -1px; }
-  h2 { font-size: clamp(18px, 4vw, 24px); }
-  .scanner-feed-container { font-size: 12px; }
+  .container { padding: 0 16px; }
+  section { padding: 48px 0; }
+
+  /* Hero */
+  .hero { padding: 100px 0 48px; }
+  .hero h1 { font-size: 28px; line-height: 1.15; letter-spacing: -1px; }
+  .hero-sub { font-size: 14px; max-width: 100%; margin-bottom: 32px; }
+  .hero-actions { flex-direction: column; gap: 12px; width: 100%; }
+  .hero-actions a { width: 100%; text-align: center; padding: 14px 24px; font-size: 13px; }
+  .hero-badge { font-size: 10px; padding: 6px 14px; }
+
+  /* Stats */
+  .hero-stats { gap: 12px; margin-top: 40px; }
+  .hero-stat .value { font-size: 28px; }
+  .hero-stat .label { font-size: 9px; }
+
+  /* Section headings */
+  h2, .section-title { font-size: 22px; }
+  .section-sub { font-size: 13px; }
+
+  /* Scanner feed */
+  .scanner-feed-container { font-size: 11px; overflow-x: auto; }
+
+  /* Equity curve */
+  .equity-card { padding: 16px; }
+  .equity-value { font-size: 28px; }
+
+  /* Feature cards */
+  .feature-card { padding: 24px 20px; }
+
+  /* Pricing */
+  .pricing-grid { gap: 16px; }
+  .pricing-card { padding: 24px 20px; }
+  .pricing-amount { font-size: 36px; }
+
+  /* Validation */
+  .validation-grid { gap: 16px; }
+
+  /* Footer */
+  .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
 }
 </style>
 </head>

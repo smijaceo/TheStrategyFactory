@@ -909,25 +909,6 @@ footer {
 .reveal-stagger > .reveal:nth-child(5) { transition-delay: 0.33s; }
 .reveal-stagger > .reveal:nth-child(6) { transition-delay: 0.40s; }
 
-/* ── Responsive ──────────────────────────────────────── */
-@media (max-width: 900px) {
-  .steps-grid { grid-template-columns: 1fr; }
-  .signal-layout { grid-template-columns: 1fr; gap: 40px; }
-  .tier-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
-  .nav-links { display: none; }
-  .hero { padding: 140px 0 60px; }
-  .hero h1 { letter-spacing: -1.5px; }
-  .footer-top { flex-direction: column; gap: 32px; }
-  .footer-links { flex-direction: column; gap: 24px; }
-  section { padding: 60px 0; }
-}
-
-@media (max-width: 600px) {
-  .container { padding: 0 20px; }
-  .step-card { padding: 28px 24px; }
-  .hero-actions { flex-direction: column; }
-}
-
 /* ── Hamburger Menu ───────────────────────────────────── */
 .hamburger {
   display: none;
@@ -998,16 +979,32 @@ footer {
 }
 .mobile-menu-close:hover { color: var(--accent-cyan); }
 
-/* ── Mobile Responsive Fixes ──────────────────────────── */
+/* ── Responsive — Tablet ──────────────────────────────── */
 @media (max-width: 900px) {
   .hamburger { display: flex; }
-  h1 { font-size: clamp(24px, 5vw, 36px); word-break: break-word; }
-  h2 { font-size: clamp(20px, 4vw, 28px); }
+  .nav-links { display: none; }
+  .footer-top { flex-direction: column; gap: 32px; }
+  .footer-links { flex-direction: column; gap: 24px; }
 }
+
+/* ── Responsive — Mobile ──────────────────────────────── */
 @media (max-width: 600px) {
-  h1 { font-size: clamp(20px, 5vw, 28px); letter-spacing: -1px; }
-  h2 { font-size: clamp(18px, 4vw, 24px); }
-  .scanner-feed-container { font-size: 12px; }
+  .tiers-grid, .tier-grid { grid-template-columns: 1fr; gap: 16px; }
+  .tier-card { padding: 24px 20px; }
+  .tier-price { font-size: 32px; }
+  .hero { padding: 100px 0 48px; }
+  .hero h1 { font-size: 28px !important; }
+  .faq-item { padding: 16px; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .container { padding: 0 16px; }
+  section { padding: 48px 0; }
+  h1 { font-size: 28px !important; line-height: 1.15; letter-spacing: -1px; }
+  h2 { font-size: 22px !important; }
+  p { font-size: 14px; }
+  .page-header { padding: 100px 0 40px; }
+  .page-header h1 { font-size: 28px !important; }
+  .page-header p { font-size: 14px; }
+  .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
 }
 </style>
 </head>

@@ -413,18 +413,6 @@ footer { border-top: 1px solid var(--border-subtle); padding: 60px 0 40px; }
 .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.8s, transform 0.8s; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
 
-/* ── Responsive ───────────────────────────────────────── */
-@media (max-width: 768px) {
-  .scanner-grid { grid-template-columns: 1fr; }
-  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
-  .nav-links { display: none; }
-  .footer-top { flex-direction: column; gap: 32px; }
-  .footer-links { flex-direction: column; gap: 24px; }
-  .status-meta { flex-direction: column; gap: 8px; }
-  .session-timeline { flex-direction: column; height: auto; }
-  .session-block { padding: 12px; }
-}
-
 /* ── Hamburger Menu ───────────────────────────────────── */
 .hamburger {
   display: none;
@@ -495,11 +483,27 @@ footer { border-top: 1px solid var(--border-subtle); padding: 60px 0 40px; }
 }
 .mobile-menu-close:hover { color: var(--accent-cyan); }
 
-/* ── Mobile Responsive Fixes ──────────────────────────── */
-@media (max-width: 768px) {
+/* ── Responsive — Tablet ──────────────────────────────── */
+@media (max-width: 900px) {
   .hamburger { display: flex; }
-  h1 { word-break: break-word; }
-  h2 { font-size: clamp(18px, 4vw, 24px); }
+  .nav-links { display: none; }
+  .footer-top { flex-direction: column; gap: 32px; }
+  .footer-links { flex-direction: column; gap: 24px; }
+}
+
+/* ── Responsive — Mobile ──────────────────────────────── */
+@media (max-width: 600px) {
+  .dashboard-grid, .status-grid { grid-template-columns: 1fr; gap: 12px; }
+  .status-card { padding: 16px; }
+  .container { padding: 0 16px; }
+  section { padding: 48px 0; }
+  h1 { font-size: 28px !important; line-height: 1.15; letter-spacing: -1px; }
+  h2 { font-size: 22px !important; }
+  p { font-size: 14px; }
+  .page-header { padding: 100px 0 40px; }
+  .page-header h1 { font-size: 28px !important; }
+  .page-header p { font-size: 14px; }
+  .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
 }
 </style>
 </head>
