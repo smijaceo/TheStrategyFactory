@@ -113,6 +113,14 @@ nav {
   backdrop-filter: blur(24px) saturate(1.4);
   border-bottom: 1px solid var(--border-subtle);
 }
+nav::before {
+  content: '';
+  position: fixed;
+  top: -100px; left: 0; right: 0;
+  height: calc(100px + env(safe-area-inset-top, 0px));
+  background: #06090F;
+  z-index: 99;
+}
 nav .container { display: flex; align-items: center; justify-content: space-between; }
 .nav-logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
 .nav-logo-mark { font-family: var(--font-display); font-weight: 900; font-size: 28px; font-style: italic; letter-spacing: -1px; }

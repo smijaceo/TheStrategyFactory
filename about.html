@@ -106,6 +106,14 @@ nav {
   background: #06090F;
   border-bottom: 1px solid var(--border-subtle);
 }
+nav::before {
+  content: '';
+  position: fixed;
+  top: -100px; left: 0; right: 0;
+  height: calc(100px + env(safe-area-inset-top, 0px));
+  background: #06090F;
+  z-index: 99;
+}
 
 nav .container {
   display: flex;
