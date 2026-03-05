@@ -902,7 +902,11 @@ footer {
 
 /* ── Responsive — Mobile ──────────────────────────────── */
 @media (max-width: 600px) {
-  .kpi-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .kpi-grid { grid-template-columns: 1fr; gap: 12px; }
+  .instrument-breakdown { grid-template-columns: 1fr; }
+  .trade-dist, .distribution-grid { grid-template-columns: 1fr; }
+  .monthly-table { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .monthly-table table { min-width: 500px; }
   .kpi-card { padding: 16px; }
   .kpi-value { font-size: 24px; }
   .chart-container { padding: 16px; }
