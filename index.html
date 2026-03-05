@@ -289,12 +289,12 @@ nav .container {
   gap: 8px;
   font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--accent-green);
-  background: var(--accent-green-dim);
-  border: 1px solid rgba(0, 230, 118, 0.15);
+  color: var(--accent-cyan);
+  background: var(--accent-cyan-dim);
+  border: 1px solid rgba(0, 163, 255, 0.2);
   padding: 8px 20px;
   border-radius: var(--radius-pill);
   margin-bottom: 40px;
@@ -305,9 +305,13 @@ nav .container {
   content: '';
   width: 6px; height: 6px;
   border-radius: 50%;
-  background: var(--accent-green);
-  box-shadow: 0 0 10px var(--accent-green);
-  animation: pulse 2s infinite;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 10px var(--accent-cyan);
+  animation: pulse-cyan 2s infinite;
+}
+@keyframes pulse-cyan {
+  0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--accent-cyan); }
+  50% { opacity: 0.4; box-shadow: 0 0 4px var(--accent-cyan); }
 }
 
 @keyframes pulse {
@@ -1598,8 +1602,6 @@ footer {
 
   /* Footer */
   .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
-  .launch-banner { font-size: 11px; padding: 8px 16px; }
-  .launch-banner .launch-banner-text { gap: 12px; }
   .countdown { gap: 12px; }
   .countdown-unit { min-width: 48px; }
   .countdown-value { font-size: 28px; }
@@ -1608,66 +1610,6 @@ footer {
   .founding-card { padding: 32px 20px; }
   .founding-headline { font-size: 28px; }
   .founding-spots-bar { max-width: 100%; }
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   LAUNCH BANNER
-   ═══════════════════════════════════════════════════════════════ */
-.launch-banner {
-  background: linear-gradient(90deg, rgba(0,163,255,0.12) 0%, rgba(124,92,252,0.12) 50%, rgba(0,163,255,0.12) 100%);
-  border-bottom: 1px solid rgba(0,163,255,0.15);
-  padding: 10px 20px;
-  text-align: center;
-  position: relative;
-  z-index: 101;
-  overflow: hidden;
-}
-.launch-banner::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 200%; height: 100%;
-  background: linear-gradient(90deg, transparent 0%, rgba(0,163,255,0.08) 25%, rgba(124,92,252,0.08) 50%, rgba(0,163,255,0.08) 75%, transparent 100%);
-  animation: bannerSweep 4s linear infinite;
-}
-@keyframes bannerSweep {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(50%); }
-}
-.launch-banner .launch-banner-text {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-}
-.launch-banner .launch-date {
-  color: var(--accent-cyan);
-  font-weight: 700;
-}
-.launch-banner .launch-dot {
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: var(--accent-cyan);
-  opacity: 0.5;
-}
-.launch-banner .launch-cta {
-  color: var(--accent-cyan);
-  text-decoration: none;
-  font-weight: 700;
-  transition: all 0.3s;
-}
-.launch-banner .launch-cta:hover {
-  color: #fff;
-  text-shadow: 0 0 10px var(--accent-cyan);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1878,19 +1820,6 @@ footer {
 <canvas id="particles"></canvas>
 
 <!-- ═══════════════════════════════════════════════════════════
-     LAUNCH BANNER
-     ═══════════════════════════════════════════════════════════ -->
-<div class="launch-banner">
-  <div class="launch-banner-text">
-    <span>🚀 Launching <span class="launch-date">March 16, 2026</span></span>
-    <span class="launch-dot"></span>
-    <span>Founding member spots are limited</span>
-    <span class="launch-dot"></span>
-    <a href="https://discord.gg/6hWtrqxSed" class="launch-cta" target="_blank">Join the Discord →</a>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════
      NAVIGATION
      ═══════════════════════════════════════════════════════════ -->
 <nav>
@@ -1927,7 +1856,7 @@ footer {
      ═══════════════════════════════════════════════════════════ -->
 <section class="hero">
   <div class="container">
-    <div class="hero-badge">Walk-Forward Validated</div>
+    <div class="hero-badge">🚀 Launching March 16</div>
 
     <h1>
       Automated Futures<br>
@@ -1940,10 +1869,34 @@ footer {
       No discretion. No guesswork.
     </p>
 
+    <!-- Launch Countdown -->
+    <div class="countdown-wrapper" style="margin-top:0;margin-bottom:48px;">
+      <div class="countdown" id="launchCountdown">
+        <div class="countdown-unit">
+          <div class="countdown-value" id="cd-days">--</div>
+          <div class="countdown-label">Days</div>
+        </div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit">
+          <div class="countdown-value" id="cd-hours">--</div>
+          <div class="countdown-label">Hours</div>
+        </div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit">
+          <div class="countdown-value" id="cd-mins">--</div>
+          <div class="countdown-label">Mins</div>
+        </div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit">
+          <div class="countdown-value" id="cd-secs">--</div>
+          <div class="countdown-label">Secs</div>
+        </div>
+      </div>
+    </div>
+
     <div class="hero-actions">
-      
-      <a href="start.html#pricing" class="btn-primary">View Plans</a>
-      <a href="performance.html" class="btn-secondary">See Results</a>
+      <a href="https://discord.gg/6hWtrqxSed" class="btn-primary" target="_blank">Join the Discord</a>
+      <a href="performance.html" class="btn-secondary">See the Numbers</a>
     </div>
 
     <div class="hero-stats">
@@ -1976,31 +1929,6 @@ footer {
       </div>
     </div>
 
-    <!-- Launch Countdown -->
-    <div class="countdown-wrapper">
-      <div class="countdown-label-text">Launching in</div>
-      <div class="countdown" id="launchCountdown">
-        <div class="countdown-unit">
-          <div class="countdown-value" id="cd-days">--</div>
-          <div class="countdown-label">Days</div>
-        </div>
-        <div class="countdown-sep">:</div>
-        <div class="countdown-unit">
-          <div class="countdown-value" id="cd-hours">--</div>
-          <div class="countdown-label">Hours</div>
-        </div>
-        <div class="countdown-sep">:</div>
-        <div class="countdown-unit">
-          <div class="countdown-value" id="cd-mins">--</div>
-          <div class="countdown-label">Mins</div>
-        </div>
-        <div class="countdown-sep">:</div>
-        <div class="countdown-unit">
-          <div class="countdown-value" id="cd-secs">--</div>
-          <div class="countdown-label">Secs</div>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
