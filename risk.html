@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="theme-color" content="#06090F">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2306090F'/%3E%3Ctext x='4' y='24' font-family='Arial' font-weight='900' font-style='italic' font-size='22'%3E%3Ctspan fill='white'%3ES%3C/tspan%3E%3Ctspan fill='%2300A3FF'%3EF%3C/tspan%3E%3C/text%3E%3C/svg%3E">
+<title>Risk Disclosure — The Strategy Factory</title>
+<meta name="description" content="Risk Disclosure for The Strategy Factory. Futures trading involves substantial risk of loss. Read this before subscribing.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Risk Disclosure — The Strategy Factory">
+<meta property="og:description" content="Futures trading involves substantial risk of loss. Read this before subscribing to The Strategy Factory.">
+<meta property="og:url" content="https://thestrategyfactory.io/risk.html">
+<meta property="og:site_name" content="The Strategy Factory">
+<meta property="og:image" content="https://thestrategyfactory.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@tsfalgo">
+<meta name="twitter:title" content="Risk Disclosure — The Strategy Factory">
+<meta name="twitter:description" content="Futures trading involves substantial risk of loss. Read this before subscribing.">
+<meta name="twitter:image" content="https://thestrategyfactory.io/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { overflow-x: hidden; max-width: 100vw; }
+main.page-content { position: relative; z-index: 1; clip-path: inset(0 0 0 0); -webkit-clip-path: inset(0 0 0 0); }
+
+:root {
+  --bg-primary: #06090F;
+  --bg-secondary: #0B1018;
+  --bg-card: #0E1420;
+  --bg-card-hover: #141C2A;
+  --bg-elevated: #1A2233;
+  --accent-cyan: #00A3FF;
+  --accent-cyan-dim: rgba(0, 163, 255, 0.10);
+  --accent-cyan-glow: rgba(0, 163, 255, 0.35);
+  --accent-green: #00E676;
+  --accent-green-dim: rgba(0, 230, 118, 0.08);
+  --accent-red: #FF5252;
+  --accent-purple: #7C5CFC;
+  --accent-gold: #EAB308;
+  --text-primary: #FFFFFF;
+  --text-secondary: #7B8DA4;
+  --text-muted: #445566;
+  --text-dim: #2A3544;
+  --border-default: #151D2B;
+  --border-subtle: rgba(255,255,255,0.04);
+  --border-cyan: rgba(0, 163, 255, 0.2);
+  --font-display: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-pill: 9999px;
+}
+
+html { scroll-behavior: smooth; overflow-x: hidden; }
+
+body {
+  font-family: var(--font-display);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.5;
+  animation: grain 0.5s steps(1) infinite;
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-2%, -3%); }
+  20% { transform: translate(3%, 1%); }
+  30% { transform: translate(-1%, 2%); }
+  40% { transform: translate(2%, -2%); }
+  50% { transform: translate(-3%, 3%); }
+  60% { transform: translate(1%, -1%); }
+  70% { transform: translate(-2%, 2%); }
+  80% { transform: translate(3%, -3%); }
+  90% { transform: translate(-1%, 1%); }
+}
+
+#particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 1; }
+
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 12px 0; background: #06090F; border-bottom: 1px solid var(--border-subtle); }
+nav.scrolled { background: rgba(6, 9, 15, 0.95); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); }
+nav .container { display: flex; align-items: center; justify-content: space-between; }
+.nav-logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+.nav-logo-mark { font-family: var(--font-display); font-weight: 900; font-size: 28px; font-style: italic; letter-spacing: -1px; }
+.nav-logo-mark .s { color: var(--text-primary); }
+.nav-logo-mark .f { color: var(--accent-cyan); text-shadow: 0 0 20px var(--accent-cyan-glow); }
+.nav-logo-text { font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-muted); line-height: 1.3; }
+.nav-links { display: flex; align-items: center; gap: 36px; list-style: none; }
+.nav-links a { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-secondary); text-decoration: none; transition: all 0.3s; position: relative; }
+.nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 1px; background: var(--accent-cyan); transform: scaleX(0); transition: transform 0.3s; }
+.nav-links a:hover { color: var(--accent-cyan); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-cta { font-family: var(--font-mono) !important; font-size: 11px !important; font-weight: 600 !important; letter-spacing: 0.1em !important; text-transform: uppercase !important; color: var(--bg-primary) !important; background: var(--accent-cyan) !important; padding: 10px 24px; border-radius: var(--radius-pill); transition: all 0.3s; box-shadow: 0 0 20px rgba(0, 163, 255, 0.2); }
+.nav-cta::after { display: none !important; }
+.nav-cta:hover { background: #38BDF8 !important; box-shadow: 0 0 40px rgba(0, 163, 255, 0.4); transform: translateY(-1px); }
+
+.hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 32px; height: 32px; cursor: pointer; z-index: 200; background: none; border: none; padding: 0; }
+.hamburger span { display: block; width: 24px; height: 2px; background: var(--text-secondary); border-radius: 2px; transition: all 0.3s; }
+.hamburger:hover span { background: var(--accent-cyan); }
+.mobile-menu { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(6, 9, 15, 0.97); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); z-index: 150; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px; opacity: 0; visibility: hidden; transition: opacity 0.35s ease, visibility 0.35s ease; }
+.mobile-menu.open { opacity: 1; visibility: visible; }
+.mobile-menu a { font-family: var(--font-mono); font-size: 16px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-secondary); text-decoration: none; padding: 8px 0; transform: translateY(20px); opacity: 0; transition: color 0.3s, transform 0.4s ease, opacity 0.4s ease; }
+.mobile-menu.open a { transform: translateY(0); opacity: 1; }
+.mobile-menu a:hover { color: var(--accent-cyan); }
+.mobile-menu a.mobile-cta { color: var(--bg-primary); background: var(--accent-cyan); padding: 14px 40px; border-radius: var(--radius-pill); margin-top: 16px; box-shadow: 0 0 30px rgba(0, 163, 255, 0.2); }
+.mobile-menu-close { position: absolute; top: 20px; right: 32px; background: none; border: none; color: var(--text-secondary); font-size: 32px; cursor: pointer; font-family: var(--font-mono); transition: color 0.3s, transform 0.3s; z-index: 200; }
+.mobile-menu-close:hover { color: var(--accent-cyan); transform: rotate(90deg); }
+
+.legal-hero { padding: 160px 0 60px; text-align: center; }
+.legal-hero h1 { font-family: var(--font-display); font-size: clamp(36px, 5vw, 56px); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 12px; }
+.legal-hero .subtitle { font-family: var(--font-display); font-size: 18px; color: var(--text-secondary); max-width: 600px; margin: 0 auto 12px; line-height: 1.6; }
+.legal-hero .updated { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); letter-spacing: 0.1em; }
+.legal-content { padding: 0 0 100px; }
+.legal-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius); padding: 32px; margin-bottom: 20px; }
+.legal-card h2 { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--accent-cyan); margin-bottom: 16px; }
+.legal-card p, .legal-card li { font-size: 15px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 12px; }
+.legal-card ul, .legal-card ol { padding-left: 20px; margin-bottom: 12px; }
+.legal-card li { margin-bottom: 6px; }
+.legal-card p:last-child, .legal-card li:last-child { margin-bottom: 0; }
+.legal-card strong { color: var(--text-primary); }
+.legal-card a { color: var(--accent-cyan); text-decoration: none; }
+.legal-card a:hover { text-decoration: underline; }
+
+.risk-warning {
+  border-color: rgba(255, 82, 82, 0.2);
+  background: linear-gradient(135deg, var(--bg-card), rgba(255, 82, 82, 0.03));
+}
+.risk-warning h2 { color: var(--accent-red); }
+
+.cftc-card {
+  border-color: rgba(234, 179, 8, 0.15);
+  background: linear-gradient(135deg, var(--bg-card), rgba(234, 179, 8, 0.02));
+}
+.cftc-card h2 { color: var(--accent-gold); }
+.cftc-text {
+  font-family: var(--font-mono) !important;
+  font-size: 13px !important;
+  color: var(--text-muted) !important;
+  line-height: 2 !important;
+  border-left: 3px solid var(--accent-gold);
+  padding-left: 20px;
+  margin: 16px 0;
+}
+
+footer { border-top: 1px solid var(--border-subtle); padding: 60px 0 40px; }
+.footer-top { display: flex; justify-content: space-between; align-items: start; margin-bottom: 48px; }
+.footer-brand { max-width: 320px; }
+.footer-logo { font-family: var(--font-display); font-weight: 900; font-size: 22px; font-style: italic; margin-bottom: 12px; }
+.footer-logo .s { color: var(--text-primary); }
+.footer-logo .f { color: var(--accent-cyan); text-shadow: 0 0 16px var(--accent-cyan-glow); }
+.footer-tagline { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); }
+.footer-links { display: flex; gap: 48px; }
+.footer-col h4 { font-family: var(--font-mono); font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+.footer-col a { display: block; font-size: 14px; color: var(--text-secondary); text-decoration: none; padding: 4px 0; transition: color 0.3s; }
+.footer-col a:hover { color: var(--accent-cyan); }
+.footer-bottom { border-top: 1px solid var(--border-subtle); padding-top: 24px; }
+.footer-disclaimer { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); line-height: 1.8; max-width: 800px; }
+
+.reveal { opacity: 0; transform: translateY(40px); transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 900px) {
+  .hamburger { display: flex; }
+  nav { position: static; }
+  .nav-links { display: none; }
+  .legal-hero { padding: 32px 0 40px; }
+  .footer-top { flex-direction: column; gap: 32px; }
+  .footer-links { flex-direction: column; gap: 24px; }
+}
+@media (max-width: 600px) {
+  .container { padding: 0 16px; }
+  .legal-card { padding: 24px 20px; }
+  .legal-card h2 { font-size: 18px; }
+  .legal-card p, .legal-card li { font-size: 14px; }
+  .cftc-text { font-size: 11px !important; padding-left: 14px; }
+  .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<nav>
+  <div class="container">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark"><span class="s">S</span><span class="f">F</span></div>
+      <div class="nav-logo-text">Strategy<br>Factory</div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="performance.html">Performance</a></li>
+      <li><a href="about.html">How It Works</a></li>
+      <li><a href="start.html#pricing">Pricing</a></li>
+      <li><a href="https://whop.com/the-strategy-factory/" class="nav-cta" target="_blank">Get Started</a></li>
+    </ul>
+    <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu">
+  <button class="mobile-menu-close">&times;</button>
+  <a href="index.html">Home</a>
+  <a href="performance.html">Performance</a>
+  <a href="about.html">Methodology</a>
+  <a href="status.html">Status</a>
+  <a href="start.html#pricing">Pricing</a>
+  <a href="https://whop.com/the-strategy-factory/" class="mobile-cta" target="_blank">Get Started</a>
+</div>
+
+<main class="page-content">
+
+<section class="legal-hero">
+  <div class="container">
+    <h1>Risk Disclosure</h1>
+    <p class="subtitle">Futures trading carries substantial risk. We believe in full transparency — read this carefully before using our service.</p>
+    <p class="updated">Last Updated: March 5, 2026</p>
+  </div>
+</section>
+
+<section class="legal-content">
+  <div class="container">
+
+    <div class="legal-card risk-warning reveal">
+      <h2>1. General Risk Warning</h2>
+      <p><strong>Trading futures involves substantial risk of loss and is not suitable for all investors.</strong> You should carefully consider whether futures trading is appropriate for you in light of your financial condition, investment experience, and risk tolerance.</p>
+      <p>The high degree of leverage available in futures trading can work against you as well as for you. The use of leverage can lead to large losses as well as large gains. You could lose more than your initial investment.</p>
+      <p>Do not trade with money you cannot afford to lose. The Strategy Factory makes no guarantees about the profitability of any trade, signal, or strategy.</p>
+    </div>
+
+    <div class="legal-card cftc-card reveal">
+      <h2>2. CFTC Rule 4.41 — Hypothetical Performance Disclaimer</h2>
+      <p class="cftc-text">Hypothetical or simulated performance results have certain limitations. Unlike an actual performance record, simulated results do not represent actual trading. Also, since the trades have not been executed, the results may have under-or-over compensated for the impact, if any, of certain market factors, such as lack of liquidity. Simulated trading programs in general are also subject to the fact that they are designed with the benefit of hindsight. No representation is being made that any account will or is likely to achieve profit or losses similar to those shown.</p>
+      <p>This disclaimer is required by the Commodity Futures Trading Commission (CFTC) and applies to all performance data presented by The Strategy Factory, including backtested results, walk-forward validation results, and any hypothetical trade records.</p>
+    </div>
+
+    <div class="legal-card reveal">
+      <h2>3. Simulated vs. Actual Performance</h2>
+      <p>The performance results displayed on our website, Discord, and marketing materials are based on <strong>backtested and simulated trading results</strong> unless explicitly stated otherwise. These results were generated by applying our algorithms to historical market data.</p>
+      <p>Important limitations of backtested data include:</p>
+      <ul>
+        <li><strong>Hindsight bias</strong> — Strategies are developed with knowledge of past price action. Parameters may have been optimized (intentionally or inadvertently) to fit historical data.</li>
+        <li><strong>Execution assumptions</strong> — Backtests assume fills at signal prices. In live markets, slippage, partial fills, and execution delays are unavoidable.</li>
+        <li><strong>Liquidity assumptions</strong> — Historical data may not reflect periods of low liquidity where orders would have moved the market.</li>
+        <li><strong>Commission estimates</strong> — While our results include commission estimates, your actual commission costs may differ based on your broker.</li>
+        <li><strong>Survivorship bias</strong> — Only the strategies that "survived" development and testing are presented. Failed strategies are not shown.</li>
+      </ul>
+      <p>We use walk-forward validation to test our strategies on out-of-sample data. While this is a more rigorous methodology than simple backtesting, it still does not guarantee future performance.</p>
+    </div>
+
+    <div class="legal-card reveal">
+      <h2>4. No Guarantee of Results</h2>
+      <p><strong>Past performance is not indicative of future results.</strong> This is not a disclaimer we bury in fine print — it is a fundamental truth of trading.</p>
+      <p>Market conditions change. Strategies that performed well in backtesting or during specific time periods may underperform, break even, or lose money in the future. Factors that can cause strategies to degrade include:</p>
+      <ul>
+        <li>Changes in market microstructure, volatility, or correlation</li>
+        <li>Shifts in monetary policy, economic conditions, or geopolitical events</li>
+        <li>Increased adoption of similar strategies, reducing edge</li>
+        <li>Regulatory changes affecting futures markets</li>
+      </ul>
+      <p>We monitor our strategies continuously and will communicate with subscribers if significant performance degradation is observed. But we cannot predict when or if this will happen.</p>
+    </div>
+
+    <div class="legal-card risk-warning reveal">
+      <h2>5. Leverage & Margin Risk</h2>
+      <p>Futures are leveraged instruments. A relatively small market movement can have a proportionally larger impact on the funds you have deposited or will have to deposit.</p>
+      <ul>
+        <li><strong>You can lose more than your initial margin deposit.</strong> If the market moves against your position, you may be required to deposit additional funds (margin call) on short notice to maintain your position.</li>
+        <li>Failure to meet margin calls may result in your broker liquidating your position at a loss — without your consent.</li>
+        <li>Leverage amplifies both gains and losses. A 1% move in the underlying market can translate to a 10%+ move in your account, depending on the margin requirements.</li>
+      </ul>
+      <p>The Strategy Factory signals do not account for your individual account size, margin requirements, or risk tolerance. Position sizing and risk management are your responsibility.</p>
+    </div>
+
+    <div class="legal-card reveal">
+      <h2>6. Signal Service Limitations</h2>
+      <p>Our signal delivery system, while designed for reliability, is subject to the following limitations:</p>
+      <ul>
+        <li><strong>Latency:</strong> Signals are delivered via Discord. There is inherent latency between signal generation and delivery. Market conditions can change in the seconds between when a signal fires and when you see it.</li>
+        <li><strong>Technology failures:</strong> Discord outages, internet connectivity issues, server downtime, or software bugs can delay or prevent signal delivery.</li>
+        <li><strong>Execution gap:</strong> Even if you receive a signal instantly, your actual execution depends on your broker's platform, your internet connection, order routing speed, and available liquidity.</li>
+        <li><strong>Slippage:</strong> The price at which you fill your order may differ from the signal price, especially during volatile market conditions or around news events.</li>
+        <li><strong>Partial signals:</strong> System errors may result in entry signals without corresponding exit signals, or vice versa. Always have a contingency plan.</li>
+      </ul>
+      <p>We are not responsible for any losses resulting from signal delivery delays, technical failures, or execution differences between the signal and your actual trade.</p>
+    </div>
+
+    <div class="legal-card reveal">
+      <h2>7. Not Financial Advice</h2>
+      <p><strong>The Strategy Factory is not a registered investment advisor, commodity trading advisor, broker-dealer, or financial planner.</strong> We are not registered with the SEC, CFTC, NFA, or any state securities regulator.</p>
+      <p>Nothing provided through the Service — including signals, performance data, educational content, Discord messages, tweets, or any other communication — constitutes:</p>
+      <ul>
+        <li>Personalized investment advice</li>
+        <li>A recommendation to buy, sell, or hold any futures contract</li>
+        <li>An offer to manage your money or execute trades on your behalf</li>
+        <li>A guarantee or promise of investment returns</li>
+      </ul>
+      <p>All signals are generated algorithmically and are provided for <strong>informational and educational purposes only</strong>. They are not tailored to your individual financial situation, investment objectives, or risk tolerance.</p>
+    </div>
+
+    <div class="legal-card reveal">
+      <h2>8. You Are Responsible</h2>
+      <p>By using The Strategy Factory, you acknowledge that:</p>
+      <ul>
+        <li><strong>All trading decisions are yours alone.</strong> Whether to enter, exit, or modify a trade is entirely your decision.</li>
+        <li>You are responsible for your own due diligence before placing any trade.</li>
+        <li>You should consult with a qualified financial advisor, tax professional, or legal counsel before making investment decisions.</li>
+        <li>You are responsible for understanding and complying with all applicable laws and regulations regarding futures trading in your jurisdiction.</li>
+        <li>You are responsible for your own risk management, including position sizing, stop-loss placement, and portfolio allocation.</li>
+      </ul>
+      <p>We provide signals. What you do with them is entirely up to you.</p>
+    </div>
+
+    <div class="legal-card risk-warning reveal">
+      <h2>9. Capital at Risk</h2>
+      <p><strong>Only trade with capital you can afford to lose entirely.</strong></p>
+      <p>Do not use rent money, emergency funds, retirement savings, borrowed money, or funds earmarked for essential expenses to trade futures. Trading should only be done with true risk capital — money that, if lost completely, would not materially affect your lifestyle or financial security.</p>
+      <p>If you find yourself trading with money you can't afford to lose, or if trading is causing you significant stress or anxiety, stop trading and seek professional guidance.</p>
+    </div>
+
+    <div class="legal-card reveal">
+      <h2>10. Acknowledgment</h2>
+      <p>By subscribing to and using The Strategy Factory's services, you acknowledge that:</p>
+      <ul>
+        <li>You have read and understood this Risk Disclosure in its entirety</li>
+        <li>You understand that futures trading involves substantial risk of loss</li>
+        <li>You understand that past performance does not guarantee future results</li>
+        <li>You understand that our performance data is based on backtested/simulated results with inherent limitations</li>
+        <li>You accept full responsibility for your own trading decisions</li>
+        <li>You will not hold The Strategy Factory liable for any trading losses</li>
+        <li>You have the financial means and risk tolerance appropriate for futures trading</li>
+      </ul>
+      <p>If you have any questions about this Risk Disclosure, contact us at <a href="mailto:support@thestrategyfactory.io">support@thestrategyfactory.io</a> before subscribing.</p>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo"><span class="s">S</span><span class="f">F</span></div>
+        <div class="footer-tagline">Quantitative · Systematic · Automated</div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="performance.html">Performance</a>
+          <a href="status.html">System Status</a>
+          <a href="start.html#pricing">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="start.html">Getting Started</a>
+          <a href="about.html">Methodology</a>
+          <a href="start.html#faq">FAQ</a>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <a href="https://discord.gg/6hWtrqxSed" target="_blank">Discord</a>
+          <a href="https://x.com/tsfalgo" target="_blank">Twitter</a>
+          <a href="mailto:support@thestrategyfactory.io">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="terms.html">Terms of Service</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="risk.html">Risk Disclosure</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-disclaimer">
+        CFTC Rule 4.41 — Hypothetical or simulated performance results have certain limitations. Unlike an actual performance record, simulated results do not represent actual trading. Also, since the trades have not been executed, the results may have under-or-over compensated for the impact, if any, of certain market factors, such as lack of liquidity. Simulated trading programs in general are also subject to the fact that they are designed with the benefit of hindsight. No representation is being made that any account will or is likely to achieve profit or losses similar to those shown. Past performance is not indicative of future results. This is not financial advice.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let w, h, particles = [], mouse = { x: null, y: null };
+  function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  class P {
+    constructor() { this.x = Math.random()*w; this.y = Math.random()*h; this.vx = (Math.random()-0.5)*0.4; this.vy = (Math.random()-0.5)*0.4; this.r = Math.random()*1.5+0.5; this.a = Math.random()*0.4+0.1; }
+    update() { this.x+=this.vx; this.y+=this.vy; if(this.x<0||this.x>w)this.vx*=-1; if(this.y<0||this.y>h)this.vy*=-1; if(mouse.x!==null){const dx=mouse.x-this.x,dy=mouse.y-this.y,d=Math.sqrt(dx*dx+dy*dy);if(d<200){this.vx+=dx*0.00005;this.vy+=dy*0.00005;}} }
+    draw() { ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fillStyle=`rgba(0,163,255,${this.a})`; ctx.fill(); }
+  }
+  for(let i=0;i<60;i++) particles.push(new P());
+  function animate() {
+    ctx.clearRect(0,0,w,h);
+    particles.forEach(p=>{p.update();p.draw();});
+    for(let i=0;i<particles.length;i++) for(let j=i+1;j<particles.length;j++){const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<150){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(0,163,255,${0.08*(1-d/150)})`;ctx.lineWidth=0.5;ctx.stroke();}}
+    if(mouse.x!==null) particles.forEach(p=>{const dx=mouse.x-p.x,dy=mouse.y-p.y,d=Math.sqrt(dx*dx+dy*dy);if(d<200){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(mouse.x,mouse.y);ctx.strokeStyle=`rgba(0,163,255,${0.15*(1-d/200)})`;ctx.lineWidth=0.8;ctx.stroke();}});
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+const revealObserver = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); revealObserver.unobserve(entry.target); } }); }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+(function() { const h = document.querySelector('.hamburger'); const m = document.querySelector('.mobile-menu'); const c = document.querySelector('.mobile-menu-close'); if(!h||!m)return; h.addEventListener('click',()=>m.classList.add('open')); c.addEventListener('click',()=>m.classList.remove('open')); m.querySelectorAll('a').forEach(a=>{a.addEventListener('click',()=>m.classList.remove('open'));}); })();
+(function() { const nav = document.querySelector('nav'); if(!nav)return; function cs(){nav.classList.toggle('scrolled',window.scrollY>40);} window.addEventListener('scroll',cs,{passive:true}); cs(); })();
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
