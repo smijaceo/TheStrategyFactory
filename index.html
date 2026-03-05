@@ -1351,6 +1351,7 @@ footer {
 /* ── Responsive — Tablet ──────────────────────────────── */
 @media (max-width: 900px) {
   .hamburger { display: flex; }
+  nav { position: static; }
   .nav-links { display: none; }
 
   .features-grid, .instruments-grid, .pricing-grid, .validation-grid {
@@ -1361,7 +1362,7 @@ footer {
   .hero-stat:last-child { border-bottom: none; }
   .footer-top { flex-direction: column; gap: 32px; }
   .footer-links { flex-direction: column; gap: 24px; }
-  .hero { padding: 120px 0 60px; min-height: auto; }
+  .hero { padding: 32px 0 60px; min-height: auto; }
   .hero h1 { font-size: 48px; letter-spacing: -1.5px; }
   .hero-sub { font-size: 15px; max-width: 90%; }
 }
@@ -1372,7 +1373,7 @@ footer {
   section { padding: 48px 0; }
 
   /* Hero — headline is the HOOK, it needs to dominate */
-  .hero { padding: 100px 0 40px; }
+  .hero { padding: 32px 0 40px; }
   .hero h1 {
     font-size: 44px;
     line-height: 1.1;
