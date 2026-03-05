@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="theme-color" content="#06090F">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2306090F'/%3E%3Ctext x='16' y='23' font-family='Arial,Helvetica,sans-serif' font-weight='900' font-style='italic' font-size='20' text-anchor='middle'%3E%3Ctspan fill='white'%3ES%3C/tspan%3E%3Ctspan fill='%2300A3FF'%3EF%3C/tspan%3E%3C/text%3E%3C/svg%3E">
+<title>Position Sizing Guide — The Strategy Factory</title>
+    <meta name="description" content="Position sizing guide for prop firm accounts. Learn how to size trades for 50K, 100K, and 150K funded accounts using The Strategy Factory signals.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Position Sizing Guide — The Strategy Factory">
+    <meta property="og:description" content="Position sizing guide for prop firm accounts. Learn how to size trades for 50K, 100K, and 150K funded accounts.">
+    <meta property="og:url" content="https://thestrategyfactory.io/sizing">
+    <meta property="og:site_name" content="The Strategy Factory">
+    <meta property="og:image" content="https://thestrategyfactory.io/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@tsfalgo">
+    <meta name="twitter:title" content="Position Sizing Guide — The Strategy Factory">
+    <meta name="twitter:description" content="Position sizing guide for prop firm accounts. Learn how to size trades for 50K, 100K, and 150K funded accounts.">
+    <meta name="twitter:image" content="https://thestrategyfactory.io/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { overflow-x: hidden; max-width: 100vw; }
+main.page-content { position: relative; z-index: 1; clip-path: inset(0 0 0 0); -webkit-clip-path: inset(0 0 0 0); }
+
+:root {
+  --bg-primary: #06090F;
+  --bg-secondary: #0B1018;
+  --bg-card: #0E1420;
+  --bg-card-hover: #141C2A;
+  --bg-elevated: #1A2233;
+  --accent-cyan: #00A3FF;
+  --accent-cyan-dim: rgba(0, 163, 255, 0.10);
+  --accent-cyan-glow: rgba(0, 163, 255, 0.35);
+  --accent-green: #00E676;
+  --accent-green-dim: rgba(0, 230, 118, 0.08);
+  --accent-red: #FF5252;
+  --accent-purple: #7C5CFC;
+  --accent-purple-glow: rgba(124, 92, 252, 0.25);
+  --accent-gold: #EAB308;
+  --accent-teal: #0D9488;
+  --text-primary: #FFFFFF;
+  --text-secondary: #7B8DA4;
+  --text-muted: #445566;
+  --text-dim: #2A3544;
+  --border-default: #151D2B;
+  --border-subtle: rgba(255,255,255,0.04);
+  --border-cyan: rgba(0, 163, 255, 0.2);
+  --font-display: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-pill: 9999px;
+}
+
+html { scroll-behavior: smooth; overflow-x: hidden; }
+
+body {
+  font-family: var(--font-display);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.5;
+  animation: grain 0.5s steps(1) infinite;
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-2%, -3%); }
+  20% { transform: translate(3%, 1%); }
+  30% { transform: translate(-1%, 2%); }
+  40% { transform: translate(2%, -2%); }
+  50% { transform: translate(-3%, 3%); }
+  60% { transform: translate(1%, -1%); }
+  70% { transform: translate(-2%, 2%); }
+  80% { transform: translate(3%, -3%); }
+  90% { transform: translate(-1%, 1%); }
+}
+
+#particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 1;
+}
+
+section { padding: 100px 0; }
+
+/* Navigation */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 12px 0;
+  background: #06090F;
+  border-bottom: 1px solid var(--border-subtle);
+}
+nav.scrolled {
+  background: rgba(6, 9, 15, 0.95);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+nav .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+
+.nav-logo-mark {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 28px;
+  font-style: italic;
+  letter-spacing: -1px;
+}
+
+.nav-logo-mark .s { color: var(--text-primary); }
+.nav-logo-mark .f { color: var(--accent-cyan); text-shadow: 0 0 20px var(--accent-cyan-glow); }
+
+.nav-logo-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0; right: 0;
+  height: 1px;
+  background: var(--accent-cyan);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+
+.nav-links a:hover { color: var(--accent-cyan); }
+.nav-links a:hover::after { transform: scaleX(1); }
+
+.nav-cta {
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: var(--bg-primary) !important;
+  background: var(--accent-cyan) !important;
+  padding: 10px 24px;
+  border-radius: var(--radius-pill);
+  transition: all 0.3s;
+  box-shadow: 0 0 20px rgba(0, 163, 255, 0.2);
+}
+
+.nav-cta::after { display: none !important; }
+.nav-cta:hover {
+  background: #38BDF8 !important;
+  box-shadow: 0 0 40px rgba(0, 163, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Section helpers */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 16px;
+  text-shadow: 0 0 20px var(--accent-cyan-glow);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+  line-height: 1.05;
+}
+
+.section-desc {
+  font-size: 17px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin-bottom: 64px;
+  line-height: 1.7;
+}
+
+/* Hero */
+.hero {
+  padding: 200px 0 100px;
+  text-align: center;
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+}
+
+.hero .container { width: 100%; }
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px;
+  height: 600px;
+  background: radial-gradient(ellipse, rgba(124, 92, 252, 0.06), transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 8vw, 110px);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -4px;
+  margin-bottom: 32px;
+  animation: fadeInUp 0.8s ease 0.1s both;
+}
+
+.hero h1 .gradient {
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 50%, var(--accent-cyan) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.hero-sub {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  max-width: 650px;
+  margin: 0 auto;
+  line-height: 1.7;
+  animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+.hero-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  background: var(--accent-cyan-dim);
+  border: 1px solid rgba(0, 163, 255, 0.2);
+  padding: 8px 20px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 32px;
+  animation: fadeInUp 0.8s ease 0s both;
+}
+
+/* Callout card */
+.callout-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(0, 163, 255, 0.25);
+  border-radius: var(--radius);
+  padding: 48px 40px;
+  margin-bottom: 0;
+}
+
+.callout-card h3 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--accent-cyan);
+}
+
+.callout-card p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+
+.callout-card p:last-child { margin-bottom: 0; }
+
+/* Signal info list */
+.signal-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.signal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+}
+
+.signal-card h4 {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 16px;
+}
+
+.signal-card p, .signal-card li {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.signal-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.signal-card ul li {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.signal-card ul li:last-child { border-bottom: none; }
+
+.signal-card .highlight {
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+
+/* Account tier cards */
+.tier-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.tier-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 40px 32px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tier-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.tier-card.cyan-border { border-color: rgba(0, 163, 255, 0.2); }
+.tier-card.cyan-border::before { background: var(--accent-cyan); }
+.tier-card.purple-border { border-color: rgba(124, 92, 252, 0.2); }
+.tier-card.purple-border::before { background: var(--accent-purple); }
+
+.tier-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(0, 163, 255, 0.05);
+}
+
+.tier-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.tier-badge.yellow { background: rgba(234, 179, 8, 0.12); color: var(--accent-gold); border: 1px solid rgba(234, 179, 8, 0.2); }
+.tier-badge.green { background: var(--accent-green-dim); color: var(--accent-green); border: 1px solid rgba(0, 230, 118, 0.2); }
+
+.tier-card h3 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.tier-card .tier-subtitle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+}
+
+.tier-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 14px;
+}
+
+.tier-stat:last-of-type { border-bottom: none; }
+
+.tier-stat-label {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+
+.tier-stat-value {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+.tier-stat-value.cyan { color: var(--accent-cyan); }
+.tier-stat-value.green { color: var(--accent-green); }
+.tier-stat-value.purple { color: var(--accent-purple); }
+
+.tier-details {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.tier-details h4 {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.tier-details p, .tier-details li {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.tier-details ul {
+  list-style: none;
+  padding: 0;
+}
+
+.tier-details ul li {
+  padding: 4px 0;
+}
+
+.tier-details ul li::before {
+  content: '→ ';
+  color: var(--accent-cyan);
+}
+
+.tier-survival {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-family: var(--font-mono);
+}
+
+.tier-scale {
+  margin-top: 12px;
+  padding: 12px 16px;
+  background: rgba(0, 230, 118, 0.05);
+  border: 1px solid rgba(0, 230, 118, 0.1);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--accent-green);
+  line-height: 1.6;
+}
+
+/* Phases */
+.phases {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 64px;
+}
+
+.phase-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 36px 28px;
+  position: relative;
+  transition: all 0.4s;
+}
+
+.phase-card:hover {
+  border-color: var(--border-cyan);
+  transform: translateY(-4px);
+}
+
+.phase-number {
+  font-family: var(--font-mono);
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--bg-elevated);
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  line-height: 1;
+}
+
+.phase-card h4 {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.phase-card h4.cyan-text { color: var(--accent-cyan); }
+.phase-card h4.green-text { color: var(--accent-green); }
+.phase-card h4.purple-text { color: var(--accent-purple); }
+
+.phase-card p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* Scaling tables */
+.scaling-tables {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.scaling-table-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  overflow: hidden;
+}
+
+.scaling-table-wrap h4 {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.scaling-table-wrap h4.cyan-text { color: var(--accent-cyan); }
+.scaling-table-wrap h4.purple-text { color: var(--accent-purple); }
+
+.scaling-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.scaling-table th {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-align: left;
+  padding: 8px 8px;
+  border-bottom: 1px solid var(--border-default);
+}
+
+.scaling-table td {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.scaling-table tr:last-child td { border-bottom: none; }
+
+.scaling-table td:last-child {
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+
+/* Micro section */
+.micro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.micro-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 36px 32px;
+}
+
+.micro-card h4 {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-green);
+  margin-bottom: 16px;
+}
+
+.micro-card p, .micro-card li {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.micro-card ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 12px;
+}
+
+.micro-card ul li { padding: 4px 0; }
+.micro-card ul li::before { content: '→ '; color: var(--accent-green); }
+
+/* Real talk card */
+.real-talk {
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 82, 82, 0.15);
+  border-radius: var(--radius);
+  padding: 48px 40px;
+}
+
+.real-talk h3 {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-red);
+  margin-bottom: 28px;
+}
+
+.real-talk-item {
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.real-talk-item:last-child { border-bottom: none; }
+
+.real-talk-item strong {
+  color: var(--text-primary);
+}
+
+/* CTA */
+.cta-section {
+  text-align: center;
+  padding: 80px 0 120px;
+}
+
+.cta-section h2 {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 800;
+  margin-bottom: 32px;
+}
+
+.cta-btn {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--bg-primary);
+  background: var(--accent-cyan);
+  padding: 18px 48px;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  transition: all 0.3s;
+  box-shadow: 0 0 30px rgba(0, 163, 255, 0.25);
+}
+
+.cta-btn:hover {
+  background: #38BDF8;
+  box-shadow: 0 0 60px rgba(0, 163, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Footer */
+footer {
+  border-top: 1px solid var(--border-subtle);
+  padding: 60px 0 40px;
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 48px;
+}
+
+.footer-brand { max-width: 320px; }
+
+.footer-logo {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 22px;
+  font-style: italic;
+  margin-bottom: 12px;
+}
+
+.footer-logo .s { color: var(--text-primary); }
+.footer-logo .f { color: var(--accent-cyan); text-shadow: 0 0 16px var(--accent-cyan-glow); }
+
+.footer-tagline {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.footer-links {
+  display: flex;
+  gap: 48px;
+}
+
+.footer-col h4 {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.footer-col a {
+  display: block;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 4px 0;
+  transition: color 0.3s;
+}
+
+.footer-col a:hover { color: var(--accent-cyan); }
+
+.footer-bottom {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 24px;
+}
+
+.footer-disclaimer {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  max-width: 800px;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-stagger > .reveal:nth-child(1) { transition-delay: 0.05s; }
+.reveal-stagger > .reveal:nth-child(2) { transition-delay: 0.12s; }
+.reveal-stagger > .reveal:nth-child(3) { transition-delay: 0.19s; }
+.reveal-stagger > .reveal:nth-child(4) { transition-delay: 0.26s; }
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  z-index: 200;
+  background: none;
+  border: none;
+  padding: 0;
+}
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text-secondary);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+.hamburger:hover span { background: var(--accent-cyan); }
+
+.mobile-menu {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(6, 9, 15, 0.97);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+.mobile-menu.open { opacity: 1; visibility: visible; }
+.mobile-menu a {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 8px 0;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: color 0.3s, transform 0.4s ease, opacity 0.4s ease;
+}
+.mobile-menu.open a {
+  transform: translateY(0);
+  opacity: 1;
+}
+.mobile-menu.open a:nth-child(2) { transition-delay: 0.05s; }
+.mobile-menu.open a:nth-child(3) { transition-delay: 0.1s; }
+.mobile-menu.open a:nth-child(4) { transition-delay: 0.15s; }
+.mobile-menu.open a:nth-child(5) { transition-delay: 0.2s; }
+.mobile-menu.open a:nth-child(6) { transition-delay: 0.25s; }
+.mobile-menu.open a:nth-child(7) { transition-delay: 0.3s; }
+.mobile-menu a:hover { color: var(--accent-cyan); }
+.mobile-menu a.mobile-cta {
+  color: var(--bg-primary);
+  background: var(--accent-cyan);
+  padding: 14px 40px;
+  border-radius: var(--radius-pill);
+  margin-top: 16px;
+  box-shadow: 0 0 30px rgba(0, 163, 255, 0.2);
+}
+.mobile-menu-close {
+  position: absolute;
+  top: 20px; right: 32px;
+  background: none; border: none;
+  color: var(--text-secondary);
+  font-size: 32px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  transition: color 0.3s, transform 0.3s;
+  z-index: 200;
+}
+.mobile-menu-close:hover { color: var(--accent-cyan); transform: rotate(90deg); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .hamburger { display: flex; }
+  nav { position: static; }
+  .nav-links { display: none; }
+  .tier-grid, .phases, .scaling-tables, .signal-info, .micro-grid {
+    grid-template-columns: 1fr;
+  }
+  .footer-top { flex-direction: column; gap: 32px; }
+  .footer-links { flex-direction: column; gap: 24px; }
+  .hero { padding: 32px 0 60px; min-height: auto; }
+  .hero h1 { font-size: 48px; letter-spacing: -1.5px; }
+}
+
+@media (max-width: 600px) {
+  .container { padding: 0 16px; }
+  section { padding: 48px 0; }
+  h1 { font-size: 44px !important; line-height: 1.1; letter-spacing: -1.5px; }
+  h2 { font-size: 36px !important; line-height: 1.15; letter-spacing: -1px; }
+  p { font-size: 14px; }
+  .tier-grid { grid-template-columns: 1fr; }
+  .phases { grid-template-columns: 1fr; }
+  .scaling-tables { grid-template-columns: 1fr; }
+  .signal-info { grid-template-columns: 1fr; }
+  .micro-grid { grid-template-columns: 1fr; }
+  .callout-card { padding: 32px 24px; }
+  .real-talk { padding: 32px 24px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="container">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark"><span class="s">S</span><span class="f">F</span></div>
+      <div class="nav-logo-text">Strategy<br>Factory</div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="performance.html">Performance</a></li>
+      <li><a href="about.html">Methodology</a></li>
+      <li><a href="start.html#pricing">Pricing</a></li>
+      <li><a href="https://discord.gg/6hWtrqxSed" class="nav-cta" target="_blank">Join Discord</a></li>
+    </ul>
+    <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu">
+  <button class="mobile-menu-close">&times;</button>
+  <a href="index.html">Home</a>
+  <a href="performance.html">Performance</a>
+  <a href="about.html">Methodology</a>
+  <a href="status.html">Status</a>
+  <a href="start.html#pricing">Pricing</a>
+  <a href="https://discord.gg/6hWtrqxSed" class="mobile-cta" target="_blank">Join Discord</a>
+</div>
+
+<main class="page-content">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">Risk Management</div>
+    <h1>Size It <span class="gradient">Right.</span></h1>
+    <p class="hero-sub">
+      The best signals in the world won't save you from bad sizing. Here's how to survive long enough to let the edge play out.
+    </p>
+  </div>
+</section>
+
+<!-- KEY PRINCIPLE -->
+<section>
+  <div class="container">
+    <div class="callout-card reveal">
+      <h3>The #1 Rule: Never risk more than 25% of your drawdown limit on a single trade.</h3>
+      <p>Your drawdown limit is your lifeline. Blow it and you're done — account gone, fees wasted, back to square one.</p>
+      <p>The strategy has a <strong style="color: var(--text-primary);">56% win rate</strong> — that means 44% of trades lose. You <em>will</em> have losing streaks. Three losers in a row? Happens regularly. Four? Not rare. Five? It'll happen eventually.</p>
+      <p>Size so you survive them. The edge only works if you're still in the game when the wins come back.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW OUR SIGNALS WORK -->
+<section>
+  <div class="container">
+    <div class="section-label reveal">How Our Signals Work</div>
+    <h2 class="section-title reveal">What you get on every trade.</h2>
+    <p class="section-desc reveal">Understanding signal structure is essential for proper sizing.</p>
+
+    <div class="signal-info reveal-stagger">
+      <div class="signal-card reveal">
+        <h4>Signal Components</h4>
+        <ul>
+          <li><span class="highlight">Entry Price</span> — exact level to enter</li>
+          <li><span class="highlight">Stop Loss</span> — structure-based, non-negotiable</li>
+          <li><span class="highlight">TP1</span> — partial exit (50% of position)</li>
+          <li><span class="highlight">TP2</span> — runner target for remainder</li>
+        </ul>
+        <p style="margin-top: 16px; font-size: 13px; color: var(--text-muted);">TP1 exits 50% of position. Stop moves to breakeven on the remainder.</p>
+      </div>
+      <div class="signal-card reveal">
+        <h4>Typical Stop Distances</h4>
+        <ul>
+          <li><span class="highlight">NQ</span> — 10–30 points ($200–$600 risk/contract)</li>
+          <li><span class="highlight">GC (Gold)</span> — 3–10 points ($300–$1,000 risk/contract)</li>
+          <li><span class="highlight">SIL (Silver)</span> — $0.10–$0.30 ($500–$1,500 risk/contract)</li>
+        </ul>
+        <p style="margin-top: 16px; font-size: 13px; color: var(--text-muted);">Stop distances vary by instrument and market conditions. Always check the signal's risk before entering.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE THREE ACCOUNT TIERS -->
+<section>
+  <div class="container">
+    <div class="section-label reveal">Account Sizing</div>
+    <h2 class="section-title reveal">Size for your account.</h2>
+    <p class="section-desc reveal">Three prop firm tiers, three sizing strategies. Start conservative. Scale with profits.</p>
+
+    <div class="tier-grid reveal-stagger">
+      <!-- 50K -->
+      <div class="tier-card cyan-border reveal">
+        <div class="tier-badge yellow">🟡 Conservative Start</div>
+        <h3>50K Account</h3>
+        <div class="tier-subtitle">Max Loss: $2,000 · Max 2 Lots</div>
+
+        <div class="tier-stat">
+          <span class="tier-stat-label">Recommended Size</span>
+          <span class="tier-stat-value cyan">1 Contract</span>
+        </div>
+        <div class="tier-stat">
+          <span class="tier-stat-label">Max Risk / Trade</span>
+          <span class="tier-stat-value">~$500–600</span>
+        </div>
+        <div class="tier-stat">
+          <span class="tier-stat-label">% of Drawdown</span>
+          <span class="tier-stat-value">25–30%</span>
+        </div>
+
+        <div class="tier-details">
+          <h4>Instrument Sizing</h4>
+          <ul>
+            <li>NQ: 1 contract</li>
+            <li>GC: 1 contract</li>
+            <li>SIL: 1 contract</li>
+          </ul>
+        </div>
+
+        <div class="tier-survival">
+          At 1 contract, you can take 3–4 consecutive losers before danger. With a 56% win rate, a 4-loss streak happens ~3.8% of the time.
+        </div>
+
+        <div class="tier-scale">
+          📈 Once balance hits $2,000+, your effective cushion doubles. Consider 2 contracts.
+        </div>
+      </div>
+
+      <!-- 100K -->
+      <div class="tier-card cyan-border reveal">
+        <div class="tier-badge green">✅ More Room to Work</div>
+        <h3>100K Account</h3>
+        <div class="tier-subtitle">Max Loss: $3,000 · Max 3 Lots</div>
+
+        <div class="tier-stat">
+          <span class="tier-stat-label">Recommended Size</span>
+          <span class="tier-stat-value cyan">1–2 Contracts</span>
+        </div>
+        <div class="tier-stat">
+          <span class="tier-stat-label">Max Risk / Trade</span>
+          <span class="tier-stat-value">~$750</span>
+        </div>
+        <div class="tier-stat">
+          <span class="tier-stat-label">% of Drawdown</span>
+          <span class="tier-stat-value">25%</span>
+        </div>
+
+        <div class="tier-details">
+          <h4>Instrument Sizing</h4>
+          <ul>
+            <li>NQ: 2 contracts OK (max ~$600 = 20% of DD)</li>
+            <li>GC: 1–2 contracts (watch wider stops)</li>
+            <li>SIL: 1 contract (stops can be wide)</li>
+          </ul>
+        </div>
+
+        <div class="tier-survival">
+          With 1–2 contracts, your risk per trade stays well under the 25% threshold on most signals. More cushion = more flexibility.
+        </div>
+
+        <div class="tier-scale">
+          📈 At $3,000+ balance, you have a $6,000 effective cushion. Scale to 2–3 contracts.
+        </div>
+      </div>
+
+      <!-- 150K -->
+      <div class="tier-card purple-border reveal">
+        <div class="tier-badge green">✅ Most Flexibility</div>
+        <h3>150K Account</h3>
+        <div class="tier-subtitle">Max Loss: $4,500 · Max 5 Lots</div>
+
+        <div class="tier-stat">
+          <span class="tier-stat-label">Recommended Size</span>
+          <span class="tier-stat-value purple">2 Contracts</span>
+        </div>
+        <div class="tier-stat">
+          <span class="tier-stat-label">Max Risk / Trade</span>
+          <span class="tier-stat-value">~$1,125</span>
+        </div>
+        <div class="tier-stat">
+          <span class="tier-stat-label">% of Drawdown</span>
+          <span class="tier-stat-value">25%</span>
+        </div>
+
+        <div class="tier-details">
+          <h4>Instrument Sizing</h4>
+          <ul>
+            <li>NQ: 2 contracts ($400–600 = 9–13% of DD)</li>
+            <li>GC: 2 contracts ($600–1000 = 13–22% of DD)</li>
+            <li>SIL: 1–2 contracts (wider stops, be careful)</li>
+          </ul>
+        </div>
+
+        <div class="tier-survival">
+          At 2 contracts, even a worst-case NQ stop ($600) is only 13% of your drawdown. Plenty of room to absorb losing streaks.
+        </div>
+
+        <div class="tier-scale">
+          📈 At $4,500+ balance, scale to 3–4 contracts. Your effective cushion is $9,000+.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCALING STRATEGY -->
+<section>
+  <div class="container">
+    <div class="section-label reveal">Scaling Strategy</div>
+    <h2 class="section-title reveal">Survive. Scale. Compound.</h2>
+    <p class="section-desc reveal">The three phases of building a funded account. Don't skip steps.</p>
+
+    <div class="phases reveal-stagger">
+      <div class="phase-card reveal">
+        <div class="phase-number">1</div>
+        <h4 class="cyan-text">Phase 1: Survive</h4>
+        <p>Start at minimum size. Build buffer. Goal: get your balance to equal your max loss limit — effectively doubling your cushion. No hero trades.</p>
+      </div>
+      <div class="phase-card reveal">
+        <div class="phase-number">2</div>
+        <h4 class="green-text">Phase 2: Scale</h4>
+        <p>Increase by 1 contract. Your edge compounds faster with more size, but only after you've proven the buffer. Patience pays.</p>
+      </div>
+      <div class="phase-card reveal">
+        <div class="phase-number">3</div>
+        <h4 class="purple-text">Phase 3: Compound</h4>
+        <p>At 2x your max loss limit in balance, you're playing with house money. Size up aggressively. This is where the P&L gets exciting.</p>
+      </div>
+    </div>
+
+    <div class="scaling-tables reveal-stagger">
+      <!-- 50K Table -->
+      <div class="scaling-table-wrap reveal">
+        <h4 class="cyan-text">50K Account · $2,000 Max Loss</h4>
+        <table class="scaling-table">
+          <thead>
+            <tr><th>Balance</th><th>Cushion</th><th>Contracts</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>$0 (start)</td><td>$2,000</td><td>1</td></tr>
+            <tr><td>$1,000</td><td>$3,000</td><td>1</td></tr>
+            <tr><td>$2,000</td><td>$4,000</td><td>2</td></tr>
+            <tr><td>$4,000</td><td>$6,000</td><td>2–3</td></tr>
+            <tr><td>$6,000+</td><td>$8,000+</td><td>3+</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 100K Table -->
+      <div class="scaling-table-wrap reveal">
+        <h4 class="cyan-text">100K Account · $3,000 Max Loss</h4>
+        <table class="scaling-table">
+          <thead>
+            <tr><th>Balance</th><th>Cushion</th><th>Contracts</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>$0 (start)</td><td>$3,000</td><td>1–2</td></tr>
+            <tr><td>$1,500</td><td>$4,500</td><td>2</td></tr>
+            <tr><td>$3,000</td><td>$6,000</td><td>2–3</td></tr>
+            <tr><td>$6,000</td><td>$9,000</td><td>3–4</td></tr>
+            <tr><td>$9,000+</td><td>$12,000+</td><td>4+</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 150K Table -->
+      <div class="scaling-table-wrap reveal">
+        <h4 class="purple-text">150K Account · $4,500 Max Loss</h4>
+        <table class="scaling-table">
+          <thead>
+            <tr><th>Balance</th><th>Cushion</th><th>Contracts</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>$0 (start)</td><td>$4,500</td><td>2</td></tr>
+            <tr><td>$2,000</td><td>$6,500</td><td>2–3</td></tr>
+            <tr><td>$4,500</td><td>$9,000</td><td>3–4</td></tr>
+            <tr><td>$9,000</td><td>$13,500</td><td>4–5</td></tr>
+            <tr><td>$12,000+</td><td>$16,500+</td><td>5+</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MICRO CONTRACTS -->
+<section>
+  <div class="container">
+    <div class="section-label reveal">Start Smaller</div>
+    <h2 class="section-title reveal">Don't have a funded account yet? Trade micros.</h2>
+    <p class="section-desc reveal">All our signals work with micro contracts. Same setups, 1/10th the risk.</p>
+
+    <div class="micro-grid reveal-stagger">
+      <div class="micro-card reveal">
+        <h4>Why Micros?</h4>
+        <p>Micro contracts let you trade the exact same signals at a fraction of the risk. Perfect for learning the system with real money before sizing up to a funded account.</p>
+        <ul>
+          <li>1 micro = 1/10th the risk of a standard contract</li>
+          <li>Same entry, stop, and target levels</li>
+          <li>Build confidence without blowing up</li>
+          <li>Learn execution before real money is on the line</li>
+        </ul>
+      </div>
+      <div class="micro-card reveal">
+        <h4>Micro vs Standard</h4>
+        <ul>
+          <li><strong style="color: var(--text-primary);">MNQ</strong> — $0.50/tick vs $5.00/tick on NQ</li>
+          <li><strong style="color: var(--text-primary);">MGC</strong> — $1.00/tick vs $10.00/tick on GC</li>
+          <li><strong style="color: var(--text-primary);">SIL</strong> — Micro Silver available at reduced size</li>
+        </ul>
+        <p style="margin-top: 16px;">A $600 risk on NQ becomes $60 on a micro. You can take 30+ losers in a row on a $2,000 account. That's how you learn without stress.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REAL TALK -->
+<section>
+  <div class="container">
+    <div class="real-talk reveal">
+      <h3>Real Talk</h3>
+      <div class="real-talk-item">We show our losses. We have <strong>2 red months out of 25</strong>. That's real.</div>
+      <div class="real-talk-item">The strategy has edge — <strong>2.03 profit factor on NQ, 56% win rate across 2,155 trades</strong>. But edge only works if you're still in the game when it hits.</div>
+      <div class="real-talk-item">Most people don't blow up because their signals are bad. They blow up because they <strong>sized too big for one bad week</strong>.</div>
+      <div class="real-talk-item"><strong>Size small. Let the math work. The P&L takes care of itself.</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <h2 class="reveal">Ready to trade with us?</h2>
+    <a href="https://discord.gg/6hWtrqxSed" class="cta-btn reveal" target="_blank">Join Discord</a>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo"><span class="s">S</span><span class="f">F</span></div>
+        <div class="footer-tagline">Quantitative · Systematic · Automated</div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="performance.html">Performance</a>
+          <a href="start.html#pricing">Pricing</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="about.html">Methodology</a>
+          <a href="sizing.html">Sizing Guide</a>
+          <a href="start.html#faq">FAQ</a>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <a href="https://discord.gg/6hWtrqxSed" target="_blank">Discord</a>
+          <a href="https://x.com/tsfalgo" target="_blank">Twitter</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="terms.html">Terms of Service</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="risk.html">Risk Disclosure</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-disclaimer">
+        CFTC Rule 4.41 — Hypothetical or simulated performance results have certain limitations. Unlike an actual performance record, simulated results do not represent actual trading. Also, since the trades have not been executed, the results may have under-or-over compensated for the impact, if any, of certain market factors, such as lack of liquidity. Simulated trading programs in general are also subject to the fact that they are designed with the benefit of hindsight. No representation is being made that any account will or is likely to achieve profit or losses similar to those shown. Past performance is not indicative of future results. This is not financial advice.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- JAVASCRIPT -->
+<script>
+// Particle Network
+(function() {
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let w, h, particles = [], mouse = { x: null, y: null };
+  const COUNT = 60, DIST = 150, MOUSE_DIST = 200;
+
+  function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+  class P {
+    constructor() {
+      this.x = Math.random() * w; this.y = Math.random() * h;
+      this.vx = (Math.random() - 0.5) * 0.4; this.vy = (Math.random() - 0.5) * 0.4;
+      this.r = Math.random() * 1.5 + 0.5; this.a = Math.random() * 0.4 + 0.1;
+    }
+    update() {
+      this.x += this.vx; this.y += this.vy;
+      if (this.x < 0 || this.x > w) this.vx *= -1;
+      if (this.y < 0 || this.y > h) this.vy *= -1;
+    }
+    draw() {
+      ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0, 163, 255, ${this.a})`; ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < COUNT; i++) particles.push(new P());
+
+  function animate() {
+    ctx.clearRect(0, 0, w, h);
+    particles.forEach(p => { p.update(); p.draw(); });
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < DIST) {
+          ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(0, 163, 255, ${0.08 * (1 - d / DIST)})`;
+          ctx.lineWidth = 0.5; ctx.stroke();
+        }
+      }
+      if (mouse.x) {
+        const dx = particles[i].x - mouse.x, dy = particles[i].y - mouse.y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < MOUSE_DIST) {
+          ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.strokeStyle = `rgba(0, 163, 255, ${0.15 * (1 - d / MOUSE_DIST)})`;
+          ctx.lineWidth = 0.6; ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// Scroll Reveal
+(function() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+})();
+
+// Mobile Menu
+(function() {
+  const hamburger = document.querySelector('.hamburger');
+  const mobileMenu = document.querySelector('.mobile-menu');
+  const closeBtn = document.querySelector('.mobile-menu-close');
+  if (!hamburger || !mobileMenu) return;
+  hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
+  closeBtn.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  });
+})();
+
+// Nav scroll effect
+(function() {
+  const nav = document.querySelector('nav');
+  if (!nav) return;
+  function checkScroll() {
+    if (window.scrollY > 40) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  }
+  window.addEventListener('scroll', checkScroll, { passive: true });
+  checkScroll();
+})();
+</script>
+
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
