@@ -1029,6 +1029,21 @@ setInterval(() => {
   });
 })();
 
+
+// ── Nav scroll effect ─────────────────────────────────────
+(function() {
+  const nav = document.querySelector('nav');
+  if (!nav) return;
+  function checkScroll() {
+    if (window.scrollY > 40) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+  }
+  window.addEventListener('scroll', checkScroll, { passive: true });
+  checkScroll();
+})();
 </script>
 </main>
 </body>
