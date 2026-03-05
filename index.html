@@ -1613,13 +1613,13 @@ footer {
 
   /* Footer */
   .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
-  /* Countdown — mobile */
-  .countdown-wrapper { margin-bottom: 32px !important; }
-  .countdown { gap: 8px; }
-  .countdown-unit { min-width: 44px; padding: 8px 4px; }
-  .countdown-value { font-size: 24px; }
+  /* Countdown — mobile: hide separators, tight grid */
+  .countdown-wrapper { margin-bottom: 28px !important; }
+  .countdown { gap: 6px; }
+  .countdown-unit { min-width: 0; flex: 1; padding: 10px 4px; }
+  .countdown-value { font-size: 26px; }
   .countdown-label { font-size: 7px; letter-spacing: 0.15em; }
-  .countdown-sep { font-size: 20px; margin-top: -8px; }
+  .countdown-sep { display: none; }
 
   /* Founding — mobile */
   .founding-section { padding: 40px 0; }
