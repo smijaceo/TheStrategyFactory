@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2306090F'/%3E%3Ctext x='4' y='24' font-family='Arial' font-weight='900' font-style='italic' font-size='22'%3E%3Ctspan fill='white'%3ES%3C/tspan%3E%3Ctspan fill='%2300A3FF'%3EF%3C/tspan%3E%3C/text%3E%3C/svg%3E">
 <title>Get Started — The Strategy Factory</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -926,6 +927,88 @@ footer {
   .step-card { padding: 28px 24px; }
   .hero-actions { flex-direction: column; }
 }
+
+/* ── Hamburger Menu ───────────────────────────────────── */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  z-index: 200;
+  background: none;
+  border: none;
+  padding: 0;
+}
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text-secondary);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+.hamburger:hover span { background: var(--accent-cyan); }
+
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(6, 9, 15, 0.97);
+  backdrop-filter: blur(24px);
+  z-index: 150;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s;
+  padding: 8px 0;
+}
+.mobile-menu a:hover { color: var(--accent-cyan); }
+.mobile-menu a.mobile-cta {
+  color: var(--bg-primary);
+  background: var(--accent-cyan);
+  padding: 14px 40px;
+  border-radius: var(--radius-pill);
+  margin-top: 16px;
+  box-shadow: 0 0 30px rgba(0, 163, 255, 0.2);
+}
+.mobile-menu-close {
+  position: absolute;
+  top: 20px; right: 32px;
+  background: none; border: none;
+  color: var(--text-secondary);
+  font-size: 32px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  transition: color 0.3s;
+  z-index: 200;
+}
+.mobile-menu-close:hover { color: var(--accent-cyan); }
+
+/* ── Mobile Responsive Fixes ──────────────────────────── */
+@media (max-width: 900px) {
+  .hamburger { display: flex; }
+  h1 { font-size: clamp(28px, 6vw, 48px) !important; word-break: break-word; }
+  h2 { font-size: clamp(24px, 5vw, 36px) !important; }
+}
+@media (max-width: 600px) {
+  h1 { font-size: clamp(24px, 7vw, 36px) !important; letter-spacing: -1px !important; }
+  h2 { font-size: clamp(20px, 5vw, 28px) !important; }
+  .scanner-feed-container { font-size: 12px; }
+}
 </style>
 </head>
 <body>
@@ -935,17 +1018,19 @@ footer {
 <!-- ═══ NAVIGATION ═══ -->
 <nav>
   <div class="container">
-    <a href="landing.html" class="nav-logo">
+    <a href="index.html" class="nav-logo">
       <div class="nav-logo-mark"><span class="s">S</span><span class="f">F</span></div>
       <div class="nav-logo-text">Strategy<br>Factory</div>
     </a>
-    <ul class="nav-links">
-      <li><a href="landing.html">Home</a></li>
-      <li><a href="#steps">Steps</a></li>
-      <li><a href="#signals">Signals</a></li>
-      <li><a href="#faq">FAQ</a></li>
+        <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="performance.html">Performance</a></li>
+      <li><a href="about.html">Methodology</a></li>
+      <li><a href="status.html">Status</a></li>
+      <!-- TODO: Replace with Whop URL -->
       <li><a href="#pricing" class="nav-cta">Join Now</a></li>
     </ul>
+    <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
@@ -1240,6 +1325,7 @@ footer {
           <li><span class="tier-check no">✗</span> Strategy deep-dives</li>
           <li><span class="tier-check no">✗</span> Direct team access</li>
         </ul>
+        <!-- TODO: Replace with Whop URL -->
         <a href="#" class="tier-btn tier-btn-outline">Join Free</a>
       </div>
 
@@ -1257,6 +1343,7 @@ footer {
           <li><span class="tier-check no">✗</span> Strategy deep-dives</li>
           <li><span class="tier-check no">✗</span> Direct team access</li>
         </ul>
+        <!-- TODO: Replace with Whop URL -->
         <a href="#" class="tier-btn tier-btn-cyan">Go Pro</a>
       </div>
 
@@ -1273,6 +1360,7 @@ footer {
           <li><span class="tier-check yes">✓</span> Priority support</li>
           <li><span class="tier-check yes">✓</span> Early feature access</li>
         </ul>
+        <!-- TODO: Replace with Whop URL -->
         <a href="#" class="tier-btn tier-btn-gold">Go Elite</a>
       </div>
 
@@ -1291,14 +1379,14 @@ footer {
       <div class="footer-links">
         <div class="footer-col">
           <h4>Product</h4>
-          <a href="landing.html">Performance</a>
-          <a href="#">System Status</a>
+          <a href="index.html">Performance</a>
+          <a href="status.html">System Status</a>
           <a href="#pricing">Pricing</a>
         </div>
         <div class="footer-col">
           <h4>Resources</h4>
-          <a href="#">Getting Started</a>
-          <a href="#">Methodology</a>
+          <a href="start.html">Getting Started</a>
+          <a href="about.html">Methodology</a>
           <a href="#faq">FAQ</a>
         </div>
         <div class="footer-col">
@@ -1439,6 +1527,20 @@ document.querySelectorAll('.step-card, .tier-card').forEach(card => {
   });
   card.addEventListener('mouseleave', () => { card.style.transform = ''; });
 });
+
+// ── Mobile Menu ───────────────────────────────────────────
+(function() {
+  const hamburger = document.querySelector('.hamburger');
+  const mobileMenu = document.querySelector('.mobile-menu');
+  const closeBtn = document.querySelector('.mobile-menu-close');
+  if (!hamburger || !mobileMenu) return;
+  hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
+  closeBtn.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  });
+})();
+
 </script>
 </body>
 </html>
