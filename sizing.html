@@ -1052,11 +1052,11 @@ footer {
       <div class="signal-card reveal">
         <h4>Typical Stop Distances</h4>
         <ul>
-          <li><span class="highlight">NQ</span> — 10–30 points ($200–$600 risk/contract)</li>
-          <li><span class="highlight">GC (Gold)</span> — 3–10 points ($300–$1,000 risk/contract)</li>
-          <li><span class="highlight">SIL (Silver)</span> — $0.10–$0.30 ($500–$1,500 risk/contract)</li>
+          <li><span class="highlight">NQ</span> — Median 9.5 pts, avg 20 pts ($190–$590 typical, up to $1,100 on wide stops)</li>
+          <li><span class="highlight">GC (Gold)</span> — Median $1.40, avg $2.80 ($140–$410 typical, up to $760 on wide stops)</li>
+          <li><span class="highlight">SIL (Silver)</span> — Median $0.04, avg $0.08 ($200–$525 typical, up to $990 on wide stops)</li>
         </ul>
-        <p style="margin-top: 16px; font-size: 13px; color: var(--text-muted);">Stop distances vary by instrument and market conditions. Always check the signal's risk before entering.</p>
+        <p style="margin-top: 16px; font-size: 13px; color: var(--text-muted);">Based on 2,157 trades. "Typical" = 25th–75th percentile. 10% of trades have wider stops — always check the signal's risk before entering.</p>
       </div>
     </div>
   </div>
@@ -1082,7 +1082,7 @@ footer {
         </div>
         <div class="tier-stat">
           <span class="tier-stat-label">Max Risk / Trade</span>
-          <span class="tier-stat-value">~$500–600</span>
+          <span class="tier-stat-value">~$200–$590</span>
         </div>
         <div class="tier-stat">
           <span class="tier-stat-label">% of Drawdown</span>
@@ -1129,14 +1129,14 @@ footer {
         <div class="tier-details">
           <h4>Instrument Sizing</h4>
           <ul>
-            <li>NQ: 2 contracts OK (max ~$600 = 20% of DD)</li>
-            <li>GC: 1–2 contracts (watch wider stops)</li>
-            <li>SIL: 1 contract (stops can be wide)</li>
+            <li>NQ: 2 contracts OK (typical risk ~$380–$1,180 = 13–39% of DD)</li>
+            <li>GC: 2 contracts (typical risk ~$280–$820 = 9–27% of DD)</li>
+            <li>SIL: 1 contract until buffer builds (P90 risk = $990)</li>
           </ul>
         </div>
 
         <div class="tier-survival">
-          With 1–2 contracts, your risk per trade stays well under the 25% threshold on most signals. More cushion = more flexibility.
+          Most trades risk $140–$525 per contract. At 1–2 contracts, you're under the 25% threshold on the vast majority of signals. Check the wider stops before entering.
         </div>
 
         <div class="tier-scale">
@@ -1167,13 +1167,13 @@ footer {
           <h4>Instrument Sizing</h4>
           <ul>
             <li>NQ: 2 contracts ($400–600 = 9–13% of DD)</li>
-            <li>GC: 2 contracts ($600–1000 = 13–22% of DD)</li>
-            <li>SIL: 1–2 contracts (wider stops, be careful)</li>
+            <li>GC: 2 contracts ($280–$820 = 6–18% of DD)</li>
+            <li>SIL: 2 contracts ($400–$1,050 = 9–23% of DD)</li>
           </ul>
         </div>
 
         <div class="tier-survival">
-          At 2 contracts, even a worst-case NQ stop ($600) is only 13% of your drawdown. Plenty of room to absorb losing streaks.
+          At 2 contracts, a typical NQ trade risks $380–$1,180 (8–26% of DD). You have the most room here, but still respect the P90 stops — they can hit $1,100+/contract.
         </div>
 
         <div class="tier-scale">
@@ -1289,7 +1289,7 @@ footer {
           <li><strong style="color: var(--text-primary);">MGC</strong> — $1.00/tick vs $10.00/tick on GC</li>
           <li><strong style="color: var(--text-primary);">SIL</strong> — Micro Silver available at reduced size</li>
         </ul>
-        <p style="margin-top: 16px;">A $600 risk on NQ becomes $60 on a micro. You can take 30+ losers in a row on a $2,000 account. That's how you learn without stress.</p>
+        <p style="margin-top: 16px;">A $395 average risk on NQ becomes ~$40 on a micro. You can take 50 losers in a row on a $2,000 account. That's how you learn without stress.</p>
       </div>
     </div>
   </div>
