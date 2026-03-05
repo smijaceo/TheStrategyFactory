@@ -1049,11 +1049,20 @@ nav .container {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple), var(--accent-cyan));
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), var(--accent-purple), var(--accent-cyan), transparent);
   background-size: 200% 100%;
   animation: shimmer 3s linear infinite;
   border-radius: var(--radius) var(--radius) 0 0;
+}
+.pricing-card.featured::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  background: linear-gradient(180deg, rgba(0, 163, 255, 0.06), transparent);
+  border-radius: var(--radius) var(--radius) 0 0;
+  pointer-events: none;
 }
 
 .pricing-tier {
