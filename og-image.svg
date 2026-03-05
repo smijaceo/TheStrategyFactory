@@ -1,0 +1,22 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06090F"/>
+      <stop offset="100%" style="stop-color:#0d1520"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00e5ff"/>
+      <stop offset="100%" style="stop-color:#7c4dff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1200" height="4" fill="url(#accent)"/>
+  <!-- SF Logo -->
+  <text x="100" y="260" font-family="system-ui,-apple-system,sans-serif" font-size="72" font-weight="800" fill="#ffffff" letter-spacing="-2">The Strategy</text>
+  <text x="100" y="340" font-family="system-ui,-apple-system,sans-serif" font-size="72" font-weight="800" fill="#00e5ff" letter-spacing="-2">Factory</text>
+  <text x="100" y="400" font-family="system-ui,-apple-system,sans-serif" font-size="24" fill="#8899aa" letter-spacing="4">AUTOMATED FUTURES SIGNALS</text>
+  <!-- Stats -->
+  <text x="100" y="500" font-family="system-ui,-apple-system,sans-serif" font-size="20" fill="#556677">NQ · GC · SIL</text>
+  <text x="100" y="540" font-family="system-ui,-apple-system,sans-serif" font-size="18" fill="#445566">thestrategyfactory.io</text>
+  <rect x="0" y="626" width="1200" height="4" fill="url(#accent)"/>
+</svg>
