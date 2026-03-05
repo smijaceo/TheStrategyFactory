@@ -1065,20 +1065,21 @@ nav .container {
   box-shadow: 0 12px 40px rgba(124, 92, 252, 0.1);
 }
 
-/* ── Featured card: floating animation ── */
+/* ── Featured card: smooth floating animation ── */
 .pricing-card.featured {
   border-color: transparent;
   box-shadow: 0 0 80px rgba(0, 163, 255, 0.06);
-  animation: pricingFloat 4s ease-in-out infinite;
+  animation: pricingFloat 6s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+  will-change: transform;
 }
 
 @keyframes pricingFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-6px) scale(1.005); }
 }
 
 .pricing-card.featured:hover {
-  animation: none;
+  animation-play-state: paused;
 }
 
 /* ── Featured card: animated gradient border ── */
@@ -1086,11 +1087,12 @@ nav .container {
   content: '';
   position: absolute;
   top: -2px; left: -2px; right: -2px; bottom: -2px;
-  background: linear-gradient(45deg, var(--accent-cyan), var(--accent-purple), var(--accent-cyan), var(--accent-purple));
-  background-size: 300% 300%;
-  animation: gradientBorder 4s ease infinite;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple), var(--accent-cyan));
+  background-size: 200% 200%;
+  animation: gradientBorder 6s linear infinite;
   border-radius: calc(var(--radius) + 2px);
   z-index: -2;
+  will-change: background-position;
 }
 
 .pricing-card.featured::after {
@@ -1103,9 +1105,9 @@ nav .container {
 }
 
 @keyframes gradientBorder {
-  0% { background-position: 0% 50%; opacity: 0.6; }
-  50% { background-position: 100% 50%; opacity: 1; }
-  100% { background-position: 0% 50%; opacity: 0.6; }
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
 }
 
 /* ── "Most Popular" badge with shimmer ── */
