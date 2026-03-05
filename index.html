@@ -1035,63 +1035,111 @@ nav .container {
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   transform-style: preserve-3d;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .pricing-card:hover {
+  border-color: var(--border-cyan);
   transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
 }
 
+/* ── Featured card: floating animation ── */
 .pricing-card.featured {
-  border-color: rgba(0, 163, 255, 0.3);
+  border-color: transparent;
   box-shadow: 0 0 80px rgba(0, 163, 255, 0.06);
+  animation: pricingFloat 4s ease-in-out infinite;
 }
 
+@keyframes pricingFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.pricing-card.featured:hover {
+  animation: none;
+}
+
+/* ── Featured card: animated gradient border ── */
 .pricing-card.featured::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent-cyan), var(--accent-purple), var(--accent-cyan), transparent);
-  background-size: 200% 100%;
-  animation: shimmer 3s linear infinite;
-  border-radius: var(--radius) var(--radius) 0 0;
+  top: -2px; left: -2px; right: -2px; bottom: -2px;
+  background: linear-gradient(45deg, var(--accent-cyan), var(--accent-purple), var(--accent-cyan), var(--accent-purple));
+  background-size: 300% 300%;
+  animation: gradientBorder 4s ease infinite;
+  border-radius: calc(var(--radius) + 2px);
+  z-index: -2;
 }
+
 .pricing-card.featured::after {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 60px;
-  background: linear-gradient(180deg, rgba(0, 163, 255, 0.06), transparent);
-  border-radius: var(--radius) var(--radius) 0 0;
-  pointer-events: none;
+  top: 1px; left: 1px; right: 1px; bottom: 1px;
+  background: var(--bg-card);
+  border-radius: calc(var(--radius) - 1px);
+  z-index: -1;
 }
 
-.pricing-tier {
+@keyframes gradientBorder {
+  0% { background-position: 0% 50%; opacity: 0.6; }
+  50% { background-position: 100% 50%; opacity: 1; }
+  100% { background-position: 0% 50%; opacity: 0.6; }
+}
+
+/* ── "Most Popular" badge with shimmer ── */
+.pricing-badge {
+  position: absolute;
+  top: -1px; right: 24px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--bg-primary);
+  background: var(--accent-cyan);
+  padding: 6px 14px;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  z-index: 1;
+  overflow: hidden;
+}
+
+.pricing-badge::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: badgeShimmer 2.5s ease-in-out infinite;
+}
+
+@keyframes badgeShimmer {
+  0% { left: -100%; }
+  60% { left: 100%; }
+  100% { left: 100%; }
+}
+
+.pricing-tier-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  padding: 5px 14px;
-  border-radius: var(--radius-pill);
-  display: inline-block;
-  margin-bottom: 24px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
 }
-
-.tier-free { color: var(--text-secondary); background: rgba(255,255,255,0.04); }
-.tier-pro { color: var(--accent-cyan); background: var(--accent-cyan-dim); border: 1px solid rgba(0, 163, 255, 0.15); }
-.tier-elite { color: var(--accent-purple); background: rgba(124, 92, 252, 0.08); border: 1px solid rgba(124, 92, 252, 0.15); }
 
 .pricing-price {
   font-family: var(--font-display);
-  font-size: 52px;
+  font-size: 42px;
   font-weight: 900;
-  margin-bottom: 4px;
   letter-spacing: -2px;
+  margin-bottom: 4px;
 }
 
 .pricing-price span {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 400;
   color: var(--text-muted);
   letter-spacing: 0;
@@ -1100,27 +1148,41 @@ nav .container {
 .pricing-desc {
   font-size: 14px;
   color: var(--text-secondary);
-  margin-bottom: 32px;
+  margin-bottom: 28px;
+  line-height: 1.6;
 }
 
 .pricing-features {
   list-style: none;
-  margin-bottom: 36px;
+  margin-bottom: 32px;
+  flex-grow: 1;
 }
 
 .pricing-features li {
-  font-size: 14px;
-  color: var(--text-secondary);
-  padding: 8px 0;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
-.pricing-features li::before {
-  content: '✓';
-  color: var(--accent-teal);
-  font-weight: 700;
+.pricing-features li:last-child { border-bottom: none; }
+
+.pricing-check {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.pricing-check.yes {
+  color: var(--accent-green);
+  text-shadow: 0 0 8px rgba(0, 230, 118, 0.4);
+}
+
+.pricing-check.no {
+  color: var(--accent-red);
+  opacity: 0.4;
 }
 
 .pricing-btn {
@@ -1132,8 +1194,8 @@ nav .container {
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 14px 0;
-  border-radius: var(--radius-sm);
+  padding: 14px 24px;
+  border-radius: var(--radius-pill);
   text-decoration: none;
   transition: all 0.3s;
   border: none;
@@ -1160,30 +1222,42 @@ nav .container {
 }
 
 .pricing-btn-outline:hover {
-  border-color: var(--text-muted);
-  color: var(--text-primary);
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
 }
 
-.pricing-btn-primary {
+.pricing-btn-cyan {
   color: var(--bg-primary);
   background: var(--accent-cyan);
-  box-shadow: 0 0 20px rgba(0, 163, 255, 0.15);
+  box-shadow: 0 0 20px rgba(0, 163, 255, 0.2);
 }
 
-.pricing-btn-primary:hover {
+.pricing-btn-cyan:hover {
   background: #38BDF8;
-  box-shadow: 0 0 40px rgba(0, 163, 255, 0.3);
+  box-shadow: 0 0 40px rgba(0, 163, 255, 0.4);
+  transform: translateY(-2px);
 }
 
-.pricing-btn-gold {
+/* Featured card CTA pulse */
+.pricing-card.featured .pricing-btn-cyan {
+  animation: ctaPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 163, 255, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(0, 163, 255, 0.5), 0 0 60px rgba(0, 163, 255, 0.15); }
+}
+
+.pricing-btn-purple {
   color: white;
   background: var(--accent-purple);
   box-shadow: 0 0 20px rgba(124, 92, 252, 0.15);
 }
 
-.pricing-btn-gold:hover {
+.pricing-btn-purple:hover {
   background: #9678FF;
   box-shadow: 0 0 40px rgba(124, 92, 252, 0.3);
+  transform: translateY(-2px);
 }
 
 /* ── Footer ───────────────────────────────────────────── */
@@ -1484,7 +1558,8 @@ footer {
   /* Pricing */
   .pricing-grid { gap: 16px; }
   .pricing-card { padding: 24px 20px; }
-  .pricing-amount { font-size: 36px; }
+  .pricing-price { font-size: 32px; }
+  .pricing-card.featured { animation: none; transform: scale(1.02); box-shadow: 0 0 40px rgba(0, 163, 255, 0.1); }
 
   /* Validation — stack stats vertically */
   .validation { padding: 48px 0; }
@@ -1842,54 +1917,61 @@ footer {
      ═══════════════════════════════════════════════════════════ -->
 <section class="pricing" id="pricing">
   <div class="container">
-    <div class="section-label reveal">Pricing</div>
-    <h2 class="section-title reveal">Choose your edge.</h2>
-    <p class="section-desc reveal">Start free. Upgrade when you're ready.</p>
+    <div class="section-label reveal">Plans</div>
+    <h2 class="section-title reveal">Choose Your Tier</h2>
+    <p class="section-desc reveal">Start free, upgrade when you're ready. No lock-in, cancel anytime.</p>
 
     <div class="pricing-grid reveal-stagger">
+
       <div class="pricing-card reveal">
-        <div class="pricing-tier tier-free">Free</div>
+        <div class="pricing-tier-name">Free</div>
         <div class="pricing-price">$0 <span>/mo</span></div>
-        <p class="pricing-desc">Get a feel for the system.</p>
+        <p class="pricing-desc">Get a taste of the system. Limited signals, full community access.</p>
         <ul class="pricing-features">
-          <li>Delayed signals (15 min)</li>
-          <li>Daily performance recaps</li>
-          <li>Community access</li>
-          <li>Educational content</li>
+          <li><span class="pricing-check yes">✓</span> Community access</li>
+          <li><span class="pricing-check yes">✓</span> Educational content</li>
+          <li><span class="pricing-check yes">✓</span> Delayed signals (30 min)</li>
+          <li><span class="pricing-check no">✗</span> Real-time alerts</li>
+          <li><span class="pricing-check no">✗</span> All instruments</li>
+          <li><span class="pricing-check no">✗</span> Strategy deep-dives</li>
+          <li><span class="pricing-check no">✗</span> Direct team access</li>
         </ul>
-        
         <a href="https://whop.com/the-strategy-factory/" class="pricing-btn pricing-btn-outline" target="_blank">Join Free</a>
       </div>
 
       <div class="pricing-card featured reveal">
-        <div class="pricing-tier tier-pro">Pro</div>
-        <div class="pricing-price">$100 <span>/mo</span></div>
-        <p class="pricing-desc">Real-time signals for active traders.</p>
+        <div class="pricing-badge">Most Popular</div>
+        <div class="pricing-tier-name">Pro</div>
+        <div class="pricing-price" style="color:var(--accent-cyan);">$100 <span>/mo</span></div>
+        <p class="pricing-desc">Full access to all real-time signals across every instrument.</p>
         <ul class="pricing-features">
-          <li>Real-time signal alerts</li>
-          <li>All 3 instruments (NQ, GC, SIL)</li>
-          <li>Entry, SL & TP levels</li>
-          <li>Daily & monthly recaps</li>
-          <li>Priority support</li>
+          <li><span class="pricing-check yes">✓</span> Community access</li>
+          <li><span class="pricing-check yes">✓</span> Educational content</li>
+          <li><span class="pricing-check yes">✓</span> Real-time alerts</li>
+          <li><span class="pricing-check yes">✓</span> All instruments (NQ, GC, SIL)</li>
+          <li><span class="pricing-check yes">✓</span> Mobile push notifications</li>
+          <li><span class="pricing-check no">✗</span> Strategy deep-dives</li>
+          <li><span class="pricing-check no">✗</span> Direct team access</li>
         </ul>
-        
-        <a href="https://whop.com/the-strategy-factory/" class="pricing-btn pricing-btn-primary" target="_blank">Get Pro</a>
+        <a href="https://whop.com/the-strategy-factory/" class="pricing-btn pricing-btn-cyan" target="_blank">Go Pro</a>
       </div>
 
       <div class="pricing-card reveal">
-        <div class="pricing-tier tier-elite">Elite</div>
-        <div class="pricing-price">$249 <span>/mo</span></div>
-        <p class="pricing-desc">Maximum edge. Full transparency.</p>
+        <div class="pricing-tier-name">Elite</div>
+        <div class="pricing-price" style="color:var(--accent-purple);">$249 <span>/mo</span></div>
+        <p class="pricing-desc">Everything in Pro plus strategy breakdowns and direct access.</p>
         <ul class="pricing-features">
-          <li>Everything in Pro</li>
-          <li>Strategy deep-dives</li>
-          <li>Risk management breakdowns</li>
-          <li>Walk-forward validation reports</li>
-          <li>Direct access to the team</li>
+          <li><span class="pricing-check yes">✓</span> Everything in Pro</li>
+          <li><span class="pricing-check yes">✓</span> Strategy deep-dives</li>
+          <li><span class="pricing-check yes">✓</span> Risk management breakdowns</li>
+          <li><span class="pricing-check yes">✓</span> Walk-forward reports</li>
+          <li><span class="pricing-check yes">✓</span> Direct access to the team</li>
+          <li><span class="pricing-check yes">✓</span> Priority support</li>
+          <li><span class="pricing-check yes">✓</span> Early feature access</li>
         </ul>
-        
-        <a href="https://whop.com/the-strategy-factory/" class="pricing-btn pricing-btn-gold" target="_blank">Go Elite</a>
+        <a href="https://whop.com/the-strategy-factory/" class="pricing-btn pricing-btn-purple" target="_blank">Go Elite</a>
       </div>
+
     </div>
   </div>
 </section>
