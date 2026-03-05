@@ -10,6 +10,7 @@
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { overflow-x: hidden; max-width: 100vw; }
+main.page-content { position: relative; z-index: 1; clip-path: inset(0 0 0 0); -webkit-clip-path: inset(0 0 0 0); }
 
 :root {
   --bg-primary: #06090F;
@@ -868,7 +869,6 @@ footer {
 /* ── Responsive — Tablet ──────────────────────────────── */
 @media (max-width: 900px) {
   .hamburger { display: flex; }
-  nav { position: sticky; position: -webkit-sticky; top: 0; padding-top: env(safe-area-inset-top, 0px); }
   .nav-links { display: none; }
   .footer-top { flex-direction: column; gap: 32px; }
   .footer-links { flex-direction: column; gap: 24px; }
@@ -887,7 +887,7 @@ footer {
   h1 { font-size: 44px !important; line-height: 1.1; letter-spacing: -1.5px; }
   h2 { font-size: 36px !important; line-height: 1.15; letter-spacing: -1px; }
   p { font-size: 14px; }
-  .page-header { padding: 40px 0 40px; }
+  .page-header { padding: 120px 0 40px; }
   .page-header h1 { font-size: 44px !important; }
   .page-header p { font-size: 14px; }
   .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
@@ -927,6 +927,7 @@ footer {
   <a href="https://whop.com/the-strategy-factory/" class="mobile-cta" target="_blank">Get Started</a>
 </div>
 
+<main class="page-content">
 
 <!-- PAGE HEADER -->
 <section class="page-header">
@@ -1575,5 +1576,6 @@ document.querySelectorAll('[data-count]').forEach(el => counterObs.observe(el));
 })();
 
 </script>
+</main>
 </body>
 </html>
