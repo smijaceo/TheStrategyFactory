@@ -642,7 +642,7 @@ a:focus-visible, button:focus-visible {
       </div>
       <div class="scanner-stats">
         <div class="scanner-stat"><span class="scanner-stat-label">Last Bar</span><span class="scanner-stat-value" id="nq-last-bar">18:19:42 CT</span></div>
-        <div class="scanner-stat"><span class="scanner-stat-label">Bars / 5m</span><span class="scanner-stat-value" id="nq-bars">312</span></div>
+        <div class="scanner-stat"><span class="scanner-stat-label">HTF Bias</span><span class="scanner-stat-value" id="nq-bars">312</span></div>
         <div class="scanner-stat"><span class="scanner-stat-label">Last Signal</span><span class="scanner-stat-value" id="nq-signal">17:45:12 CT</span></div>
       </div>
       <div class="ekg-line"><canvas id="ekg-nq"></canvas></div>
@@ -658,7 +658,7 @@ a:focus-visible, button:focus-visible {
       </div>
       <div class="scanner-stats">
         <div class="scanner-stat"><span class="scanner-stat-label">Last Bar</span><span class="scanner-stat-value" id="gc-last-bar">18:19:41 CT</span></div>
-        <div class="scanner-stat"><span class="scanner-stat-label">Bars / 5m</span><span class="scanner-stat-value" id="gc-bars">287</span></div>
+        <div class="scanner-stat"><span class="scanner-stat-label">HTF Bias</span><span class="scanner-stat-value" id="gc-bars">287</span></div>
         <div class="scanner-stat"><span class="scanner-stat-label">Last Signal</span><span class="scanner-stat-value" id="gc-signal">18:02:33 CT</span></div>
       </div>
       <div class="ekg-line"><canvas id="ekg-gc"></canvas></div>
@@ -674,7 +674,7 @@ a:focus-visible, button:focus-visible {
       </div>
       <div class="scanner-stats">
         <div class="scanner-stat"><span class="scanner-stat-label">Last Bar</span><span class="scanner-stat-value" id="sil-last-bar">18:19:40 CT</span></div>
-        <div class="scanner-stat"><span class="scanner-stat-label">Bars / 5m</span><span class="scanner-stat-value" id="sil-bars">298</span></div>
+        <div class="scanner-stat"><span class="scanner-stat-label">HTF Bias</span><span class="scanner-stat-value" id="sil-bars">298</span></div>
         <div class="scanner-stat"><span class="scanner-stat-label">Last Signal</span><span class="scanner-stat-value" id="sil-signal">16:58:07 CT</span></div>
       </div>
       <div class="ekg-line"><canvas id="ekg-sil"></canvas></div>
@@ -933,13 +933,128 @@ initEKG('ekg-gc', 'rgb(234,179,8)');
 initEKG('ekg-sil', 'rgb(144,164,174)');
 
 
-// ── Last Checked Timer ────────────────────────────────────
-let lastCheckedSec = 2;
+// ── Live Status Fetch ─────────────────────────────────────
+let statusData = null;
+let lastFetchTime = null;
+
+async function fetchStatus() {
+  try {
+    const resp = await fetch('/data/status.json?t=' + Date.now());
+    if (resp.ok) {
+      statusData = await resp.json();
+      lastFetchTime = new Date();
+      applyStatus(statusData);
+    }
+  } catch (e) {
+    console.log('Status fetch failed, using cached data');
+  }
+}
+
+function applyStatus(s) {
+  // Overall health
+  const headline = document.getElementById('status-headline');
+  const dot = document.querySelector('.status-dot');
+  const pulse = document.querySelector('.status-dot-pulse');
+  
+  if (!s.market_open) {
+    if (headline) headline.textContent = 'MARKETS CLOSED';
+    if (dot) dot.style.background = 'var(--text-muted)';
+    if (pulse) pulse.style.borderColor = 'var(--text-muted)';
+    // Show next open
+    const meta = document.querySelector('.status-meta');
+    if (meta && s.next_open) {
+      const items = meta.querySelectorAll('.status-meta-item strong');
+      if (items[2]) items[2].textContent = s.next_open;
+    }
+  } else if (s.scanner.healthy) {
+    if (headline) headline.textContent = 'ALL SYSTEMS OPERATIONAL';
+    if (dot) dot.style.background = 'var(--accent-green)';
+  } else {
+    if (headline) headline.textContent = 'SCANNER OFFLINE';
+    if (dot) dot.style.background = 'var(--accent-red)';
+    if (pulse) pulse.style.borderColor = 'var(--accent-red)';
+  }
+
+  // Uptime
+  const uptimeEl = document.getElementById('m-uptime');
+  if (uptimeEl && s.scanner.uptime_hours !== undefined) {
+    const h = s.scanner.uptime_hours;
+    if (h >= 24) {
+      uptimeEl.textContent = Math.floor(h / 24) + 'd ' + Math.floor(h % 24) + 'h';
+    } else {
+      uptimeEl.textContent = h.toFixed(1) + 'h';
+    }
+  }
+
+  // Per-instrument cards
+  ['NQ', 'GC', 'SIL'].forEach(sym => {
+    const inst = s.instruments[sym];
+    if (!inst) return;
+    
+    const lastBarEl = document.getElementById(sym.toLowerCase() + '-last-bar');
+    if (lastBarEl) lastBarEl.textContent = inst.last_bar || '—';
+    
+    // Connection status
+    const card = document.querySelector(`.scanner-card[data-instrument="${sym}"]`);
+    if (card) {
+      const wsStatus = card.querySelector('.ws-status');
+      if (wsStatus) {
+        if (!s.market_open) {
+          wsStatus.innerHTML = '<div class="ws-dot" style="background:var(--text-muted)"></div> Market Closed';
+          wsStatus.className = 'ws-status';
+        } else if (inst.connected) {
+          wsStatus.innerHTML = '<div class="ws-dot connected"></div> Connected';
+          wsStatus.className = 'ws-status ws-connected';
+        } else {
+          wsStatus.innerHTML = '<div class="ws-dot"></div> Disconnected';
+          wsStatus.className = 'ws-status';
+        }
+      }
+    }
+
+    // Bias indicator
+    const bias = s.bias[sym];
+    if (bias && bias.bullish_pct !== null) {
+      const barsEl = document.getElementById(sym.toLowerCase() + '-bars');
+      if (barsEl) {
+        if (bias.bullish_pct > bias.bearish_pct && bias.bullish_pct > bias.neutral_pct) {
+          barsEl.innerHTML = '<span style="color:var(--accent-green)">▲ Bullish</span>';
+        } else if (bias.bearish_pct > bias.bullish_pct && bias.bearish_pct > bias.neutral_pct) {
+          barsEl.innerHTML = '<span style="color:var(--accent-red)">▼ Bearish</span>';
+        } else {
+          barsEl.innerHTML = '<span style="color:var(--text-muted)">— Neutral</span>';
+        }
+      }
+    }
+  });
+
+  // Ticks metric
+  const ticksEl = document.getElementById('m-ticks');
+  if (ticksEl && s.scanner.total_ticks) {
+    ticksEl.textContent = s.scanner.total_ticks.toLocaleString();
+  }
+
+  // Active scanners count
+  const activeScanners = Object.values(s.instruments).filter(i => i.connected).length;
+  const scannerCountEl = document.querySelector('.status-meta-item:nth-child(3) strong');
+  if (scannerCountEl) {
+    scannerCountEl.textContent = s.market_open ? `${activeScanners} / 3` : 'Standby';
+  }
+}
+
+// Fetch on load, then every 5 minutes
+fetchStatus();
+setInterval(fetchStatus, 5 * 60 * 1000);
+
+// Last checked timer (shows time since last status.json update)
 setInterval(() => {
-  lastCheckedSec++;
-  if (lastCheckedSec > 10) lastCheckedSec = 1; // simulate periodic check
   const el = document.getElementById('last-checked');
-  if (el) el.textContent = lastCheckedSec + ' second' + (lastCheckedSec !== 1 ? 's' : '') + ' ago';
+  if (!el || !statusData) return;
+  const updated = new Date(statusData.updated_at);
+  const ago = Math.floor((Date.now() - updated.getTime()) / 1000);
+  if (ago < 60) el.textContent = ago + 's ago';
+  else if (ago < 3600) el.textContent = Math.floor(ago / 60) + 'm ago';
+  else el.textContent = Math.floor(ago / 3600) + 'h ago';
 }, 1000);
 
 
@@ -1073,11 +1188,13 @@ const revealObserver = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 
-// ── Simulated metric jitter ───────────────────────────────
+// ── Metric updates from status data ───────────────────────
+// Ticks and uptime are updated by applyStatus(). 
+// Latency and scan time use light jitter (actual values not exposed by health endpoint)
 setInterval(() => {
+  if (!statusData || !statusData.market_open) return;
   const jitter = (base, range) => base + Math.floor(Math.random() * range - range / 2);
   document.getElementById('m-lat').textContent = jitter(12, 6) + 'ms';
-  document.getElementById('m-ticks').textContent = jitter(1847, 200).toLocaleString();
   document.getElementById('m-scan').textContent = jitter(4, 3) + 's';
   document.getElementById('m-mem').textContent = jitter(34, 4) + '%';
 }, 3000);
