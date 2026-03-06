@@ -1088,6 +1088,10 @@ footer {
 }
 
 /* ── Responsive — Mobile ──────────────────────────────── */
+@media (max-width: 900px) {
+  .signal-layout { grid-template-columns: 1fr; gap: 32px; }
+}
+
 @media (max-width: 600px) {
   .tiers-grid, .tier-grid { grid-template-columns: 1fr; gap: 16px; }
   .tier-card { padding: 24px 20px; }
@@ -1096,6 +1100,9 @@ footer {
   .hero h1 { font-size: 48px !important; letter-spacing: -1.5px; }
   .faq-item { padding: 16px; }
   .steps-grid { grid-template-columns: 1fr; }
+  .signal-layout { gap: 24px; }
+  .signal-mock-body { padding: 20px 16px; font-size: 12px; }
+  .signal-main-line { padding: 12px 14px; font-size: 13px; }
   .container { padding: 0 16px; }
   section { padding: 48px 0; }
   h1 { font-size: 44px !important; line-height: 1.1; letter-spacing: -1.5px; }
