@@ -1159,7 +1159,7 @@ footer {
 <section class="hero">
   <div class="container">
     <div class="hero-badge">🚀 Launching March 16</div>
-    <h1>Ready on<br><span class="gradient">Day One</span></h1>
+    <h1>Ready on <br><span class="gradient">Day One</span></h1>
     <p class="hero-sub">
       No complicated software. No coding required. Join Discord, follow the signals, 
       and trade with a proven proprietary system.
@@ -1427,8 +1427,8 @@ footer {
   <div class="container">
     <div class="section-header reveal">
       <div class="section-label">Plans</div>
-      <h2 class="section-title">Choose Your Tier</h2>
-      <p class="section-subtitle">Start free, upgrade when you're ready. No lock-in, cancel anytime.</p>
+      <h2 class="section-title">Lock In Your Edge Before It's Gone</h2>
+      <p class="section-subtitle">50 founding member spots at $79/mo — 21% off, locked for life. Once they're filled, the price goes to $100/mo and stays there.</p>
     </div>
 
     <div class="tier-grid reveal-stagger">
@@ -1447,7 +1447,7 @@ footer {
           <li><span class="tier-check no">✗</span> Direct team access</li>
         </ul>
         
-        <a href="https://discord.gg/6hWtrqxSed" class="tier-btn tier-btn-outline" target="_blank" rel="noopener noreferrer">Join Waitlist</a>
+        <a href="https://discord.gg/6hWtrqxSed" class="tier-btn tier-btn-outline" target="_blank" rel="noopener noreferrer">Join the Community Free →</a>
       </div>
 
       <div class="tier-card featured reveal">
@@ -1466,7 +1466,7 @@ footer {
           <li><span class="tier-check no">✗</span> Direct team access</li>
         </ul>
         
-        <a href="https://discord.gg/6hWtrqxSed" class="tier-btn tier-btn-cyan" target="_blank" rel="noopener noreferrer">Join Waitlist</a>
+        <a href="https://discord.gg/6hWtrqxSed" class="tier-btn tier-btn-cyan" target="_blank" rel="noopener noreferrer">Claim Your Founding Spot →</a>
         <p style="font-size:12px;color:var(--text-muted);margin-top:12px;font-family:var(--font-mono);letter-spacing:0.05em;">7-day money-back guarantee. No questions asked.</p>
       </div>
 
@@ -1670,11 +1670,15 @@ document.querySelectorAll('.step-card, .tier-card').forEach(card => {
   const mobileMenu = document.querySelector('.mobile-menu');
   const closeBtn = document.querySelector('.mobile-menu-close');
   if (!hamburger || !mobileMenu) return;
-  hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
-  closeBtn.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  function openMenu() { mobileMenu.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeMenu() { mobileMenu.classList.remove('open'); document.body.style.overflow = ''; }
+  hamburger.addEventListener('click', openMenu);
+  closeBtn.addEventListener('click', closeMenu);
   mobileMenu.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    a.addEventListener('click', closeMenu);
   });
+  mobileMenu.addEventListener('click', (e) => { if (e.target === mobileMenu) closeMenu(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
 })();
 
 

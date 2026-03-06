@@ -988,6 +988,7 @@ footer {
     <div class="page-header-badge">Feb 2024 — Feb 2026 · Live Simulation</div>
     <h1><span class="gradient">Performance Dashboard</span></h1>
     <p>Full transparency. Every trade, every month, every metric. Commission &amp; slippage included.</p>
+    <p style="max-width:700px;margin:24px auto 0;text-align:center;color:var(--text-secondary);font-size:16px;line-height:1.7;">We don't cherry-pick screenshots of our best trades. Below is every trade our system has taken across 2 years — wins, losses, drawdowns, and all. 23 out of 25 months profitable. Judge for yourself.</p>
   </div>
 </section>
 
@@ -1633,11 +1634,15 @@ document.querySelectorAll('[data-count]').forEach(el => counterObs.observe(el));
   const mobileMenu = document.querySelector('.mobile-menu');
   const closeBtn = document.querySelector('.mobile-menu-close');
   if (!hamburger || !mobileMenu) return;
-  hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
-  closeBtn.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  function openMenu() { mobileMenu.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeMenu() { mobileMenu.classList.remove('open'); document.body.style.overflow = ''; }
+  hamburger.addEventListener('click', openMenu);
+  closeBtn.addEventListener('click', closeMenu);
   mobileMenu.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    a.addEventListener('click', closeMenu);
   });
+  mobileMenu.addEventListener('click', (e) => { if (e.target === mobileMenu) closeMenu(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
 })();
 
 

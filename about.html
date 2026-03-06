@@ -1340,7 +1340,7 @@ footer {
       <div class="founder-info">
         <h2 class="founder-name">Jace</h2>
         <span class="founder-role">Founder</span>
-        <p class="founder-bio">4 years trading futures. Built TSF because the #1 problem in trading isn't strategy — it's emotion. We're human. We get scared, greedy, impatient. TSF doesn't. No feelings, no hesitation, no revenge trades. Just the system.</p>
+        <p class="founder-bio">I spent 4 years trading futures and realized something uncomfortable: my strategy was fine. I was the problem. I'd skip entries out of fear. Hold losers too long hoping they'd come back. Size up after a win streak and give it all back. So I built TSF to take myself out of the equation entirely. No feelings. No hesitation. No revenge trades. Just the system, running 24/5 whether I'm sleeping, panicking, or at the gym. If you've ever stared at a chart knowing exactly what you should do and doing the opposite — that's why this exists.</p>
       </div>
     </div>
   </div>
@@ -1472,11 +1472,15 @@ footer {
   const mobileMenu = document.querySelector('.mobile-menu');
   const closeBtn = document.querySelector('.mobile-menu-close');
   if (!hamburger || !mobileMenu) return;
-  hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
-  closeBtn.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  function openMenu() { mobileMenu.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeMenu() { mobileMenu.classList.remove('open'); document.body.style.overflow = ''; }
+  hamburger.addEventListener('click', openMenu);
+  closeBtn.addEventListener('click', closeMenu);
   mobileMenu.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    a.addEventListener('click', closeMenu);
   });
+  mobileMenu.addEventListener('click', (e) => { if (e.target === mobileMenu) closeMenu(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
 })();
 
 

@@ -428,7 +428,7 @@ footer { border-top: 1px solid var(--border-subtle); padding: 60px 0 40px; }
 })();
 const revealObserver = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); revealObserver.unobserve(entry.target); } }); }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-(function() { const h = document.querySelector('.hamburger'); const m = document.querySelector('.mobile-menu'); const c = document.querySelector('.mobile-menu-close'); if(!h||!m)return; h.addEventListener('click',()=>m.classList.add('open')); c.addEventListener('click',()=>m.classList.remove('open')); m.querySelectorAll('a').forEach(a=>{a.addEventListener('click',()=>m.classList.remove('open'));}); })();
+(function() { const h = document.querySelector('.hamburger'); const m = document.querySelector('.mobile-menu'); const c = document.querySelector('.mobile-menu-close'); if(!h||!m)return; function openMenu(){m.classList.add('open');document.body.style.overflow='hidden';} function closeMenu(){m.classList.remove('open');document.body.style.overflow='';} h.addEventListener('click',openMenu); c.addEventListener('click',closeMenu); m.querySelectorAll('a').forEach(a=>{a.addEventListener('click',closeMenu);}); m.addEventListener('click',(e)=>{if(e.target===m)closeMenu();}); document.addEventListener('keydown',(e)=>{if(e.key==='Escape')closeMenu();}); })();
 (function() { const nav = document.querySelector('nav'); if(!nav)return; function cs(){nav.classList.toggle('scrolled',window.scrollY>40);} window.addEventListener('scroll',cs,{passive:true}); cs(); })();
 </script>
 <script defer src="/_vercel/insights/script.js"></script>

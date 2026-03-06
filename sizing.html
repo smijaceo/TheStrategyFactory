@@ -1450,11 +1450,15 @@ footer {
   const mobileMenu = document.querySelector('.mobile-menu');
   const closeBtn = document.querySelector('.mobile-menu-close');
   if (!hamburger || !mobileMenu) return;
-  hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
-  closeBtn.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  function openMenu() { mobileMenu.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeMenu() { mobileMenu.classList.remove('open'); document.body.style.overflow = ''; }
+  hamburger.addEventListener('click', openMenu);
+  closeBtn.addEventListener('click', closeMenu);
   mobileMenu.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    a.addEventListener('click', closeMenu);
   });
+  mobileMenu.addEventListener('click', (e) => { if (e.target === mobileMenu) closeMenu(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
 })();
 
 // Nav scroll effect
