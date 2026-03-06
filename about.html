@@ -25,6 +25,7 @@
     <meta name="twitter:image" content="https://thestrategyfactory.io/og-image.png">
 <link rel="canonical" href="https://thestrategyfactory.io/about.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -976,6 +977,57 @@ footer {
 }
 .mobile-menu-close:hover { color: var(--accent-cyan); transform: rotate(90deg); }
 
+/* ── Founder ──────────────────────────────────────────── */
+.founder-section { padding: 80px 0 40px; }
+.founder-card {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  max-width: 700px;
+  margin: 40px auto 0;
+  padding: 40px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+}
+.founder-img-wrap {
+  flex-shrink: 0;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--accent-cyan);
+  box-shadow: 0 0 20px rgba(0,163,255,0.15);
+}
+.founder-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.founder-name {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+.founder-role {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  display: block;
+  margin: 4px 0 16px;
+}
+.founder-bio {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 0;
+}
+
 /* ── Responsive — Tablet ──────────────────────────────── */
 @media (max-width: 900px) {
   .hamburger { display: flex; min-width: 44px; min-height: 44px; }
@@ -1010,7 +1062,12 @@ footer {
   .numbers-grid { grid-template-columns: 1fr 1fr; }
   .wf-stats, .not-are { grid-template-columns: 1fr; }
   .approach-grid { grid-template-columns: 1fr; }
+  .founder-card { flex-direction: column; text-align: center; padding: 28px 20px; gap: 24px; }
+  .founder-img-wrap { width: 120px; height: 120px; }
+  .founder-name { font-size: 24px; }
+  .founder-bio { font-size: 14px; }
 }
+.cftc-disclaimer { max-width: 800px; margin: 60px auto 0; padding: 24px 28px; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); line-height: 1.8; text-align: center; opacity: 0.7; }
 </style>
 </head>
 <body>
@@ -1056,7 +1113,7 @@ footer {
     <h1><span class="gradient">Built Different.</span></h1>
     <p class="hero-sub">
       Most signal services are one person with opinions.<br>
-      We're an algorithm with receipts.
+      We're an algorithm with a track record.
     </p>
   </div>
 </section>
@@ -1227,8 +1284,7 @@ footer {
       <div class="not-list reveal">
         <h3>✕ What We're NOT</h3>
         <div class="not-item"><span class="not-x">✕</span> A guru with a hot take</div>
-        <div class="not-item"><span class="not-x">✕</span> Cherry-picked screenshots</div>
-        <div class="not-item"><span class="not-x">✕</span> Hypothetical paper trades</div>
+        <div class="not-item"><span class="not-x">✕</span> Cherry-picked screenshots — every trade logged, wins and losses</div>
         <div class="not-item"><span class="not-x">✕</span> A get-rich-quick scheme</div>
       </div>
       <div class="are-list reveal">
@@ -1272,7 +1328,29 @@ footer {
   </div>
 </section>
 
+<!-- FOUNDER -->
+<section class="founder-section">
+  <div class="container">
+    <div class="section-label reveal">The Builder</div>
+    <div class="founder-card reveal">
+      <div class="founder-img-wrap">
+        <img src="founder-headshot.jpg" alt="Jace — Founder of The Strategy Factory" class="founder-img" width="400" height="400" loading="lazy">
+      </div>
+      <div class="founder-info">
+        <h2 class="founder-name">Jace</h2>
+        <span class="founder-role">Founder</span>
+        <p class="founder-bio">4 years trading futures. Built TSF because the #1 problem in trading isn't strategy — it's emotion. We're human. We get scared, greedy, impatient. TSF doesn't. No feelings, no hesitation, no revenge trades. Just the system.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- FOOTER -->
+<!-- CFTC Disclaimer -->
+<div class="cftc-disclaimer">
+  <p>CFTC RULE 4.41 — Hypothetical or simulated performance results have certain limitations. Unlike an actual performance record, simulated results do not represent actual trading. Also, since the trades have not been executed, the results may have under-or-over compensated for the impact, if any, of certain market factors, such as lack of liquidity. Simulated trading programs in general are also subject to the fact that they are designed with the benefit of hindsight. No representation is being made that any account will or is likely to achieve profit or losses similar to those shown.</p>
+</div>
+
 <footer>
   <div class="container">
     <div class="footer-top">

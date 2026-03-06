@@ -25,6 +25,7 @@
     <meta name="twitter:image" content="https://thestrategyfactory.io/og-image.png">
 <link rel="canonical" href="https://thestrategyfactory.io/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════════════════
@@ -1135,16 +1136,16 @@ nav .container {
 .pricing-badge::after {
   content: '';
   position: absolute;
-  top: 0; left: -100%;
+  top: 0; left: 0;
   width: 100%; height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
   animation: badgeShimmer 2.5s ease-in-out infinite;
 }
 
 @keyframes badgeShimmer {
-  0% { left: -100%; }
-  60% { left: 100%; }
-  100% { left: 100%; }
+  0% { transform: translateX(-200%); }
+  60% { transform: translateX(200%); }
+  100% { transform: translateX(200%); }
 }
 
 .pricing-tier-name {
@@ -1839,6 +1840,7 @@ footer {
   transform: translateY(-2px);
   box-shadow: 0 0 50px rgba(0,163,255,0.4), 0 8px 30px rgba(0,0,0,0.3);
 }
+.cftc-disclaimer { max-width: 800px; margin: 60px auto 0; padding: 24px 28px; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); line-height: 1.8; text-align: center; opacity: 0.7; }
 </style>
 </head>
 <body>
@@ -1887,7 +1889,7 @@ footer {
 
     <h1>
       Automated Futures<br>
-      <span class="gradient">Signals That Work.</span>
+      <span class="gradient">Signals, Backed by Data.</span>
     </h1>
 
     <p class="hero-sub">
@@ -1941,7 +1943,7 @@ footer {
       </div>
       <div class="hero-stat">
         <div class="hero-stat-value" data-count="2155" data-comma="true" data-display="2,155">2,155</div>
-        <div class="hero-stat-label">Verified Trades</div>
+        <div class="hero-stat-label">Logged Trades</div>
       </div>
     </div>
 
@@ -2295,6 +2297,11 @@ footer {
 <!-- ═══════════════════════════════════════════════════════════
      FOOTER
      ═══════════════════════════════════════════════════════════ -->
+<!-- CFTC Disclaimer -->
+<div class="cftc-disclaimer">
+  <p>CFTC RULE 4.41 — Hypothetical or simulated performance results have certain limitations. Unlike an actual performance record, simulated results do not represent actual trading. Also, since the trades have not been executed, the results may have under-or-over compensated for the impact, if any, of certain market factors, such as lack of liquidity. Simulated trading programs in general are also subject to the fact that they are designed with the benefit of hindsight. No representation is being made that any account will or is likely to achieve profit or losses similar to those shown.</p>
+</div>
+
 <footer>
   <div class="container">
     <div class="footer-top">
@@ -2778,6 +2785,7 @@ document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(
       mEl.textContent = '00';
       sEl.textContent = '00';
       document.querySelector('.countdown-label-text').textContent = "We're live";
+      clearInterval(countdownInterval);
       return;
     }
     const d = Math.floor(diff / 86400000);
@@ -2790,7 +2798,7 @@ document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(
     sEl.textContent = pad(s);
   }
   tick();
-  setInterval(tick, 1000);
+  const countdownInterval = setInterval(tick, 1000);
 })();
 
 // ── Founding Spots Bar Animation ──────────────────────────
