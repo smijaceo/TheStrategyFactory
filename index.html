@@ -345,6 +345,23 @@ nav .container {
   100% { background-position: 200% center; }
 }
 
+/* Typewriter */
+.typewriter-h1 {
+  min-height: 1.1em;
+}
+.typewriter-cursor {
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: blink 0.7s step-end infinite;
+  font-weight: 300;
+  margin-left: 2px;
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
 .hero-sub {
   font-family: var(--font-display);
   font-size: 19px;
@@ -1522,6 +1539,7 @@ footer {
     line-height: 1.1;
     letter-spacing: -1.5px;
   }
+  .typewriter-h1 { min-height: 3.3em; }
   .hero h1 .gradient { display: inline; }
   .hero-sub {
     font-size: 14px;
@@ -1904,10 +1922,8 @@ a:focus-visible, button:focus-visible {
   <div class="container">
     <div class="hero-badge">🚀 Launching March 16</div>
 
-    <h1>
-      <span class="gradient">$565K in 2 Years.</span><br>
-      23 of 25 Months Profitable.<br>
-      <span class="gradient">Zero Human Decisions.</span>
+    <h1 class="typewriter-h1">
+      <span id="typewriter" class="gradient"></span><span class="typewriter-cursor">|</span>
     </h1>
 
     <p class="hero-sub">
@@ -2853,5 +2869,52 @@ document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(
 </script>
 </main>
 <script defer src="/_vercel/insights/script.js"></script>
+<script>
+(function() {
+  const lines = [
+    "An Algorithm Doesn't Revenge Trade.",
+    "$565K Across 2,155 Trades. Zero Emotion.",
+    "Your Strategy Isn't the Problem. You Are.",
+    "Not a Signal Group. A Signal Engine.",
+    "23 of 25 Months Profitable. No Gut Feeling Required."
+  ];
+  const el = document.getElementById('typewriter');
+  if (!el) return;
+  const typeSpeed = 55;
+  const deleteSpeed = 35;
+  const holdTime = 3500;
+  let lineIdx = 0;
+
+  function typeLine(text, cb) {
+    let i = 0;
+    (function tick() {
+      el.textContent = text.slice(0, ++i);
+      if (i < text.length) setTimeout(tick, typeSpeed);
+      else setTimeout(cb, holdTime);
+    })();
+  }
+
+  function deleteLine(cb) {
+    let text = el.textContent;
+    (function tick() {
+      text = text.slice(0, -1);
+      el.textContent = text;
+      if (text.length > 0) setTimeout(tick, deleteSpeed);
+      else setTimeout(cb, 300);
+    })();
+  }
+
+  function loop() {
+    typeLine(lines[lineIdx], function() {
+      deleteLine(function() {
+        lineIdx = (lineIdx + 1) % lines.length;
+        loop();
+      });
+    });
+  }
+
+  loop();
+})();
+</script>
 </body>
 </html>
