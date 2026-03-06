@@ -11,7 +11,7 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="Position Sizing Guide — The Strategy Factory">
     <meta property="og:description" content="Position sizing guide for prop firm accounts. Learn how to size trades for 50K, 100K, and 150K funded accounts.">
-    <meta property="og:url" content="https://thestrategyfactory.io/sizing">
+    <meta property="og:url" content="https://thestrategyfactory.io/sizing.html">
     <meta property="og:site_name" content="The Strategy Factory">
     <meta property="og:image" content="https://thestrategyfactory.io/og-image.png">
     <meta property="og:image:width" content="1200">
@@ -21,6 +21,7 @@
     <meta name="twitter:title" content="Position Sizing Guide — The Strategy Factory">
     <meta name="twitter:description" content="Position sizing guide for prop firm accounts. Learn how to size trades for 50K, 100K, and 150K funded accounts.">
     <meta name="twitter:image" content="https://thestrategyfactory.io/og-image.png">
+<link rel="canonical" href="https://thestrategyfactory.io/sizing.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -802,7 +803,7 @@ footer {
   gap: 48px;
 }
 
-.footer-col h4 {
+.footer-col .footer-heading { display: block;
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 600;
@@ -946,7 +947,7 @@ footer {
 
 /* Responsive */
 @media (max-width: 900px) {
-  .hamburger { display: flex; }
+  .hamburger { display: flex; min-width: 44px; min-height: 44px; }
   nav { position: static; }
   .nav-links { display: none; }
   .tier-grid, .phases, .scaling-tables, .signal-info, .micro-grid {
@@ -954,8 +955,10 @@ footer {
   }
   .footer-top { flex-direction: column; gap: 32px; }
   .footer-links { flex-direction: column; gap: 24px; }
+  .footer-col a { padding: 12px 0; display: block; }
   .hero { padding: 32px 0 60px; min-height: auto; }
   .hero h1 { font-size: 48px; letter-spacing: -1.5px; }
+  body::after { animation: none; }
 }
 
 @media (max-width: 600px) {
@@ -987,9 +990,9 @@ footer {
     </a>
     <ul class="nav-links">
       <li><a href="performance.html">Performance</a></li>
-      <li><a href="about.html">Methodology</a></li>
+      <li><a href="about.html">How It Works</a></li>
       <li><a href="start.html#pricing">Pricing</a></li>
-      <li><a href="https://discord.gg/6hWtrqxSed" class="nav-cta" target="_blank">Join Discord</a></li>
+      <li><a href="https://discord.gg/6hWtrqxSed" class="nav-cta" target="_blank" rel="noopener noreferrer">Join Discord</a></li>
     </ul>
     <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
@@ -1000,10 +1003,10 @@ footer {
   <button class="mobile-menu-close">&times;</button>
   <a href="index.html">Home</a>
   <a href="performance.html">Performance</a>
-  <a href="about.html">Methodology</a>
+  <a href="about.html">How It Works</a>
   <a href="status.html">Status</a>
   <a href="start.html#pricing">Pricing</a>
-  <a href="https://discord.gg/6hWtrqxSed" class="mobile-cta" target="_blank">Join Discord</a>
+  <a href="https://discord.gg/6hWtrqxSed" class="mobile-cta" target="_blank" rel="noopener noreferrer">Join Discord</a>
 </div>
 
 <main class="page-content">
@@ -1056,7 +1059,7 @@ footer {
           <li><span class="highlight">GC (Gold)</span> — Median $1.40, avg $2.80 ($140–$410 typical, up to $760 on wide stops)</li>
           <li><span class="highlight">SIL (Silver)</span> — Median $0.04, avg $0.08 ($200–$525 typical, up to $990 on wide stops)</li>
         </ul>
-        <p style="margin-top: 16px; font-size: 13px; color: var(--text-muted);">Based on 2,157 trades. "Typical" = 25th–75th percentile. 10% of trades have wider stops — always check the signal's risk before entering.</p>
+        <p style="margin-top: 16px; font-size: 13px; color: var(--text-muted);">Based on 2,155 trades. "Typical" = 25th–75th percentile. 10% of trades have wider stops — always check the signal's risk before entering.</p>
       </div>
     </div>
   </div>
@@ -1312,7 +1315,7 @@ footer {
 <section class="cta-section">
   <div class="container">
     <h2 class="reveal">Ready to trade with us?</h2>
-    <a href="https://discord.gg/6hWtrqxSed" class="cta-btn reveal" target="_blank">Join Discord</a>
+    <a href="https://discord.gg/6hWtrqxSed" class="cta-btn reveal" target="_blank" rel="noopener noreferrer">Join Discord</a>
   </div>
 </section>
 
@@ -1328,23 +1331,26 @@ footer {
       </div>
       <div class="footer-links">
         <div class="footer-col">
-          <h4>Product</h4>
+          <span class="footer-heading">Product</span>
           <a href="performance.html">Performance</a>
+          <a href="about.html">How It Works</a>
           <a href="start.html#pricing">Pricing</a>
+          <a href="status.html">System Status</a>
         </div>
         <div class="footer-col">
-          <h4>Resources</h4>
-          <a href="about.html">Methodology</a>
+          <span class="footer-heading">Resources</span>
+          <a href="start.html">Getting Started</a>
           <a href="sizing.html">Sizing Guide</a>
           <a href="start.html#faq">FAQ</a>
         </div>
         <div class="footer-col">
-          <h4>Connect</h4>
-          <a href="https://discord.gg/6hWtrqxSed" target="_blank">Discord</a>
-          <a href="https://x.com/tsfalgo" target="_blank">Twitter</a>
+          <span class="footer-heading">Connect</span>
+          <a href="https://discord.gg/6hWtrqxSed" target="_blank" rel="noopener noreferrer">Discord</a>
+          <a href="https://x.com/tsfalgo" target="_blank" rel="noopener noreferrer">Twitter/X</a>
+          <a href="mailto:support@thestrategyfactory.io">Contact</a>
         </div>
         <div class="footer-col">
-          <h4>Legal</h4>
+          <span class="footer-heading">Legal</span>
           <a href="terms.html">Terms of Service</a>
           <a href="privacy.html">Privacy Policy</a>
           <a href="risk.html">Risk Disclosure</a>

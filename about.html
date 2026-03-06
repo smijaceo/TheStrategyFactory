@@ -12,7 +12,7 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="About & Methodology — The Strategy Factory">
     <meta property="og:description" content="How The Strategy Factory works. Proprietary algorithmic system, walk-forward validated across 2+ years of market data.">
-    <meta property="og:url" content="https://thestrategyfactory.io/about">
+    <meta property="og:url" content="https://thestrategyfactory.io/about.html">
     <meta property="og:site_name" content="The Strategy Factory">
     <meta property="og:image" content="https://thestrategyfactory.io/og-image.png">
     <meta property="og:image:width" content="1200">
@@ -23,6 +23,7 @@
     <meta name="twitter:title" content="About & Methodology — The Strategy Factory">
     <meta name="twitter:description" content="How The Strategy Factory works. Proprietary algorithmic system, walk-forward validated across 2+ years of market data.">
     <meta name="twitter:image" content="https://thestrategyfactory.io/og-image.png">
+<link rel="canonical" href="https://thestrategyfactory.io/about.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -825,7 +826,7 @@ footer {
   gap: 48px;
 }
 
-.footer-col h4 {
+.footer-col .footer-heading { display: block;
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 600;
@@ -976,7 +977,7 @@ footer {
 
 /* ── Responsive — Tablet ──────────────────────────────── */
 @media (max-width: 900px) {
-  .hamburger { display: flex; }
+  .hamburger { display: flex; min-width: 44px; min-height: 44px; }
   nav { position: static; }
   .nav-links { display: none; }
   .approach-grid, .strategy-points, .wf-results, .numbers-grid, .wf-explainer, .not-are {
@@ -986,8 +987,10 @@ footer {
   .flow-arrow { transform: rotate(90deg); }
   .footer-top { flex-direction: column; gap: 32px; }
   .footer-links { flex-direction: column; gap: 24px; }
+  .footer-col a { padding: 12px 0; display: block; }
   .hero { padding: 32px 0 60px; min-height: auto; }
   .hero h1 { font-size: 48px; letter-spacing: -1.5px; }
+  body::after { animation: none; }
 }
 
 /* ── Responsive — Mobile ──────────────────────────────── */
@@ -1022,10 +1025,10 @@ footer {
     </a>
         <ul class="nav-links">
       <li><a href="performance.html">Performance</a></li>
-      <li><a href="about.html" class="active">Methodology</a></li>
+      <li><a href="about.html" class="active">How It Works</a></li>
       <li><a href="start.html#pricing">Pricing</a></li>
       
-      <li><a href="https://discord.gg/6hWtrqxSed" class="nav-cta" target="_blank">Join Discord</a></li>
+      <li><a href="https://discord.gg/6hWtrqxSed" class="nav-cta" target="_blank" rel="noopener noreferrer">Join Discord</a></li>
     </ul>
     <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
@@ -1036,10 +1039,10 @@ footer {
   <button class="mobile-menu-close">&times;</button>
   <a href="index.html">Home</a>
   <a href="performance.html">Performance</a>
-  <a href="about.html">Methodology</a>
+  <a href="about.html">How It Works</a>
   <a href="status.html">Status</a>
   <a href="start.html#pricing">Pricing</a>
-  <a href="https://discord.gg/6hWtrqxSed" class="mobile-cta" target="_blank">Join Discord</a>
+  <a href="https://discord.gg/6hWtrqxSed" class="mobile-cta" target="_blank" rel="noopener noreferrer">Join Discord</a>
 </div>
 
 <main class="page-content">
@@ -1097,7 +1100,7 @@ footer {
 
     <div class="strategy-points reveal-stagger">
       <div class="strategy-point reveal">
-        <p>Our system identifies <span class="highlight">high-probability setups</span> using proprietary algorithms engineered to detect institutional footprints in price action.</p>
+        <p>Our system identifies <span class="highlight">high-probability setups</span> using proprietary algorithms engineered to detect recurring patterns in price action.</p>
       </div>
       <div class="strategy-point reveal">
         <p><span class="highlight">Multi-timeframe directional filtering</span> ensures we only trade in the direction of the dominant trend. No counter-trend gambling.</p>
@@ -1278,23 +1281,26 @@ footer {
       </div>
       <div class="footer-links">
         <div class="footer-col">
-          <h4>Product</h4>
+          <span class="footer-heading">Product</span>
           <a href="performance.html">Performance</a>
+          <a href="about.html">How It Works</a>
           <a href="start.html#pricing">Pricing</a>
+          <a href="status.html">System Status</a>
         </div>
         <div class="footer-col">
-          <h4>Resources</h4>
-          <a href="about.html">Methodology</a>
+          <span class="footer-heading">Resources</span>
+          <a href="start.html">Getting Started</a>
           <a href="sizing.html">Sizing Guide</a>
           <a href="start.html#faq">FAQ</a>
         </div>
         <div class="footer-col">
-          <h4>Connect</h4>
-          <a href="https://discord.gg/6hWtrqxSed" target="_blank">Discord</a>
-          <a href="https://x.com/tsfalgo" target="_blank">Twitter</a>
+          <span class="footer-heading">Connect</span>
+          <a href="https://discord.gg/6hWtrqxSed" target="_blank" rel="noopener noreferrer">Discord</a>
+          <a href="https://x.com/tsfalgo" target="_blank" rel="noopener noreferrer">Twitter/X</a>
+          <a href="mailto:support@thestrategyfactory.io">Contact</a>
         </div>
         <div class="footer-col">
-          <h4>Legal</h4>
+          <span class="footer-heading">Legal</span>
           <a href="terms.html">Terms of Service</a>
           <a href="privacy.html">Privacy Policy</a>
           <a href="risk.html">Risk Disclosure</a>

@@ -21,6 +21,7 @@
 <meta name="twitter:title" content="Privacy Policy — The Strategy Factory">
 <meta name="twitter:description" content="Privacy Policy for The Strategy Factory algorithmic futures signal service.">
 <meta name="twitter:image" content="https://thestrategyfactory.io/og-image.png">
+<link rel="canonical" href="https://thestrategyfactory.io/privacy.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -146,7 +147,7 @@ footer { border-top: 1px solid var(--border-subtle); padding: 60px 0 40px; }
 .footer-logo .f { color: var(--accent-cyan); text-shadow: 0 0 16px var(--accent-cyan-glow); }
 .footer-tagline { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); }
 .footer-links { display: flex; gap: 48px; }
-.footer-col h4 { font-family: var(--font-mono); font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+.footer-col .footer-heading { display: block; font-family: var(--font-mono); font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
 .footer-col a { display: block; font-size: 14px; color: var(--text-secondary); text-decoration: none; padding: 4px 0; transition: color 0.3s; }
 .footer-col a:hover { color: var(--accent-cyan); }
 .footer-bottom { border-top: 1px solid var(--border-subtle); padding-top: 24px; }
@@ -156,12 +157,14 @@ footer { border-top: 1px solid var(--border-subtle); padding: 60px 0 40px; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
 
 @media (max-width: 900px) {
-  .hamburger { display: flex; }
+  .hamburger { display: flex; min-width: 44px; min-height: 44px; }
   nav { position: static; }
   .nav-links { display: none; }
   .legal-hero { padding: 32px 0 40px; }
   .footer-top { flex-direction: column; gap: 32px; }
   .footer-links { flex-direction: column; gap: 24px; }
+  .footer-col a { padding: 12px 0; display: block; }
+  body::after { animation: none; }
 }
 @media (max-width: 600px) {
   .container { padding: 0 16px; }
@@ -186,7 +189,7 @@ footer { border-top: 1px solid var(--border-subtle); padding: 60px 0 40px; }
       <li><a href="performance.html">Performance</a></li>
       <li><a href="about.html">How It Works</a></li>
       <li><a href="start.html#pricing">Pricing</a></li>
-      <li><a href="https://discord.gg/6hWtrqxSed" class="nav-cta" target="_blank">Join Discord</a></li>
+      <li><a href="https://discord.gg/6hWtrqxSed" class="nav-cta" target="_blank" rel="noopener noreferrer">Join Discord</a></li>
     </ul>
     <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
@@ -196,10 +199,10 @@ footer { border-top: 1px solid var(--border-subtle); padding: 60px 0 40px; }
   <button class="mobile-menu-close">&times;</button>
   <a href="index.html">Home</a>
   <a href="performance.html">Performance</a>
-  <a href="about.html">Methodology</a>
+  <a href="about.html">How It Works</a>
   <a href="status.html">Status</a>
   <a href="start.html#pricing">Pricing</a>
-  <a href="https://discord.gg/6hWtrqxSed" class="mobile-cta" target="_blank">Join Discord</a>
+  <a href="https://discord.gg/6hWtrqxSed" class="mobile-cta" target="_blank" rel="noopener noreferrer">Join Discord</a>
 </div>
 
 <main class="page-content">
@@ -218,7 +221,7 @@ footer { border-top: 1px solid var(--border-subtle); padding: 60px 0 40px; }
       <h2>1. Information We Collect</h2>
       <p>We collect minimal information necessary to provide and improve the Service:</p>
       <ul>
-        <li><strong>Account Information:</strong> When you subscribe through <a href="https://discord.gg/6hWtrqxSed" target="_blank">Whop</a>, we receive your name, email address, and subscription status. We do not directly process or store payment card details — Whop handles all payment processing.</li>
+        <li><strong>Account Information:</strong> When you subscribe through our platform, we receive your name, email address, and subscription status. We do not directly process or store payment card details — our payment processor handles all payment processing.</li>
         <li><strong>Discord Information:</strong> Your Discord user ID and username, used to grant access to our signal channels and deliver alerts.</li>
         <li><strong>Usage Analytics:</strong> We use Vercel Analytics to collect anonymous, aggregated website usage data (page views, visit duration, referral sources). Vercel Analytics is privacy-focused and does not use cookies or track individual users.</li>
       </ul>
@@ -242,7 +245,7 @@ footer { border-top: 1px solid var(--border-subtle); padding: 60px 0 40px; }
       <p><strong>We do not sell, rent, or trade your personal information.</strong></p>
       <p>We may share limited information with the following third-party services, solely to operate the Service:</p>
       <ul>
-        <li><strong>Whop</strong> — Payment processing and subscription management. Whop's privacy policy governs their handling of your payment data.</li>
+        <li><strong>Payment Processor</strong> — Payment processing and subscription management. Our payment processor's privacy policy governs their handling of your payment data.</li>
         <li><strong>Discord</strong> — Signal delivery and community access. Your use of Discord is subject to Discord's privacy policy.</li>
         <li><strong>Vercel</strong> — Website hosting and privacy-focused analytics. No personally identifiable information is shared.</li>
       </ul>
@@ -262,7 +265,7 @@ footer { border-top: 1px solid var(--border-subtle); padding: 60px 0 40px; }
       <ul>
         <li>Encrypted connections (HTTPS/TLS) for all web traffic</li>
         <li>Limited access to personal data on a need-to-know basis</li>
-        <li>Reliance on established, security-audited third-party platforms (Whop, Discord, Vercel) for data processing</li>
+        <li>Reliance on established, security-audited third-party platforms (Discord, Vercel) for data processing</li>
       </ul>
       <p>However, no method of transmission or storage is 100% secure. We cannot guarantee absolute security of your information.</p>
     </div>
@@ -305,7 +308,7 @@ footer { border-top: 1px solid var(--border-subtle); padding: 60px 0 40px; }
       <h2>10. Contact</h2>
       <p>If you have questions about this Privacy Policy or your personal data, contact us at:</p>
       <p><strong>Email:</strong> <a href="mailto:support@thestrategyfactory.io">support@thestrategyfactory.io</a><br>
-      <strong>Discord:</strong> <a href="https://discord.gg/6hWtrqxSed" target="_blank">discord.gg/6hWtrqxSed</a></p>
+      <strong>Discord:</strong> <a href="https://discord.gg/6hWtrqxSed" target="_blank" rel="noopener noreferrer">discord.gg/6hWtrqxSed</a></p>
     </div>
 
   </div>
@@ -322,26 +325,26 @@ footer { border-top: 1px solid var(--border-subtle); padding: 60px 0 40px; }
       </div>
       <div class="footer-links">
         <div class="footer-col">
-          <h4>Product</h4>
+          <span class="footer-heading">Product</span>
           <a href="performance.html">Performance</a>
-          <a href="status.html">System Status</a>
+          <a href="about.html">How It Works</a>
           <a href="start.html#pricing">Pricing</a>
+          <a href="status.html">System Status</a>
         </div>
         <div class="footer-col">
-          <h4>Resources</h4>
+          <span class="footer-heading">Resources</span>
           <a href="start.html">Getting Started</a>
-          <a href="about.html">Methodology</a>
           <a href="sizing.html">Sizing Guide</a>
           <a href="start.html#faq">FAQ</a>
         </div>
         <div class="footer-col">
-          <h4>Connect</h4>
-          <a href="https://discord.gg/6hWtrqxSed" target="_blank">Discord</a>
-          <a href="https://x.com/tsfalgo" target="_blank">Twitter</a>
+          <span class="footer-heading">Connect</span>
+          <a href="https://discord.gg/6hWtrqxSed" target="_blank" rel="noopener noreferrer">Discord</a>
+          <a href="https://x.com/tsfalgo" target="_blank" rel="noopener noreferrer">Twitter/X</a>
           <a href="mailto:support@thestrategyfactory.io">Contact</a>
         </div>
         <div class="footer-col">
-          <h4>Legal</h4>
+          <span class="footer-heading">Legal</span>
           <a href="terms.html">Terms of Service</a>
           <a href="privacy.html">Privacy Policy</a>
           <a href="risk.html">Risk Disclosure</a>

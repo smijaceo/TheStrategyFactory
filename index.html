@@ -23,6 +23,7 @@
     <meta name="twitter:title" content="The Strategy Factory — Automated Futures Signals">
     <meta name="twitter:description" content="Algorithmic futures signals for NQ, GC, and SIL. No hype, no guru BS — just systematic, data-driven trading signals delivered in real time.">
     <meta name="twitter:image" content="https://thestrategyfactory.io/og-image.png">
+<link rel="canonical" href="https://thestrategyfactory.io/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -1325,7 +1326,7 @@ footer {
   gap: 48px;
 }
 
-.footer-col h4 {
+.footer-col .footer-heading { display: block;
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 600;
@@ -1477,9 +1478,11 @@ footer {
 
 /* ── Responsive — Tablet ──────────────────────────────── */
 @media (max-width: 900px) {
-  .hamburger { display: flex; }
+  .hamburger { display: flex; min-width: 44px; min-height: 44px; }
   nav { position: static; }
   .nav-links { display: none; }
+  .footer-col a { padding: 12px 0; display: block; }
+  body::after { animation: none; }
 
   .features-grid, .instruments-grid, .pricing-grid, .validation-grid {
     grid-template-columns: 1fr;
@@ -1524,7 +1527,7 @@ footer {
     margin-bottom: 24px;
     line-height: 1.5;
   }
-  .hero-badge { font-size: 9px; padding: 5px 12px; margin-bottom: 16px; }
+  .hero-badge { font-size: 11px; padding: 5px 12px; margin-bottom: 16px; }
 
   /* CTA buttons — full width, primary stands out */
   .hero-actions { flex-direction: column; gap: 10px; width: 100%; }
@@ -1554,8 +1557,8 @@ footer {
   .hero-stat:nth-child(2n) { border-right: none; }
   .hero-stat:nth-child(n+3) { border-bottom: none; }
   .hero-stat:last-child { border-bottom: none; }
-  .hero-stat .value { font-size: 24px; }
-  .hero-stat .label { font-size: 9px; letter-spacing: 0.15em; }
+  .hero-stat-value { font-size: 24px; }
+  .hero-stat .label { font-size: 11px; letter-spacing: 0.15em; }
 
   /* Section headings */
   h2, .section-title { font-size: 36px; line-height: 1.15; letter-spacing: -1px; }
@@ -1563,10 +1566,10 @@ footer {
 
   /* Scanner feed */
   .scanner-feed { margin-top: 32px; }
-  .scanner-feed-container { font-size: 10px; padding: 12px 16px; max-width: 100%; overflow-x: auto; }
+  .scanner-feed-container { font-size: 11px; padding: 12px 16px; max-width: 100%; overflow-x: auto; }
   .scanner-feed-lines { height: 80px; }
   .feed-line { gap: 8px; }
-  .feed-time, .feed-sym, .feed-action { font-size: 10px; }
+  .feed-time, .feed-sym, .feed-action { font-size: 11px; }
 
   /* Equity curve */
   .equity-card { padding: 16px; }
@@ -1589,7 +1592,7 @@ footer {
     text-align: center;
   }
   .instrument-meta-value { font-size: 16px; }
-  .instrument-meta-label { font-size: 8px; }
+  .instrument-meta-label { font-size: 11px; }
   .instrument-name { margin-bottom: 16px; }
 
   /* Pricing */
@@ -1604,12 +1607,12 @@ footer {
   .val-instrument { padding: 16px; }
   .val-instrument-header { margin-bottom: 12px; }
   .val-instrument-name span { font-size: 12px; }
-  .val-badge { font-size: 8px; padding: 3px 8px; }
+  .val-badge { font-size: 11px; padding: 3px 8px; }
   .val-stats { grid-template-columns: 1fr !important; gap: 16px; }
   .val-stat-train { font-size: 13px; }
   .val-stat-test { font-size: 16px; }
   .val-stat-arrow { font-size: 11px; }
-  .val-stat-label { font-size: 8px; margin-bottom: 4px; }
+  .val-stat-label { font-size: 11px; margin-bottom: 4px; }
 
   /* Footer */
   .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
@@ -1618,20 +1621,20 @@ footer {
   .countdown { gap: 6px; }
   .countdown-unit { min-width: 0; flex: 1; padding: 10px 4px; }
   .countdown-value { font-size: 26px; }
-  .countdown-label { font-size: 7px; letter-spacing: 0.15em; }
+  .countdown-label { font-size: 11px; letter-spacing: 0.15em; }
   .countdown-sep { display: none; }
 
   /* Founding — mobile */
   .founding-section { padding: 40px 0; }
   .founding-card { padding: 28px 20px; }
-  .founding-eyebrow { font-size: 10px; letter-spacing: 0.2em; margin-bottom: 12px; }
+  .founding-eyebrow { font-size: 11px; letter-spacing: 0.2em; margin-bottom: 12px; }
   .founding-headline { font-size: 24px; letter-spacing: -1px; }
   .founding-sub { font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
   .founding-spots-bar { max-width: 100%; }
   .founding-spots-text { font-size: 12px; }
   .founding-spots-text .spots-num { font-size: 15px; }
   .founding-perks { flex-direction: column; align-items: center; gap: 10px; margin-bottom: 24px; }
-  .founding-perk { font-size: 10px; }
+  .founding-perk { font-size: 11px; }
   .founding-btn { font-size: 12px; padding: 14px 32px; width: 100%; justify-content: center; }
 }
 
@@ -1856,7 +1859,7 @@ footer {
       <li><a href="about.html">How It Works</a></li>
       <li><a href="start.html#pricing">Pricing</a></li>
       
-      <li><a href="https://discord.gg/6hWtrqxSed" class="nav-cta" target="_blank">Join Discord</a></li>
+      <li><a href="https://discord.gg/6hWtrqxSed" class="nav-cta" target="_blank" rel="noopener noreferrer">Join Discord</a></li>
     </ul>
     <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
@@ -1867,10 +1870,10 @@ footer {
   <button class="mobile-menu-close">&times;</button>
   <a href="index.html">Home</a>
   <a href="performance.html">Performance</a>
-  <a href="about.html">Methodology</a>
+  <a href="about.html">How It Works</a>
   <a href="status.html">Status</a>
   <a href="start.html#pricing">Pricing</a>
-  <a href="https://discord.gg/6hWtrqxSed" class="mobile-cta" target="_blank">Join Discord</a>
+  <a href="https://discord.gg/6hWtrqxSed" class="mobile-cta" target="_blank" rel="noopener noreferrer">Join Discord</a>
 </div>
 
 <main class="page-content">
@@ -1918,7 +1921,7 @@ footer {
     </div>
 
     <div class="hero-actions">
-      <a href="https://discord.gg/6hWtrqxSed" class="btn-primary" target="_blank">Join the Discord</a>
+      <a href="https://discord.gg/6hWtrqxSed" class="btn-primary" target="_blank" rel="noopener noreferrer">Join the Discord</a>
       <a href="performance.html" class="btn-secondary">See the Numbers</a>
     </div>
 
@@ -2102,7 +2105,7 @@ footer {
 <section class="features" id="features">
   <div class="container">
     <div class="section-label reveal">How It Works</div>
-    <h2 class="section-title reveal">Algorithmic precision.<br>Zero emotion.</h2>
+    <h2 class="section-title reveal">Algorithmic precision. <br>Zero emotion.</h2>
     <p class="section-desc reveal">
       Our scanner monitors NQ, Gold & Silver futures 24/5, identifying
       high-probability setups and executing with mechanical discipline.
@@ -2219,7 +2222,7 @@ footer {
           <li><span class="pricing-check no">✗</span> Strategy deep-dives</li>
           <li><span class="pricing-check no">✗</span> Direct team access</li>
         </ul>
-        <a href="https://discord.gg/6hWtrqxSed" class="pricing-btn pricing-btn-outline" target="_blank">Join Waitlist</a>
+        <a href="https://discord.gg/6hWtrqxSed" class="pricing-btn pricing-btn-outline" target="_blank" rel="noopener noreferrer">Join Waitlist</a>
       </div>
 
       <div class="pricing-card featured reveal">
@@ -2237,7 +2240,7 @@ footer {
           <li><span class="pricing-check no">✗</span> Strategy deep-dives</li>
           <li><span class="pricing-check no">✗</span> Direct team access</li>
         </ul>
-        <a href="https://discord.gg/6hWtrqxSed" class="pricing-btn pricing-btn-cyan" target="_blank">Join Waitlist</a>
+        <a href="https://discord.gg/6hWtrqxSed" class="pricing-btn pricing-btn-cyan" target="_blank" rel="noopener noreferrer">Join Waitlist</a>
       </div>
 
       <div class="pricing-card reveal">
@@ -2283,7 +2286,7 @@ footer {
         <div class="founding-perk"><span class="perk-icon">✓</span> Price locked for life</div>
         <div class="founding-perk"><span class="perk-icon">✓</span> Cancel anytime</div>
       </div>
-      <a href="https://discord.gg/6hWtrqxSed" class="founding-btn" target="_blank">Join the Discord →</a>
+      <a href="https://discord.gg/6hWtrqxSed" class="founding-btn" target="_blank" rel="noopener noreferrer">Join the Discord →</a>
     </div>
   </div>
 </section>
@@ -2300,26 +2303,26 @@ footer {
       </div>
       <div class="footer-links">
         <div class="footer-col">
-          <h4>Product</h4>
+          <span class="footer-heading">Product</span>
           <a href="performance.html">Performance</a>
-          <a href="status.html">System Status</a>
+          <a href="about.html">How It Works</a>
           <a href="start.html#pricing">Pricing</a>
+          <a href="status.html">System Status</a>
         </div>
         <div class="footer-col">
-          <h4>Resources</h4>
+          <span class="footer-heading">Resources</span>
           <a href="start.html">Getting Started</a>
-          <a href="about.html">Methodology</a>
           <a href="sizing.html">Sizing Guide</a>
           <a href="start.html#faq">FAQ</a>
         </div>
         <div class="footer-col">
-          <h4>Connect</h4>
-          <a href="https://discord.gg/6hWtrqxSed" target="_blank">Discord</a>
-          <a href="https://x.com/tsfalgo" target="_blank">Twitter</a>
+          <span class="footer-heading">Connect</span>
+          <a href="https://discord.gg/6hWtrqxSed" target="_blank" rel="noopener noreferrer">Discord</a>
+          <a href="https://x.com/tsfalgo" target="_blank" rel="noopener noreferrer">Twitter/X</a>
           <a href="mailto:support@thestrategyfactory.io">Contact</a>
         </div>
         <div class="footer-col">
-          <h4>Legal</h4>
+          <span class="footer-heading">Legal</span>
           <a href="terms.html">Terms of Service</a>
           <a href="privacy.html">Privacy Policy</a>
           <a href="risk.html">Risk Disclosure</a>
