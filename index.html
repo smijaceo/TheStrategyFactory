@@ -1841,6 +1841,23 @@ footer {
   box-shadow: 0 0 50px rgba(0,163,255,0.4), 0 8px 30px rgba(0,0,0,0.3);
 }
 .cftc-disclaimer { max-width: 800px; margin: 60px auto 0; padding: 24px 28px; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); line-height: 1.8; text-align: center; opacity: 0.7; }
+/* ── Accessibility ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
 </style>
 </head>
 <body>
@@ -1932,14 +1949,16 @@ footer {
       <div class="hero-stat">
         <div class="hero-stat-value green" data-count="565" data-prefix="$" data-suffix="K" data-display="565">$565K</div>
         <div class="hero-stat-label">2-Year P&L</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);margin-top:4px;letter-spacing:0.05em;">(2 contracts/instrument, commission-inclusive)</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-stat-value" data-count="203" data-decimal="2" data-display="2.03">2.03</div>
-        <div class="hero-stat-label">NQ Profit Factor</div>
+        <div class="hero-stat-value" data-count="176" data-decimal="2" data-display="1.76">1.76</div>
+        <div class="hero-stat-label">Portfolio Profit Factor</div>
       </div>
       <div class="hero-stat">
         <div class="hero-stat-value" data-count="561" data-decimal="1" data-suffix="%" data-display="56.1">56.1%</div>
         <div class="hero-stat-label">Win Rate</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);margin-top:4px;letter-spacing:0.05em;">Avg winner is 3.2× the avg loser</div>
       </div>
       <div class="hero-stat">
         <div class="hero-stat-value" data-count="2155" data-comma="true" data-display="2,155">2,155</div>
@@ -2146,6 +2165,14 @@ footer {
         <p>Every trade logged. Daily and monthly recaps. Walk-forward validated performance — not cherry-picked screenshots or hypothetical returns.</p>
       </div>
     </div>
+
+    <!-- Why Sell It? -->
+    <div style="margin-top:64px;max-width:640px;" class="reveal">
+      <div style="background:var(--bg-card);border:1px solid var(--border-default);border-radius:var(--radius);padding:32px 36px;">
+        <div style="font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent-cyan);margin-bottom:12px;">"If it works, why sell it?"</div>
+        <p style="font-size:15px;color:var(--text-secondary);line-height:1.8;">We trade our own capital with the same signals. Subscriptions fund continued R&D and infrastructure. We cap membership to protect signal quality.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -2156,7 +2183,7 @@ footer {
   <div class="container">
     <div class="section-label reveal">Instruments</div>
     <h2 class="section-title reveal">Three Uncorrelated Markets. One Diversified Edge.</h2>
-    <p class="section-desc reveal">NQ crashes? Gold often rallies. Silver zigs when both zag. Our system trades all three — so one bad week in tech doesn't sink your month. Commission-inclusive, 2-year backtest.</p>
+    <p class="section-desc reveal">NQ crashes? Gold often rallies. Silver zigs when both zag. Our system trades all three — so one bad week in tech doesn't sink your month. Commission-inclusive results ($5.00 round-turn per contract), 2-year backtest.</p>
 
     <div class="instruments-grid reveal-stagger">
       <div class="instrument-card reveal" data-instrument="nq">
@@ -2208,7 +2235,7 @@ footer {
   <div class="container">
     <div class="section-label reveal">Plans</div>
     <h2 class="section-title reveal">Lock In Your Edge Before It's Gone</h2>
-    <p class="section-desc reveal">50 founding member spots at $79/mo — 21% off, locked for life. Once they're filled, the price goes to $100/mo and stays there.</p>
+    <p class="section-desc reveal">50 founding member spots at $79/mo — 21% off, locked for life. Once they're filled, the price goes to $100/mo and stays there. All prices in USD.</p>
 
     <div class="pricing-grid reveal-stagger">
 

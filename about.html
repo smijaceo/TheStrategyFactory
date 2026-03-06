@@ -1069,6 +1069,23 @@ footer {
   .founder-bio { font-size: 14px; }
 }
 .cftc-disclaimer { max-width: 800px; margin: 60px auto 0; padding: 24px 28px; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); line-height: 1.8; text-align: center; opacity: 0.7; }
+/* ── Accessibility ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
 </style>
 </head>
 <body>
@@ -1231,12 +1248,13 @@ footer {
           <span>Feb 2026</span>
         </div>
         <div class="wf-bars">
-          <div class="wf-bar train">TRAIN — Year 1</div>
-          <div class="wf-bar test">TEST — Year 2</div>
+          <div class="wf-bar train">TRAIN — 12 mo</div>
+          <div class="wf-bar test">TEST — 13 mo</div>
         </div>
         <div class="wf-arrow-row">
           ✓ Parameters locked → tested blind → performance held
         </div>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);text-align:center;margin-top:8px;">12 months in-sample training (Feb 2024–Jan 2025), 13 months out-of-sample validation (Feb 2025–Mar 2026).</div>
       </div>
     </div>
 
@@ -1292,7 +1310,7 @@ footer {
         <h3>✓ What We ARE</h3>
         <div class="are-item"><span class="are-check">✓</span> A quantitative system with 2+ years of data</div>
         <div class="are-item"><span class="are-check">✓</span> Walk-forward validated on unseen data</div>
-        <div class="are-item"><span class="are-check">✓</span> Fully automated, zero discretion</div>
+        <div class="are-item"><span class="are-check">✓</span> Every trade entry, exit, and sizing decision is fully algorithmic. No human discretion in trade execution.</div>
         <div class="are-item"><span class="are-check">✓</span> Transparent — every trade logged and published</div>
       </div>
     </div>

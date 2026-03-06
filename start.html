@@ -1119,6 +1119,23 @@ footer {
   .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
 }
 .cftc-disclaimer { max-width: 800px; margin: 60px auto 0; padding: 24px 28px; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); line-height: 1.8; text-align: center; opacity: 0.7; }
+/* ── Accessibility ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
 </style>
 </head>
 <body>
@@ -1428,7 +1445,7 @@ footer {
     <div class="section-header reveal">
       <div class="section-label">Plans</div>
       <h2 class="section-title">Lock In Your Edge Before It's Gone</h2>
-      <p class="section-subtitle">50 founding member spots at $79/mo — 21% off, locked for life. Once they're filled, the price goes to $100/mo and stays there.</p>
+      <p class="section-subtitle">50 founding member spots at $79 USD/mo — 21% off, locked for life. Once they're filled, the price goes to $100 USD/mo and stays there. All prices in USD.</p>
     </div>
 
     <div class="tier-grid reveal-stagger">

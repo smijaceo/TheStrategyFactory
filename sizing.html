@@ -978,6 +978,23 @@ footer {
   .real-talk { padding: 32px 24px; }
 }
 .cftc-disclaimer { max-width: 800px; margin: 60px auto 0; padding: 24px 28px; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); line-height: 1.8; text-align: center; opacity: 0.7; }
+/* ── Accessibility ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
 </style>
 </head>
 <body>
@@ -1031,6 +1048,7 @@ footer {
     <div class="callout-card reveal">
       <h3>The #1 Rule: Never risk more than 25% of your drawdown limit on a single trade.</h3>
       <p>Your drawdown limit is your lifeline. Blow it and you're done — account gone, fees wasted, back to square one.</p>
+      <p><strong style="color: var(--text-muted); font-size:13px;">Note: All backtest P&amp;L figures use 2 contracts per instrument and include $5.00 round-turn commission per contract.</strong></p>
       <p>The strategy has a <strong style="color: var(--text-primary);">56% win rate</strong> — that means 44% of trades lose. You <em>will</em> have losing streaks. Three losers in a row? Happens regularly. Four? Not rare. Five? It'll happen eventually.</p>
       <p>Size so you survive them. The edge only works if you're still in the game when the wins come back.</p>
     </div>

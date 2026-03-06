@@ -198,6 +198,23 @@ footer { border-top: 1px solid var(--border-subtle); padding: 60px 0 40px; }
   .cftc-text { font-size: 11px !important; padding-left: 14px; }
   .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
 }
+/* ── Accessibility ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
 </style>
 </head>
 <body>

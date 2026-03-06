@@ -172,6 +172,23 @@ footer { border-top: 1px solid rgba(255,255,255,0.04); padding: 48px 0 32px; }
 .footer-col a:hover { color: var(--accent-cyan); }
 .footer-bottom { border-top: 1px solid rgba(255,255,255,0.04); padding-top: 24px; }
 .footer-disclaimer { font-size: 11px; color: var(--text-muted); line-height: 1.6; max-width: 800px; }
+/* ── Accessibility ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
 </style>
 </head>
 <body>
