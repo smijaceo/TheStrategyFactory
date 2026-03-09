@@ -1016,7 +1016,7 @@ a:focus-visible, button:focus-visible {
     <div class="kpi-grid reveal-stagger">
       <div class="kpi-card scanlines reveal" data-border="green">
         <div class="kpi-label">Total P&L</div>
-        <div class="kpi-value green" data-count="565170" data-prefix="$" data-comma="true" data-display="$565,170">$0</div>
+        <div class="kpi-value green" data-count="580268" data-prefix="$" data-comma="true" data-display="$580,268">$0</div>
       </div>
       <div class="kpi-card scanlines reveal" data-border="cyan">
         <div class="kpi-label">Profit Factor</div>
@@ -1024,11 +1024,11 @@ a:focus-visible, button:focus-visible {
       </div>
       <div class="kpi-card scanlines reveal" data-border="teal">
         <div class="kpi-label">Win Rate</div>
-        <div class="kpi-value" data-count="561" data-decimal="1" data-suffix="%" data-display="56.1%">0</div>
+        <div class="kpi-value" data-count="563" data-decimal="1" data-suffix="%" data-display="56.3%">0</div>
       </div>
       <div class="kpi-card scanlines reveal" data-border="white">
         <div class="kpi-label">Total Trades</div>
-        <div class="kpi-value" data-count="2155" data-comma="true" data-display="2,155">0</div>
+        <div class="kpi-value" data-count="2163" data-comma="true" data-display="2,163">0</div>
       </div>
       <div class="kpi-card scanlines reveal" data-border="red">
         <div class="kpi-label">Max Drawdown</div>
@@ -1054,7 +1054,7 @@ a:focus-visible, button:focus-visible {
       <div class="equity-header">
         <div>
           <div class="equity-title">Cumulative Growth</div>
-          <div class="equity-value">$565,170</div>
+          <div class="equity-value">$580,268</div>
           <div class="equity-label">Feb 2024 — Feb 2026 · Commission Included · 3 Instruments</div>
         </div>
       </div>
@@ -1144,7 +1144,7 @@ a:focus-visible, button:focus-visible {
         <div class="inst-pnl">$233,694</div>
         <div class="inst-sparkline"><canvas id="sparkSIL"></canvas></div>
         <div class="inst-stats">
-          <div class="inst-stat"><div class="inst-stat-label">Profit Factor</div><div class="inst-stat-value">1.60</div></div>
+          <div class="inst-stat"><div class="inst-stat-label">Profit Factor</div><div class="inst-stat-value">1.65</div></div>
           <div class="inst-stat"><div class="inst-stat-label">Win Rate</div><div class="inst-stat-value">55.2%</div></div>
           <div class="inst-stat"><div class="inst-stat-label">Trades</div><div class="inst-stat-value">884</div></div>
           <div class="inst-stat"><div class="inst-stat-label">Max DD</div><div class="inst-stat-value" style="color:var(--accent-red)">35.2%</div></div>
@@ -1375,10 +1375,10 @@ function generateCurve(finalVal, volatility, seed, points) {
   const ctx = canvas.getContext('2d');
   const POINTS = 200;
 
-  const portfolioData = generateCurve(565170, 8000, 42, POINTS);
-  const nqData = generateCurve(155819, 4000, 7, POINTS);
-  const gcData = generateCurve(175657, 5000, 13, POINTS);
-  const silData = generateCurve(233694, 6000, 31, POINTS);
+  const portfolioData = generateCurve(580268, 8000, 42, POINTS);
+  const nqData = generateCurve(159146, 4000, 7, POINTS);
+  const gcData = generateCurve(176421, 5000, 13, POINTS);
+  const silData = generateCurve(244701, 6000, 31, POINTS);
 
   let drawn = false;
 
@@ -1495,9 +1495,9 @@ function drawSparkline(canvasId, finalVal, volatility, seed, color) {
   window.addEventListener('resize', draw);
 }
 
-drawSparkline('sparkNQ', 155819, 3000, 7, 'rgb(0,163,255)');
-drawSparkline('sparkGC', 175657, 3500, 13, 'rgb(234,179,8)');
-drawSparkline('sparkSIL', 233694, 4000, 31, 'rgb(144,164,174)');
+drawSparkline('sparkNQ', 159146, 3000, 7, 'rgb(0,163,255)');
+drawSparkline('sparkGC', 176421, 3500, 13, 'rgb(234,179,8)');
+drawSparkline('sparkSIL', 244701, 4000, 31, 'rgb(144,164,174)');
 
 // ── Monthly Heatmap ───────────────────────────────────
 (function() {
