@@ -1,33 +1,49 @@
 {
-  "updated_at": "2026-03-17T12:37:34.942751-05:00",
-  "updated_at_display": "12:37 PM CT \u00b7 Mar 17",
+  "updated_at": "2026-03-17T12:45:32.589486-05:00",
+  "updated_at_display": "12:45 PM CT \u00b7 Mar 17",
   "market_open": true,
   "next_open": null,
   "active_session": "Between Sessions",
   "scanner": {
-    "healthy": false,
-    "uptime_hours": 0.0,
-    "websocket_connected": false,
+    "healthy": true,
+    "uptime_hours": 0.1,
+    "websocket_connected": true,
     "bars_last_5min": 0,
-    "total_bars": 0,
-    "total_ticks": 0
+    "total_bars": 24,
+    "total_ticks": 2111
   },
   "instruments": {
     "NQ": {
-      "last_bar": "\u2014",
-      "seconds_since_bar": null,
-      "connected": false
+      "last_bar": "12:37:00 PM CT",
+      "seconds_since_bar": 513,
+      "connected": true
     },
     "GC": {
-      "last_bar": "\u2014",
-      "seconds_since_bar": null,
-      "connected": false
+      "last_bar": "12:37:00 PM CT",
+      "seconds_since_bar": 513,
+      "connected": true
     },
     "SIL": {
-      "last_bar": "\u2014",
-      "seconds_since_bar": null,
-      "connected": false
+      "last_bar": "12:37:00 PM CT",
+      "seconds_since_bar": 513,
+      "connected": true
     }
   },
-  "bias": {}
+  "bias": {
+    "NQ": {
+      "bullish_pct": 63.4,
+      "bearish_pct": 22.2,
+      "neutral_pct": 14.4
+    },
+    "GC": {
+      "bullish_pct": 66.6,
+      "bearish_pct": 17.5,
+      "neutral_pct": 15.9
+    },
+    "SIL": {
+      "bullish_pct": 63.7,
+      "bearish_pct": 19.9,
+      "neutral_pct": 16.4
+    }
+  }
 }
