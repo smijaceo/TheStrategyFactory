@@ -1,31 +1,31 @@
 {
-  "updated_at": "2026-03-19T02:00:35.333392-05:00",
-  "updated_at_display": "02:00 AM CT \u00b7 Mar 19",
+  "updated_at": "2026-03-19T02:15:24.595849-05:00",
+  "updated_at_display": "02:15 AM CT \u00b7 Mar 19",
   "market_open": true,
   "next_open": null,
   "active_session": "London",
   "scanner": {
     "healthy": true,
-    "uptime_hours": 15.6,
+    "uptime_hours": 15.9,
     "websocket_connected": true,
     "bars_last_5min": 15,
-    "total_bars": 1625,
-    "total_ticks": 108213
+    "total_bars": 1670,
+    "total_ticks": 113605
   },
   "instruments": {
     "NQ": {
-      "last_bar": "01:59:00 AM CT",
-      "seconds_since_bar": 95,
+      "last_bar": "02:14:00 AM CT",
+      "seconds_since_bar": 85,
       "connected": true
     },
     "GC": {
-      "last_bar": "01:59:00 AM CT",
-      "seconds_since_bar": 95,
+      "last_bar": "02:14:00 AM CT",
+      "seconds_since_bar": 85,
       "connected": true
     },
     "SIL": {
-      "last_bar": "01:59:00 AM CT",
-      "seconds_since_bar": 95,
+      "last_bar": "02:14:00 AM CT",
+      "seconds_since_bar": 85,
       "connected": true
     }
   },
